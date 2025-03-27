@@ -1,9 +1,8 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @layer base {
   :root {
@@ -37,7 +36,8 @@
 
     --radius: 0.8rem;
 
-    --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
 
   .dark {
@@ -80,11 +80,18 @@
     @apply bg-background text-foreground font-sans;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-medium tracking-tight;
   }
 
-  input, textarea, select {
+  input,
+  textarea,
+  select {
     @apply focus-visible:outline-none;
   }
 }
@@ -93,31 +100,31 @@
   .json-field-row {
     @apply flex items-center gap-2 py-2 px-3 rounded-md hover:bg-secondary/50 transition-colors;
   }
-  
+
   .json-field-label {
     @apply text-sm font-medium text-foreground/80;
   }
-  
+
   .json-editor-container {
     @apply bg-white backdrop-blur-md rounded-xl border border-border shadow-sm;
   }
-  
+
   .glass-panel {
     @apply bg-white/90 backdrop-blur-md rounded-xl border border-border shadow-sm;
   }
-  
+
   .animate-in {
     @apply animate-enter;
   }
-  
+
   .animate-out {
     @apply animate-exit;
   }
-  
+
   .field-button {
     @apply flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium bg-secondary hover:bg-secondary/80 text-secondary-foreground transition-colors;
   }
-  
+
   .hover-action {
     @apply opacity-0 group-hover:opacity-100 transition-opacity;
   }

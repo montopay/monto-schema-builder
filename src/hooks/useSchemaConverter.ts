@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 export type Field = {
   id: string;
@@ -26,26 +26,26 @@ export const useSchemaConverter = (initialSchema: any = {}) => {
   // Convert schema to our internal fields format
   const convertSchemaToFields = (schema: any): SchemaToFieldsResult => {
     if (!schema || !schema.properties) return { fields: {}, rootFields: [] };
-    
+
     const fieldsMap: Record<string, Field> = {};
     const roots: string[] = [];
     const required = schema.required || [];
-    
+
     const processObject = (props: any, parentId: string | null = null) => {
       Object.entries(props).forEach(([name, config]: [string, any]) => {
-        const id = `${parentId ? `${parentId}_` : ''}${name}`;
+        const id = `${parentId ? `${parentId}_` : ""}${name}`;
         const isRequired = required.includes(name);
-        
+
         fieldsMap[id] = {
           id,
           name,
-          type: config.type || 'string',
-          description: config.description || '',
+          type: config.type || "string",
+          description: config.description || "",
           required: isRequired,
           parent: parentId,
           children: [],
         };
-        
+
         if (parentId) {
           if (!fieldsMap[parentId].children) {
             fieldsMap[parentId].children = [];
@@ -54,90 +54,99 @@ export const useSchemaConverter = (initialSchema: any = {}) => {
         } else {
           roots.push(id);
         }
-        
-        if (config.type === 'object' && config.properties) {
+
+        if (config.type === "object" && config.properties) {
           processObject(config.properties, id);
-        } else if (config.type === 'array' && config.items && config.items.type === 'object' && config.items.properties) {
+        } else if (
+          config.type === "array" &&
+          config.items &&
+          config.items.type === "object" &&
+          config.items.properties
+        ) {
           processObject(config.items.properties, id);
         }
       });
     };
-    
+
     if (schema.properties) {
       processObject(schema.properties);
     }
-    
+
     return { fields: fieldsMap, rootFields: roots };
   };
-  
+
   // Convert our internal fields format back to JSON Schema
   const convertFieldsToSchema = () => {
     const schema: any = {
-      type: 'object',
+      type: "object",
       properties: {},
       required: [],
     };
-    
+
     const processFields = (fieldIds: string[], targetObj: any) => {
-      fieldIds.forEach(id => {
+      fieldIds.forEach((id) => {
         const field = fields[id];
-        
-        if (field.type === 'object') {
+
+        if (field.type === "object") {
           targetObj[field.name] = {
-            type: 'object',
+            type: "object",
             properties: {},
           };
-          
+
           if (field.description) {
             targetObj[field.name].description = field.description;
           }
-          
+
           if (field.children && field.children.length > 0) {
             processFields(field.children, targetObj[field.name].properties);
           }
-        } else if (field.type === 'array') {
+        } else if (field.type === "array") {
           targetObj[field.name] = {
-            type: 'array',
+            type: "array",
             items: {
-              type: 'object',
+              type: "object",
               properties: {},
             },
           };
-          
+
           if (field.description) {
             targetObj[field.name].description = field.description;
           }
-          
+
           if (field.children && field.children.length > 0) {
-            processFields(field.children, targetObj[field.name].items.properties);
+            processFields(
+              field.children,
+              targetObj[field.name].items.properties,
+            );
           }
         } else {
           targetObj[field.name] = {
             type: field.type,
           };
-          
+
           if (field.description) {
             targetObj[field.name].description = field.description;
           }
         }
-        
+
         if (field.required) {
           schema.required.push(field.name);
         }
       });
     };
-    
+
     processFields(rootFields, schema.properties);
-    
+
     if (schema.required.length === 0) {
       delete schema.required;
     }
-    
+
     return schema;
   };
 
   useEffect(() => {
-    const { fields: convertedFields, rootFields: convertedRootFields } = convertSchemaToFields(initialSchema);
+    const { fields: convertedFields, rootFields: convertedRootFields } =
+      convertSchemaToFields(initialSchema);
     setFields(convertedFields);
     setRootFields(convertedRootFields);
     setSchema(initialSchema);
@@ -151,6 +160,6 @@ export const useSchemaConverter = (initialSchema: any = {}) => {
     schema,
     setSchema,
     convertSchemaToFields,
-    convertFieldsToSchema
+    convertFieldsToSchema,
   };
 };

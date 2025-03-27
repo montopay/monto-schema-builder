@@ -1,10 +1,12 @@
-
-import React, { useState } from 'react';
-import JsonSchemaEditor from '@/components/SchemaEditor/JsonSchemaEditor';
-import { exampleSchema, JSONSchemaType } from '@/components/SchemaEditor/SchemaExample';
-import { Button } from '@/components/ui/button';
-import { CirclePlus, FileJson, RefreshCw } from 'lucide-react';
-import { toast } from 'sonner';
+import React, { useState } from "react";
+import JsonSchemaEditor from "@/components/SchemaEditor/JsonSchemaEditor";
+import {
+  exampleSchema,
+  JSONSchemaType,
+} from "@/components/SchemaEditor/SchemaExample";
+import { Button } from "@/components/ui/button";
+import { CirclePlus, FileJson, RefreshCw } from "lucide-react";
+import { toast } from "sonner";
 
 const Index = () => {
   const [schema, setSchema] = useState<JSONSchemaType>(exampleSchema);
@@ -15,7 +17,7 @@ const Index = () => {
     setTimeout(() => {
       setSchema(exampleSchema);
       setIsReset(false);
-      toast.success('Reset to example schema');
+      toast.success("Reset to example schema");
     }, 300);
   };
 
@@ -24,28 +26,28 @@ const Index = () => {
     setTimeout(() => {
       // Create a minimal empty schema that satisfies the JSONSchemaType
       setSchema({
-        type: 'object',
+        type: "object",
         properties: {},
-        required: []
+        required: [],
       });
       setIsReset(false);
-      toast.success('Cleared all fields');
+      toast.success("Cleared all fields");
     }, 300);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-background/95 relative overflow-hidden">
       {/* Background accent */}
-      <div 
+      <div
         className="absolute -top-24 -right-24 w-96 h-96 bg-primary/10 rounded-full blur-3xl opacity-50 animate-float"
         aria-hidden="true"
       />
-      <div 
+      <div
         className="absolute -bottom-32 -left-32 w-96 h-96 bg-primary/5 rounded-full blur-3xl opacity-50 animate-float"
-        style={{ animationDelay: '1s' }}
+        style={{ animationDelay: "1s" }}
         aria-hidden="true"
       />
-      
+
       <div className="container mx-auto px-4 md:px-6 pt-16 pb-24 relative z-10">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
@@ -58,15 +60,15 @@ const Index = () => {
               Create JSON Schemas <span className="text-primary">Visually</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto animate-in">
-              Design your data structure effortlessly without writing a single line of code.
-              Perfect for APIs, forms, and data validation.
+              Design your data structure effortlessly without writing a single
+              line of code. Perfect for APIs, forms, and data validation.
             </p>
           </div>
-          
+
           {/* Action Buttons */}
           <div className="flex flex-wrap justify-center gap-4 mb-8 animate-in">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={handleReset}
               className="gap-2"
               disabled={isReset}
@@ -74,8 +76,8 @@ const Index = () => {
               <RefreshCw size={16} />
               Reset to Example
             </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={handleClear}
               className="gap-2"
               disabled={isReset}
@@ -84,16 +86,18 @@ const Index = () => {
               Start from Scratch
             </Button>
           </div>
-          
+
           {/* Schema Editor */}
-          <div className={`transition-opacity duration-300 ${isReset ? 'opacity-0' : 'opacity-100'}`}>
-            <JsonSchemaEditor 
-              initialSchema={schema} 
+          <div
+            className={`transition-opacity duration-300 ${isReset ? "opacity-0" : "opacity-100"}`}
+          >
+            <JsonSchemaEditor
+              initialSchema={schema}
               onChange={setSchema}
               className="shadow-lg animate-in border-border/50 backdrop-blur-sm"
             />
           </div>
-          
+
           {/* How It Works */}
           <div className="mt-16 grid md:grid-cols-3 gap-6 text-center animate-in">
             <div className="glass-panel p-6">
@@ -102,10 +106,11 @@ const Index = () => {
               </div>
               <h3 className="text-lg font-medium mb-2">Add Fields</h3>
               <p className="text-muted-foreground text-sm">
-                Define your data structure by adding fields with just a few clicks
+                Define your data structure by adding fields with just a few
+                clicks
               </p>
             </div>
-            
+
             <div className="glass-panel p-6">
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <span className="text-primary font-bold text-xl">2</span>
@@ -115,7 +120,7 @@ const Index = () => {
                 Group related fields and create nested structures easily
               </p>
             </div>
-            
+
             <div className="glass-panel p-6">
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <span className="text-primary font-bold text-xl">3</span>
@@ -126,11 +131,12 @@ const Index = () => {
               </p>
             </div>
           </div>
-          
+
           {/* Footer */}
           <div className="mt-16 text-center text-sm text-muted-foreground">
             <p>
-              Built with simplicity in mind. Design beautiful data structures without technical knowledge.
+              Built with simplicity in mind. Design beautiful data structures
+              without technical knowledge.
             </p>
           </div>
         </div>

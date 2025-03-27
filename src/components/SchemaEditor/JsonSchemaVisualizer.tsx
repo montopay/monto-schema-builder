@@ -1,38 +1,39 @@
-
-import React, { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
-import { FileJson, Copy, Check } from 'lucide-react';
-import { toast } from 'sonner';
+import type React from "react";
+import { useState, useEffect } from "react";
+import { cn } from "@/lib/utils";
+import { FileJson, Copy, Check } from "lucide-react";
+import { toast } from "sonner";
+import type { JSONSchemaType } from "./SchemaExample";
 
 interface JsonSchemaVisualizerProps {
-  schema: any;
+  schema: JSONSchemaType;
   className?: string;
-  onChange?: (schema: any) => void;
+  onChange?: (schema: JSONSchemaType) => void;
 }
 
-const JsonSchemaVisualizer: React.FC<JsonSchemaVisualizerProps> = ({ 
-  schema, 
+const JsonSchemaVisualizer: React.FC<JsonSchemaVisualizerProps> = ({
+  schema,
   className,
-  onChange 
+  onChange,
 }) => {
-  const [jsonString, setJsonString] = useState('');
+  const [jsonString, setJsonString] = useState("");
   const [isCopied, setIsCopied] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editableJson, setEditableJson] = useState('');
-  
+  const [editableJson, setEditableJson] = useState("");
+
   useEffect(() => {
     const formatted = JSON.stringify(schema, null, 2);
     setJsonString(formatted);
     setEditableJson(formatted);
   }, [schema]);
-  
+
   const copyToClipboard = () => {
     navigator.clipboard.writeText(jsonString);
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
-    toast.success('JSON schema copied to clipboard');
+    toast.success("JSON schema copied to clipboard");
   };
-  
+
   const handleEditToggle = () => {
     if (isEditing) {
       try {
@@ -41,15 +42,15 @@ const JsonSchemaVisualizer: React.FC<JsonSchemaVisualizerProps> = ({
           onChange(parsedJson);
         }
         setJsonString(JSON.stringify(parsedJson, null, 2));
-        toast.success('JSON schema updated');
+        toast.success("JSON schema updated");
       } catch (error) {
-        toast.error('Invalid JSON format');
+        toast.error("Invalid JSON format");
         return;
       }
     }
     setIsEditing(!isEditing);
   };
-  
+
   return (
     <div className={cn("relative rounded-lg overflow-hidden", className)}>
       <div className="flex items-center justify-between bg-secondary/80 backdrop-blur-sm px-4 py-2 border-b">
@@ -59,6 +60,7 @@ const JsonSchemaVisualizer: React.FC<JsonSchemaVisualizerProps> = ({
         </div>
         <div className="flex items-center gap-2">
           <button
+            type="button"
             onClick={handleEditToggle}
             className="p-1.5 rounded-md hover:bg-secondary-foreground/10 transition-colors text-muted-foreground hover:text-foreground"
             aria-label={isEditing ? "Save changes" : "Edit JSON"}
@@ -66,6 +68,7 @@ const JsonSchemaVisualizer: React.FC<JsonSchemaVisualizerProps> = ({
             {isEditing ? "Save" : "Edit"}
           </button>
           <button
+            type="button"
             onClick={copyToClipboard}
             className="p-1.5 rounded-md hover:bg-secondary-foreground/10 transition-colors text-muted-foreground hover:text-foreground"
             aria-label="Copy to clipboard"

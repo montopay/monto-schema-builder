@@ -1,14 +1,29 @@
-
-import React from 'react';
-import AddFieldButton from './AddFieldButton';
-import SchemaFieldList from './SchemaFieldList';
-import { Field } from '@/hooks/useSchemaConverter';
+import type React from "react";
+import AddFieldButton from "./AddFieldButton";
+import SchemaFieldList from "./SchemaFieldList";
+import type { Field } from "@/hooks/useSchemaConverter";
 
 interface SchemaVisualEditorProps {
   fields: Record<string, Field>;
   rootFields: string[];
-  onAddField: (newField: { name: string; type: string; description: string; required: boolean }, parentId?: string) => void;
-  onEditField: (id: string, updatedField: { name: string; type: string; description: string; required: boolean }) => void;
+  onAddField: (
+    newField: {
+      name: string;
+      type: string;
+      description: string;
+      required: boolean;
+    },
+    parentId?: string,
+  ) => void;
+  onEditField: (
+    id: string,
+    updatedField: {
+      name: string;
+      type: string;
+      description: string;
+      required: boolean;
+    },
+  ) => void;
   onDeleteField: (id: string) => void;
 }
 
@@ -24,14 +39,14 @@ const SchemaVisualEditor: React.FC<SchemaVisualEditorProps> = ({
       <div className="mb-6">
         <AddFieldButton onAddField={(field) => onAddField(field)} />
       </div>
-      
+
       {rootFields.length === 0 ? (
         <div className="text-center py-10 text-muted-foreground">
           <p className="mb-3">No fields defined yet</p>
           <p className="text-sm">Add your first field to get started</p>
         </div>
       ) : (
-        <SchemaFieldList 
+        <SchemaFieldList
           fieldIds={rootFields}
           fields={fields}
           onAddField={onAddField}

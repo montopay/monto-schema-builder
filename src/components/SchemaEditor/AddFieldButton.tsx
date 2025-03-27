@@ -1,37 +1,51 @@
-
-import React, { useState } from 'react';
-import { CirclePlus } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import SchemaTypeSelector from './SchemaTypeSelector';
+import type React from "react";
+import { useState } from "react";
+import { CirclePlus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import SchemaTypeSelector from "./SchemaTypeSelector";
 
 interface AddFieldButtonProps {
-  onAddField: (field: { name: string; type: string; description: string; required: boolean }) => void;
-  variant?: 'primary' | 'secondary';
+  onAddField: (field: {
+    name: string;
+    type: string;
+    description: string;
+    required: boolean;
+  }) => void;
+  variant?: "primary" | "secondary";
 }
 
-const AddFieldButton: React.FC<AddFieldButtonProps> = ({ onAddField, variant = 'primary' }) => {
+const AddFieldButton: React.FC<AddFieldButtonProps> = ({
+  onAddField,
+  variant = "primary",
+}) => {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [fieldName, setFieldName] = useState('');
-  const [fieldType, setFieldType] = useState('string');
-  const [fieldDesc, setFieldDesc] = useState('');
+  const [fieldName, setFieldName] = useState("");
+  const [fieldType, setFieldType] = useState("string");
+  const [fieldDesc, setFieldDesc] = useState("");
   const [fieldRequired, setFieldRequired] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!fieldName.trim()) return;
-    
+
     onAddField({
       name: fieldName,
       type: fieldType,
       description: fieldDesc,
       required: fieldRequired,
     });
-    
-    setFieldName('');
-    setFieldType('string');
-    setFieldDesc('');
+
+    setFieldName("");
+    setFieldType("string");
+    setFieldDesc("");
     setFieldRequired(false);
     setDialogOpen(false);
   };
@@ -40,20 +54,23 @@ const AddFieldButton: React.FC<AddFieldButtonProps> = ({ onAddField, variant = '
     <>
       <Button
         onClick={() => setDialogOpen(true)}
-        variant={variant === 'primary' ? 'default' : 'outline'}
+        variant={variant === "primary" ? "default" : "outline"}
         size="sm"
         className="flex items-center gap-1.5 group"
       >
-        <CirclePlus size={16} className="group-hover:scale-110 transition-transform" />
+        <CirclePlus
+          size={16}
+          className="group-hover:scale-110 transition-transform"
+        />
         <span>Add Field</span>
       </Button>
-      
+
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-[425px] animate-in">
           <DialogHeader>
             <DialogTitle>Add New Field</DialogTitle>
           </DialogHeader>
-          
+
           <form onSubmit={handleSubmit} className="mt-4 space-y-4">
             <div className="space-y-2">
               <label htmlFor="fieldName" className="text-sm font-medium">
@@ -67,12 +84,14 @@ const AddFieldButton: React.FC<AddFieldButtonProps> = ({ onAddField, variant = '
                 required
               />
             </div>
-            
+
             <div className="space-y-2">
-              <label className="text-sm font-medium">Field Type</label>
-              <SchemaTypeSelector value={fieldType} onChange={setFieldType} />
+              <label htmlFor="fieldType" className="text-sm font-medium">
+                Field Type
+              </label>
+              <SchemaTypeSelector id="fieldType" value={fieldType} onChange={setFieldType} />
             </div>
-            
+
             <div className="space-y-2">
               <label htmlFor="fieldDesc" className="text-sm font-medium">
                 Description (Optional)
@@ -84,7 +103,7 @@ const AddFieldButton: React.FC<AddFieldButtonProps> = ({ onAddField, variant = '
                 placeholder="What this field represents"
               />
             </div>
-            
+
             <div className="flex items-center gap-2">
               <input
                 type="checkbox"
@@ -97,9 +116,13 @@ const AddFieldButton: React.FC<AddFieldButtonProps> = ({ onAddField, variant = '
                 Is this field required?
               </label>
             </div>
-            
+
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setDialogOpen(false)}
+              >
                 Cancel
               </Button>
               <Button type="submit">Add Field</Button>

@@ -1,14 +1,16 @@
-import React, { useEffect } from 'react';
-import { cn } from '@/lib/utils';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import JsonSchemaVisualizer from './JsonSchemaVisualizer';
-import SchemaVisualEditor from './SchemaVisualEditor';
-import { useSchemaConverter } from '@/hooks/useSchemaConverter';
-import { useSchemaFields } from '@/hooks/useSchemaFields';
+import type React from "react";
+import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import JsonSchemaVisualizer from "./JsonSchemaVisualizer";
+import SchemaVisualEditor from "./SchemaVisualEditor";
+import { useSchemaConverter } from "@/hooks/useSchemaConverter";
+import { useSchemaFields } from "@/hooks/useSchemaFields";
+import type { JSONSchemaType } from "./SchemaExample";
 
 interface JsonSchemaEditorProps {
-  initialSchema?: any;
-  onChange?: (schema: any) => void;
+  initialSchema?: JSONSchemaType;
+  onChange?: (schema: JSONSchemaType) => void;
   className?: string;
 }
 
@@ -17,22 +19,22 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
   onChange,
   className,
 }) => {
-  const [activeTab, setActiveTab] = React.useState('visual');
-  
-  const { 
-    fields, setFields,
-    rootFields, setRootFields,
-    schema, setSchema,
-    convertSchemaToFields,
-    convertFieldsToSchema
-  } = useSchemaConverter(initialSchema);
-  
+  const [activeTab, setActiveTab] = useState("visual");
+
   const {
-    handleAddField,
-    handleEditField,
-    handleDeleteField
-  } = useSchemaFields(fields, rootFields);
-  
+    fields,
+    setFields,
+    rootFields,
+    setRootFields,
+    schema,
+    setSchema,
+    convertSchemaToFields,
+    convertFieldsToSchema,
+  } = useSchemaConverter(initialSchema);
+
+  const { handleAddField, handleEditField, handleDeleteField } =
+    useSchemaFields(fields, rootFields);
+
   // Keep fields and schema in sync
   useEffect(() => {
     if (onChange && Object.keys(fields).length > 0) {
@@ -40,17 +42,18 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
       setSchema(generatedSchema);
       onChange(generatedSchema);
     }
-  }, [fields, rootFields, convertFieldsToSchema, onChange]);
-  
+  }, [fields, convertFieldsToSchema, onChange, setSchema]);
+
   // Handle direct schema edits in the JSON view
-  const handleSchemaDirectEdit = (editedSchema: any) => {
+  const handleSchemaDirectEdit = (editedSchema: JSONSchemaType) => {
     setSchema(editedSchema);
-    
+
     // Convert the edited schema back to fields
-    const { fields: convertedFields, rootFields: convertedRootFields } = convertSchemaToFields(editedSchema);
+    const { fields: convertedFields, rootFields: convertedRootFields } =
+      convertSchemaToFields(editedSchema);
     setFields(convertedFields);
     setRootFields(convertedRootFields);
-    
+
     if (onChange) {
       onChange(editedSchema);
     }
@@ -66,9 +69,9 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
             <TabsTrigger value="json">JSON</TabsTrigger>
           </TabsList>
         </div>
-        
+
         <TabsContent value="visual" className="focus:outline-none">
-          <SchemaVisualEditor 
+          <SchemaVisualEditor
             fields={fields}
             rootFields={rootFields}
             onAddField={handleAddField}
@@ -76,11 +79,11 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
             onDeleteField={handleDeleteField}
           />
         </TabsContent>
-        
+
         <TabsContent value="json" className="focus:outline-none">
-          <JsonSchemaVisualizer 
-            schema={schema} 
-            onChange={handleSchemaDirectEdit} 
+          <JsonSchemaVisualizer
+            schema={schema}
+            onChange={handleSchemaDirectEdit}
           />
         </TabsContent>
       </Tabs>

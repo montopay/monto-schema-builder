@@ -1,10 +1,9 @@
-
-import React, { useState } from 'react';
-import { Edit, X, ChevronDown, ChevronUp } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
-import { cn } from '@/lib/utils';
+import React, { useState } from "react";
+import { Edit, X, ChevronDown, ChevronUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { cn } from "@/lib/utils";
 
 interface SchemaFieldProps {
   name: string;
@@ -13,7 +12,12 @@ interface SchemaFieldProps {
   required?: boolean;
   children?: React.ReactNode;
   onDelete: () => void;
-  onEdit: (field: { name: string; type: string; description: string; required: boolean }) => void;
+  onEdit: (field: {
+    name: string;
+    type: string;
+    description: string;
+    required: boolean;
+  }) => void;
   isNested?: boolean;
   depth?: number;
 }
@@ -21,7 +25,7 @@ interface SchemaFieldProps {
 const SchemaField: React.FC<SchemaFieldProps> = ({
   name,
   type,
-  description = '',
+  description = "",
   required = false,
   children,
   onDelete,
@@ -36,9 +40,10 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
   const [fieldDesc, setFieldDesc] = useState(description);
   const [fieldRequired, setFieldRequired] = useState(required);
 
-  const isPrimitive = type === 'string' || type === 'number' || type === 'boolean';
+  const isPrimitive =
+    type === "string" || type === "number" || type === "boolean";
   const hasChildren = !!children && !isPrimitive;
-  
+
   const handleSave = () => {
     onEdit({
       name: fieldName,
@@ -51,27 +56,27 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'string':
-        return 'text-blue-500 bg-blue-50';
-      case 'number':
-        return 'text-purple-500 bg-purple-50';
-      case 'boolean':
-        return 'text-green-500 bg-green-50';
-      case 'object':
-        return 'text-orange-500 bg-orange-50';
-      case 'array':
-        return 'text-pink-500 bg-pink-50';
+      case "string":
+        return "text-blue-500 bg-blue-50";
+      case "number":
+        return "text-purple-500 bg-purple-50";
+      case "boolean":
+        return "text-green-500 bg-green-50";
+      case "object":
+        return "text-orange-500 bg-orange-50";
+      case "array":
+        return "text-pink-500 bg-pink-50";
       default:
-        return 'text-gray-500 bg-gray-50';
+        return "text-gray-500 bg-gray-50";
     }
   };
 
   return (
-    <div 
+    <div
       className={cn(
         "mb-2 animate-in rounded-lg border border-border transition-all duration-200",
         depth > 0 && "ml-4 border-l-2",
-        isNested && "mt-2"
+        isNested && "mt-2",
       )}
     >
       <div className="group relative json-field-row justify-between">
@@ -85,7 +90,7 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
               {expanded ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
             </button>
           )}
-          
+
           {isEditing ? (
             <div className="flex flex-col gap-3 py-3 w-full">
               <div className="flex items-center gap-3">
@@ -107,14 +112,14 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
                   <option value="array">List</option>
                 </select>
               </div>
-              
+
               <Input
                 value={fieldDesc}
                 onChange={(e) => setFieldDesc(e.target.value)}
                 placeholder="Description (optional)"
                 className="h-8 text-sm"
               />
-              
+
               <div className="flex items-center gap-3">
                 <label className="flex items-center gap-2 text-sm">
                   <input
@@ -125,7 +130,7 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
                   />
                   Required
                 </label>
-                
+
                 <div className="flex gap-2 ml-auto">
                   <Button
                     variant="outline"
@@ -135,11 +140,7 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
                   >
                     Cancel
                   </Button>
-                  <Button
-                    size="sm"
-                    onClick={handleSave}
-                    className="h-8"
-                  >
+                  <Button size="sm" onClick={handleSave} className="h-8">
                     Save
                   </Button>
                 </div>
@@ -155,12 +156,23 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
                     Required
                   </span>
                 )}
-                <span className={cn("text-xs px-1.5 py-0.5 rounded-md font-medium", getTypeColor(type))}>
-                  {type === 'string' ? 'Text' : 
-                  type === 'number' ? 'Number' : 
-                  type === 'boolean' ? 'Yes/No' : 
-                  type === 'object' ? 'Group' : 
-                  type === 'array' ? 'List' : type}
+                <span
+                  className={cn(
+                    "text-xs px-1.5 py-0.5 rounded-md font-medium",
+                    getTypeColor(type),
+                  )}
+                >
+                  {type === "string"
+                    ? "Text"
+                    : type === "number"
+                      ? "Number"
+                      : type === "boolean"
+                        ? "Yes/No"
+                        : type === "object"
+                          ? "Group"
+                          : type === "array"
+                            ? "List"
+                            : type}
                 </span>
                 {description && (
                   <span className="text-xs text-muted-foreground italic max-w-[300px] truncate">
@@ -171,7 +183,7 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
             </>
           )}
         </div>
-        
+
         {!isEditing && (
           <div className="flex items-center gap-1 text-muted-foreground">
             <button
@@ -191,11 +203,9 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
           </div>
         )}
       </div>
-      
+
       {expanded && hasChildren && (
-        <div className="pt-1 pb-2 px-2 animate-in">
-          {children}
-        </div>
+        <div className="pt-1 pb-2 px-2 animate-in">{children}</div>
       )}
     </div>
   );
