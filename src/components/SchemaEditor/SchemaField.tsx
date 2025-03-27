@@ -344,14 +344,12 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
   };
 
   return (
-    <div
-      className={cn(
-        "mb-2 animate-in rounded-lg border border-border transition-all duration-200 group",
-        depth > 0 && "ml-4 border-l-2",
-        isNested && "mt-2",
-      )}
-    >
-      <div className="group relative json-field-row justify-between">
+    <div className={cn(
+      "mb-2 animate-in rounded-lg border border-border transition-all duration-200",
+      depth > 0 && "ml-4 border-l-2",
+      isNested && "mt-2",
+    )}>
+      <div className="relative json-field-row justify-between group">
         <div className="flex items-center gap-2 flex-grow">
           {isExpandable && (
             <ExpandButton
