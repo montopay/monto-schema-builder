@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as RechartsPrimitive from "recharts";
 import { createGlobalStyle } from "styled-components";
-import styles from './chart.module.css';
+import styles from "./chart.module.css";
 
 import { cn } from "@/lib/utils";
 
@@ -76,28 +76,24 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
     return null;
   }
 
-  return (
-    <style
-      dangerouslySetInnerHTML={{
-        __html: Object.entries(THEMES)
-          .map(
-            ([theme, prefix]) => `
-${prefix} [data-chart=${id}] {
-${colorConfig
-  .map(([key, itemConfig]) => {
-    const color =
-      itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
-      itemConfig.color;
-    return color ? `  --color-${key}: ${color};` : null;
-  })
-  .join("\n")}
-}
-`,
-          )
-          .join("\n"),
-      }}
-    />
-  );
+  const StyledChartStyles = createGlobalStyle`
+    ${Object.entries(THEMES).map(
+      ([theme, prefix]) => `
+      ${prefix} [data-chart=${id}] {
+        ${colorConfig
+          .map(([key, itemConfig]) => {
+            const color =
+              itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
+              itemConfig.color;
+            return color ? `--color-${key}: ${color};` : "";
+          })
+          .join("\n")}
+      }
+    `,
+    )}
+  `;
+
+  return <StyledChartStyles />;
 };
 
 const ChartStyles = createGlobalStyle`
@@ -374,11 +370,7 @@ const Chart = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("recharts-wrapper", className)}
-    {...props}
-  />
+  <div ref={ref} className={cn("recharts-wrapper", className)} {...props} />
 ));
 
 Chart.displayName = "Chart";
