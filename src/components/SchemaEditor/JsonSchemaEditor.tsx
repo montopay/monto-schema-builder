@@ -1,10 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useSchemaConverter } from "@/hooks/useSchemaConverter";
-import { useSchemaFields } from "@/hooks/useSchemaFields";
+import { useSchemaEditor } from "@/hooks/useSchemaEditor";
 import { cn } from "@/lib/utils";
-import type { SchemaConverterState, SchemaFieldsState } from "@/types/schema";
 import type React from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
 import JsonSchemaVisualizer from "./JsonSchemaVisualizer";
 import type { JSONSchemaType } from "./SchemaExample";
 import SchemaVisualEditor from "./SchemaVisualEditor";
@@ -20,56 +18,23 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
   onChange,
   className,
 }) => {
-  const [activeTab, setActiveTab] = useState("visual");
-  const [lastGeneratedSchema, setLastGeneratedSchema] =
-    useState<JSONSchemaType>(initialSchema);
-
   const {
     fields,
     rootFields,
     schema,
-    setSchema,
-    convertFieldsToSchema,
-  }: SchemaConverterState = useSchemaConverter(initialSchema);
-
-  const {
     handleAddField,
     handleEditField,
     handleDeleteField,
-    setFields: setSchemaFields,
-    setRootFields: setSchemaRootFields,
-  }: SchemaFieldsState = useSchemaFields(fields, rootFields);
+    handleSchemaEdit,
+  } = useSchemaEditor(initialSchema);
 
   useEffect(() => {
-    setSchemaFields(fields);
-    setSchemaRootFields(rootFields);
-  }, [fields, rootFields, setSchemaFields, setSchemaRootFields]);
-
-  const updateSchema = useCallback(
-    (newSchema: JSONSchemaType) => {
-      if (JSON.stringify(newSchema) !== JSON.stringify(lastGeneratedSchema)) {
-        setLastGeneratedSchema(newSchema);
-        setSchema(newSchema);
-        onChange?.(newSchema);
-      }
-    },
-    [lastGeneratedSchema, setSchema, onChange],
-  );
-
-  useEffect(() => {
-    if (Object.keys(fields).length > 0) {
-      const generatedSchema = convertFieldsToSchema();
-      updateSchema(generatedSchema);
-    }
-  }, [fields, convertFieldsToSchema, updateSchema]);
-
-  const handleSchemaDirectEdit = (editedSchema: JSONSchemaType) => {
-    updateSchema(editedSchema);
-  };
+    onChange?.(schema);
+  }, [schema, onChange]);
 
   return (
     <div className={cn("json-editor-container", className)}>
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <Tabs defaultValue="visual" className="w-full">
         <div className="flex items-center justify-between px-4 py-3 border-b">
           <h3 className="font-medium">JSON Schema Editor</h3>
           <TabsList className="grid grid-cols-2 w-[200px]">
@@ -91,7 +56,7 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
         <TabsContent value="json" className="focus:outline-none">
           <JsonSchemaVisualizer
             schema={schema}
-            onChange={handleSchemaDirectEdit}
+            onChange={handleSchemaEdit}
           />
         </TabsContent>
       </Tabs>
