@@ -31,6 +31,7 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
   const [fields, setFields] = useState<Record<string, Field>>({});
   const [rootFields, setRootFields] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState('visual');
+  const [schema, setSchema] = useState(initialSchema);
 
   // Helper to convert schema to our internal format
   const convertSchemaToFields = (schema: any) => {
@@ -149,14 +150,29 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
     const { fields: convertedFields, rootFields: convertedRootFields } = convertSchemaToFields(initialSchema);
     setFields(convertedFields);
     setRootFields(convertedRootFields);
+    setSchema(initialSchema);
   }, [initialSchema]);
   
   useEffect(() => {
     if (onChange && Object.keys(fields).length > 0) {
-      const schema = convertFieldsToSchema();
-      onChange(schema);
+      const generatedSchema = convertFieldsToSchema();
+      setSchema(generatedSchema);
+      onChange(generatedSchema);
     }
   }, [fields, rootFields]);
+  
+  const handleSchemaDirectEdit = (editedSchema: any) => {
+    setSchema(editedSchema);
+    
+    // Convert the edited schema back to fields
+    const { fields: convertedFields, rootFields: convertedRootFields } = convertSchemaToFields(editedSchema);
+    setFields(convertedFields);
+    setRootFields(convertedRootFields);
+    
+    if (onChange) {
+      onChange(editedSchema);
+    }
+  };
   
   const handleAddField = (newField: { name: string; type: string; description: string; required: boolean }, parentId?: string) => {
     const id = `${parentId ? `${parentId}_` : ''}${newField.name}`;
@@ -272,7 +288,8 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
   const renderFieldsRecursively = (fieldIds: string[], depth = 0) => {
     return fieldIds.map(id => {
       const field = fields[id];
-      const hasChildren = field.children && field.children.length > 0;
+      const isPrimitive = field.type === 'string' || field.type === 'number' || field.type === 'boolean';
+      const hasChildren = !isPrimitive && field.children && field.children.length > 0;
       
       return (
         <SchemaField
@@ -330,7 +347,10 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
         </TabsContent>
         
         <TabsContent value="json" className="focus:outline-none">
-          <JsonSchemaVisualizer schema={convertFieldsToSchema()} />
+          <JsonSchemaVisualizer 
+            schema={schema} 
+            onChange={handleSchemaDirectEdit} 
+          />
         </TabsContent>
       </Tabs>
     </div>

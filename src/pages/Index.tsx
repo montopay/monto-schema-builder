@@ -24,7 +24,8 @@ const Index = () => {
     setTimeout(() => {
       setSchema({
         type: 'object',
-        properties: {}
+        properties: {},
+        required: []
       });
       setIsReset(false);
       toast.success('Cleared all fields');

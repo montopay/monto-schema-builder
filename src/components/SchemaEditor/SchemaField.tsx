@@ -1,8 +1,9 @@
 
 import React, { useState } from 'react';
-import { CircleMinus, CirclePlus, ChevronDown, ChevronUp, Edit, X } from 'lucide-react';
+import { Edit, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
 
 interface SchemaFieldProps {
@@ -35,7 +36,8 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
   const [fieldDesc, setFieldDesc] = useState(description);
   const [fieldRequired, setFieldRequired] = useState(required);
 
-  const hasChildren = !!children;
+  const isPrimitive = type === 'string' || type === 'number' || type === 'boolean';
+  const hasChildren = !!children && !isPrimitive;
   
   const handleSave = () => {
     onEdit({
@@ -145,24 +147,27 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
             </div>
           ) : (
             <>
-              <span className="json-field-label font-medium">{name}</span>
-              {required && (
-                <span className="text-xs px-1.5 py-0.5 rounded-md bg-red-50 text-red-500 font-medium">
-                  Required
+              {/* Field display for all types */}
+              <div className="flex items-center gap-2 flex-grow">
+                <span className="json-field-label font-medium">{name}</span>
+                {required && (
+                  <span className="text-xs px-1.5 py-0.5 rounded-md bg-red-50 text-red-500 font-medium">
+                    Required
+                  </span>
+                )}
+                <span className={cn("text-xs px-1.5 py-0.5 rounded-md font-medium", getTypeColor(type))}>
+                  {type === 'string' ? 'Text' : 
+                  type === 'number' ? 'Number' : 
+                  type === 'boolean' ? 'Yes/No' : 
+                  type === 'object' ? 'Group' : 
+                  type === 'array' ? 'List' : type}
                 </span>
-              )}
-              <span className={cn("text-xs px-1.5 py-0.5 rounded-md font-medium", getTypeColor(type))}>
-                {type === 'string' ? 'Text' : 
-                 type === 'number' ? 'Number' : 
-                 type === 'boolean' ? 'Yes/No' : 
-                 type === 'object' ? 'Group' : 
-                 type === 'array' ? 'List' : type}
-              </span>
-              {description && (
-                <span className="text-xs text-muted-foreground italic max-w-[300px] truncate">
-                  {description}
-                </span>
-              )}
+                {description && (
+                  <span className="text-xs text-muted-foreground italic max-w-[300px] truncate">
+                    {description}
+                  </span>
+                )}
+              </div>
             </>
           )}
         </div>
@@ -171,14 +176,14 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
           <div className="flex items-center gap-1 text-muted-foreground">
             <button
               onClick={() => setIsEditing(true)}
-              className="hover-action p-1 rounded-md hover:bg-secondary hover:text-foreground transition-colors"
+              className="p-1 rounded-md hover:bg-secondary hover:text-foreground transition-colors"
               aria-label="Edit field"
             >
               <Edit size={16} />
             </button>
             <button
               onClick={onDelete}
-              className="hover-action p-1 rounded-md hover:bg-secondary hover:text-destructive transition-colors"
+              className="p-1 rounded-md hover:bg-secondary hover:text-destructive transition-colors"
               aria-label="Delete field"
             >
               <X size={16} />
