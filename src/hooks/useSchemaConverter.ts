@@ -1,4 +1,11 @@
-import type { JSONSchemaType, ObjectSchema, StringSchema, NumberSchema, BooleanSchema, ArraySchema } from "@/components/SchemaEditor/SchemaExample";
+import type {
+  ArraySchema,
+  BooleanSchema,
+  JSONSchemaType,
+  NumberSchema,
+  ObjectSchema,
+  StringSchema,
+} from "@/components/SchemaEditor/SchemaExample";
 import type { Field, SchemaConverterState } from "@/types/schema";
 import { useEffect, useState } from "react";
 
@@ -44,7 +51,11 @@ export const useSchemaConverter = (
             rootFieldIds.push(id);
           }
 
-          if (config.type === "object" && "properties" in config && config.properties) {
+          if (
+            config.type === "object" &&
+            "properties" in config &&
+            config.properties
+          ) {
             processObject(config.properties, id);
           } else if (
             config.type === "array" &&
