@@ -1,6 +1,6 @@
 import type * as React from "react";
 import type { UseEmblaCarouselType } from "embla-carousel-react";
-import useEmblaCarousel from "embla-carousel-react";
+import type useEmblaCarousel from "embla-carousel-react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker } from "react-day-picker";

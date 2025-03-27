@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import JsonSchemaEditor from "@/components/SchemaEditor/JsonSchemaEditor";
 import {
   exampleSchema,
-  JSONSchemaType,
+  type JSONSchemaType,
 } from "@/components/SchemaEditor/SchemaExample";
 import { Button } from "@/components/ui/button";
 import { CirclePlus, FileJson, RefreshCw } from "lucide-react";
