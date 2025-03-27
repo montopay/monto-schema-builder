@@ -114,7 +114,18 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
                 />
                 <select
                   value={fieldType}
-                  onChange={(e) => setFieldType(e.target.value as SchemaType)}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                    const value = e.target.value;
+                    if (
+                      value === "string" ||
+                      value === "number" ||
+                      value === "boolean" ||
+                      value === "object" ||
+                      value === "array"
+                    ) {
+                      setFieldType(value);
+                    }
+                  }}
                   className="h-8 rounded-md border border-input bg-background px-3 py-1 text-sm"
                 >
                   <option value="string">Text</option>

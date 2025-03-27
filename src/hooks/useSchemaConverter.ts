@@ -97,33 +97,33 @@ export const useSchemaConverter = (
             fieldSchema = {
               type: "string",
               description: field.description || undefined,
-            } as StringSchema;
+            };
             break;
           case "number":
             fieldSchema = {
               type: "number",
               description: field.description || undefined,
-            } as NumberSchema;
+            };
             break;
           case "boolean":
             fieldSchema = {
               type: "boolean",
               description: field.description || undefined,
-            } as BooleanSchema;
+            };
             break;
           case "array":
             fieldSchema = {
               type: "array",
               description: field.description || undefined,
               items: { type: "object", properties: {} },
-            } as ArraySchema;
+            };
             break;
           case "object":
             fieldSchema = {
               type: "object",
               description: field.description || undefined,
               properties: {},
-            } as ObjectSchema;
+            };
             break;
         }
 
