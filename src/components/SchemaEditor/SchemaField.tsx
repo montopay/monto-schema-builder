@@ -306,7 +306,6 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
     setIsEditing(false);
   };
 
-  console.log(name, type, description, required, children);
   return (
     <div
       className={cn(
