@@ -40,6 +40,10 @@ export const useSchemaFields = (initialFields = {}, initialRootFields = []) => {
     }));
 
     if (parentId) {
+      if (!fields[parentId]) {
+        toast.error(`Parent field "${parentId}" does not exist`);
+        return;
+      }
       setFields((prev) => ({
         ...prev,
         [parentId]: {

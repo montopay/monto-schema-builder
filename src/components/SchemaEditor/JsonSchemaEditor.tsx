@@ -26,8 +26,13 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
   const { fields, rootFields, schema, setSchema, convertFieldsToSchema } =
     useSchemaConverter(initialSchema);
 
-  const { handleAddField, handleEditField, handleDeleteField } =
+  const { handleAddField, handleEditField, handleDeleteField, setFields: setSchemaFields, setRootFields: setSchemaRootFields } =
     useSchemaFields(fields, rootFields);
+
+  useEffect(() => {
+    setSchemaFields(fields);
+    setSchemaRootFields(rootFields);
+  }, [fields, rootFields, setSchemaFields, setSchemaRootFields]);
 
   const updateSchema = useCallback(
     (newSchema: JSONSchemaType) => {
