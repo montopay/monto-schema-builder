@@ -126,12 +126,7 @@ const EditForm: React.FC<EditFormProps> = ({
       </label>
 
       <div className="flex gap-2 ml-auto">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onCancel}
-          className="h-8"
-        >
+        <Button variant="outline" size="sm" onClick={onCancel} className="h-8">
           Cancel
         </Button>
         <Button size="sm" onClick={onSave} className="h-8">
@@ -254,7 +249,7 @@ const FieldContent: React.FC<FieldContentProps> = ({
   type,
   required,
   description,
-}) => (
+}) =>
   isEditing ? (
     <EditForm
       fieldName={fieldName}
@@ -275,8 +270,7 @@ const FieldContent: React.FC<FieldContentProps> = ({
       required={required}
       description={description}
     />
-  )
-);
+  );
 
 const SchemaField: React.FC<SchemaFieldProps> = ({
   name,
@@ -343,10 +337,7 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
         </div>
 
         {!isEditing && (
-          <FieldActions
-            onEdit={() => setIsEditing(true)}
-            onDelete={onDelete}
-          />
+          <FieldActions onEdit={() => setIsEditing(true)} onDelete={onDelete} />
         )}
       </div>
 

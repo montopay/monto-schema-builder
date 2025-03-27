@@ -44,8 +44,18 @@ function processSchemaObject(
       result[parentId].children.push(id);
     }
 
-    if (config.type === "object" && "properties" in config && config.properties) {
-      processSchemaObject(config.properties, id, required, result, rootFieldIds);
+    if (
+      config.type === "object" &&
+      "properties" in config &&
+      config.properties
+    ) {
+      processSchemaObject(
+        config.properties,
+        id,
+        required,
+        result,
+        rootFieldIds,
+      );
     } else if (
       config.type === "array" &&
       "items" in config &&
@@ -55,7 +65,13 @@ function processSchemaObject(
       "properties" in config.items &&
       config.items.properties
     ) {
-      processSchemaObject(config.items.properties, id, required, result, rootFieldIds);
+      processSchemaObject(
+        config.items.properties,
+        id,
+        required,
+        result,
+        rootFieldIds,
+      );
     }
   }
 }
@@ -135,7 +151,9 @@ function addField(
   );
 
   if (isDuplicate) {
-    toast.error(`A field named "${newField.name}" already exists at this level`);
+    toast.error(
+      `A field named "${newField.name}" already exists at this level`,
+    );
     return null;
   }
 
@@ -162,7 +180,7 @@ function addField(
 
   const newRootFields = parentId ? prev.rootFields : [...prev.rootFields, id];
   toast.success(`Added field "${newField.name}"`);
-  
+
   return { fields: newFields, rootFields: newRootFields };
 }
 
@@ -207,7 +225,10 @@ function editField(
   return { ...prev, fields: newFields };
 }
 
-function getAllChildrenIds(fields: Record<string, Field>, fieldId: string): string[] {
+function getAllChildrenIds(
+  fields: Record<string, Field>,
+  fieldId: string,
+): string[] {
   const childIds = fields[fieldId].children;
   const allDescendants = [...childIds];
 
@@ -231,7 +252,9 @@ function deleteField(prev: FieldState, id: string): FieldState | null {
   if (parentId) {
     newFields[parentId] = {
       ...newFields[parentId],
-      children: newFields[parentId].children.filter((childId) => childId !== id),
+      children: newFields[parentId].children.filter(
+        (childId) => childId !== id,
+      ),
     };
   }
 
@@ -252,12 +275,15 @@ function deleteField(prev: FieldState, id: string): FieldState | null {
 // Main hook
 export function useSchemaEditor(initialSchema: JSONSchemaType) {
   const [fieldState, setFieldState] = useState<FieldState>(() =>
-    convertSchemaToFields(initialSchema)
+    convertSchemaToFields(initialSchema),
   );
 
-  const handleAddField = useCallback((newField: NewField, parentId?: string) => {
-    setFieldState((prev) => addField(prev, newField, parentId) || prev);
-  }, []);
+  const handleAddField = useCallback(
+    (newField: NewField, parentId?: string) => {
+      setFieldState((prev) => addField(prev, newField, parentId) || prev);
+    },
+    [],
+  );
 
   const handleEditField = useCallback((id: string, updatedField: NewField) => {
     setFieldState((prev) => editField(prev, id, updatedField) || prev);
@@ -282,4 +308,4 @@ export function useSchemaEditor(initialSchema: JSONSchemaType) {
     handleDeleteField,
     handleSchemaEdit,
   };
-} 
+}
