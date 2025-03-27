@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import JsonSchemaEditor from '@/components/SchemaEditor/JsonSchemaEditor';
 import { exampleSchema } from '@/components/SchemaEditor/SchemaExample';
@@ -22,46 +21,14 @@ const Index = () => {
   const handleClear = () => {
     setIsReset(true);
     setTimeout(() => {
-      // Create an empty schema that matches the expected structure exactly
+      // Create a truly empty schema object
       setSchema({
         type: 'object',
-        properties: {
-          person: {
-            type: 'object',
-            description: '',
-            properties: {
-              firstName: { type: 'string', description: '' },
-              lastName: { type: 'string', description: '' },
-              age: { type: 'number', description: '' },
-              isEmployed: { type: 'boolean', description: '' }
-            },
-            required: []
-          },
-          address: {
-            type: 'object',
-            description: '',
-            properties: {
-              street: { type: 'string', description: '' },
-              city: { type: 'string', description: '' },
-              zipCode: { type: 'string', description: '' }
-            }
-          },
-          hobbies: {
-            type: 'array',
-            description: '',
-            items: {
-              type: 'object',
-              properties: {
-                name: { type: 'string', description: '' },
-                yearsExperience: { type: 'number', description: '' }
-              }
-            }
-          }
-        },
+        properties: {},
         required: []
       });
       setIsReset(false);
-      toast.success('Cleared all fields');
+      toast.success('Cleared schema');
     }, 300);
   };
 
