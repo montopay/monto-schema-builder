@@ -1,5 +1,5 @@
 import type React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import JsonSchemaVisualizer from "./JsonSchemaVisualizer";
@@ -15,48 +15,40 @@ interface JsonSchemaEditorProps {
 }
 
 const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
-  initialSchema = {},
+  initialSchema = { type: "object" },
   onChange,
   className,
 }) => {
   const [activeTab, setActiveTab] = useState("visual");
+  const [lastGeneratedSchema, setLastGeneratedSchema] =
+    useState<JSONSchemaType>(initialSchema);
 
-  const {
-    fields,
-    setFields,
-    rootFields,
-    setRootFields,
-    schema,
-    setSchema,
-    convertSchemaToFields,
-    convertFieldsToSchema,
-  } = useSchemaConverter(initialSchema);
+  const { fields, rootFields, schema, setSchema, convertFieldsToSchema } =
+    useSchemaConverter(initialSchema);
 
   const { handleAddField, handleEditField, handleDeleteField } =
     useSchemaFields(fields, rootFields);
 
-  // Keep fields and schema in sync
+  const updateSchema = useCallback(
+    (newSchema: JSONSchemaType) => {
+      if (JSON.stringify(newSchema) !== JSON.stringify(lastGeneratedSchema)) {
+        setLastGeneratedSchema(newSchema);
+        setSchema(newSchema);
+        onChange?.(newSchema);
+      }
+    },
+    [lastGeneratedSchema, setSchema, onChange],
+  );
+
   useEffect(() => {
-    if (onChange && Object.keys(fields).length > 0) {
+    if (Object.keys(fields).length > 0) {
       const generatedSchema = convertFieldsToSchema();
-      setSchema(generatedSchema);
-      onChange(generatedSchema);
+      updateSchema(generatedSchema);
     }
-  }, [fields, convertFieldsToSchema, onChange, setSchema]);
+  }, [fields, convertFieldsToSchema, updateSchema]);
 
-  // Handle direct schema edits in the JSON view
   const handleSchemaDirectEdit = (editedSchema: JSONSchemaType) => {
-    setSchema(editedSchema);
-
-    // Convert the edited schema back to fields
-    const { fields: convertedFields, rootFields: convertedRootFields } =
-      convertSchemaToFields(editedSchema);
-    setFields(convertedFields);
-    setRootFields(convertedRootFields);
-
-    if (onChange) {
-      onChange(editedSchema);
-    }
+    updateSchema(editedSchema);
   };
 
   return (

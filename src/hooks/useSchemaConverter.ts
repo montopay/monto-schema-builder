@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import type { JSONSchemaType } from "@/components/SchemaEditor/SchemaExample";
 
 export type Field = {
   id: string;
@@ -15,31 +16,19 @@ export type SchemaToFieldsResult = {
   rootFields: string[];
 };
 
-interface JSONSchema {
-  type?: string;
-  properties?: Record<string, JSONSchemaProperty>;
-  required?: string[];
-  items?: JSONSchemaProperty;
-}
-
-interface JSONSchemaProperty {
-  type: string;
-  description?: string;
-  properties?: Record<string, JSONSchemaProperty>;
-  items?: JSONSchemaProperty;
-}
-
 /**
  * Hook to convert between JSON Schema and internal field representation
  */
-export const useSchemaConverter = (initialSchema: JSONSchema = {}) => {
+export const useSchemaConverter = (
+  initialSchema: JSONSchemaType = { type: "object" },
+) => {
   const [fields, setFields] = useState<Record<string, Field>>({});
   const [rootFields, setRootFields] = useState<string[]>([]);
-  const [schema, setSchema] = useState(initialSchema);
+  const [schema, setSchema] = useState<JSONSchemaType>(initialSchema);
 
   useEffect(() => {
     const convertSchemaToFields = (
-      schema: JSONSchema,
+      schema: JSONSchemaType,
     ): SchemaToFieldsResult => {
       if (!schema || !schema.properties) return { fields: {}, rootFields: [] };
 
@@ -48,7 +37,7 @@ export const useSchemaConverter = (initialSchema: JSONSchema = {}) => {
       const required = schema.required || [];
 
       const processObject = (
-        props: Record<string, JSONSchemaProperty>,
+        props: Record<string, JSONSchemaType>,
         parentId: string | null = null,
       ) => {
         for (const [name, config] of Object.entries(props)) {
@@ -86,24 +75,22 @@ export const useSchemaConverter = (initialSchema: JSONSchema = {}) => {
     setRootFields(newRootFields);
   }, [schema]);
 
-  const convertFieldsToSchema = () => {
-    const result: JSONSchema = {
+  const convertFieldsToSchema = (): JSONSchemaType => {
+    const result: JSONSchemaType = {
       type: "object",
       properties: {},
       required: [],
     };
 
     const processField = (field: Field) => {
-      if (!field.parent) {
-        if (result.properties) {
-          result.properties[field.name] = {
-            type: field.type,
-            description: field.description,
-          };
+      if (!field.parent && result.properties) {
+        result.properties[field.name] = {
+          type: field.type,
+          description: field.description,
+        };
 
-          if (field.required) {
-            result.required?.push(field.name);
-          }
+        if (field.required) {
+          result.required?.push(field.name);
         }
       }
     };
