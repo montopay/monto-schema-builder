@@ -1,7 +1,17 @@
 
 import React from 'react';
 
-export const exampleSchema = {
+// Define a generic JSON Schema type that can handle any structure
+export type JSONSchemaType = {
+  type: string;
+  properties?: Record<string, any>;
+  items?: JSONSchemaType | Record<string, any>;
+  required?: string[];
+  description?: string;
+  [key: string]: any; // Allow for any additional properties
+};
+
+export const exampleSchema: JSONSchemaType = {
   type: 'object',
   properties: {
     person: {

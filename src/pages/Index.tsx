@@ -1,13 +1,13 @@
 
 import React, { useState } from 'react';
 import JsonSchemaEditor from '@/components/SchemaEditor/JsonSchemaEditor';
-import { exampleSchema } from '@/components/SchemaEditor/SchemaExample';
+import { exampleSchema, JSONSchemaType } from '@/components/SchemaEditor/SchemaExample';
 import { Button } from '@/components/ui/button';
 import { CirclePlus, FileJson, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 
 const Index = () => {
-  const [schema, setSchema] = useState(exampleSchema);
+  const [schema, setSchema] = useState<JSONSchemaType>(exampleSchema);
   const [isReset, setIsReset] = useState(false);
 
   const handleReset = () => {
@@ -22,6 +22,7 @@ const Index = () => {
   const handleClear = () => {
     setIsReset(true);
     setTimeout(() => {
+      // Create a minimal empty schema that satisfies the JSONSchemaType
       setSchema({
         type: 'object',
         properties: {},
