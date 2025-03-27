@@ -22,9 +22,37 @@ const Index = () => {
   const handleClear = () => {
     setIsReset(true);
     setTimeout(() => {
+      // Create an empty schema that matches the expected structure
       setSchema({
         type: 'object',
-        properties: {},
+        properties: {
+          person: {
+            type: 'object',
+            description: '',
+            properties: {
+              firstName: { type: 'string', description: '' },
+              lastName: { type: 'string', description: '' }
+            },
+            required: []
+          },
+          address: {
+            type: 'object',
+            description: '',
+            properties: {
+              street: { type: 'string', description: '' }
+            }
+          },
+          hobbies: {
+            type: 'array',
+            description: '',
+            items: {
+              type: 'object',
+              properties: {
+                name: { type: 'string', description: '' }
+              }
+            }
+          }
+        },
         required: []
       });
       setIsReset(false);
