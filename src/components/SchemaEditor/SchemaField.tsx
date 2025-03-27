@@ -82,6 +82,8 @@ const FieldDisplay: React.FC<FieldDisplayProps> = ({
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingDesc, setIsEditingDesc] = useState(false);
   const [isTypeOpen, setIsTypeOpen] = useState(false);
+  const [tempName, setTempName] = useState(name);
+  const [tempDesc, setTempDesc] = useState(typeof schema === "boolean" ? "" : schema.description || "");
   const typeDropdownRef = useRef<HTMLDivElement>(null);
   const type =
     typeof schema === "boolean"
@@ -89,6 +91,11 @@ const FieldDisplay: React.FC<FieldDisplayProps> = ({
       : ((schema.type || "object") as SchemaType);
   const description =
     typeof schema === "boolean" ? "" : schema.description || "";
+
+  useEffect(() => {
+    setTempName(name);
+    setTempDesc(description);
+  }, [name, description]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -104,15 +111,35 @@ const FieldDisplay: React.FC<FieldDisplayProps> = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const handleNameSubmit = () => {
+    const trimmedName = tempName.trim();
+    if (trimmedName && trimmedName !== name) {
+      onNameChange(trimmedName);
+    } else {
+      setTempName(name);
+    }
+    setIsEditingName(false);
+  };
+
+  const handleDescSubmit = () => {
+    const trimmedDesc = tempDesc.trim();
+    if (trimmedDesc !== description) {
+      onDescriptionChange(trimmedDesc);
+    } else {
+      setTempDesc(description);
+    }
+    setIsEditingDesc(false);
+  };
+
   return (
     <div className="flex items-center gap-2 flex-grow group">
       <div className="flex-grow flex items-center gap-2">
         {isEditingName ? (
           <Input
-            value={name}
-            onChange={(e) => onNameChange(e.target.value)}
-            onBlur={() => setIsEditingName(false)}
-            onKeyDown={(e) => e.key === "Enter" && setIsEditingName(false)}
+            value={tempName}
+            onChange={(e) => setTempName(e.target.value)}
+            onBlur={handleNameSubmit}
+            onKeyDown={(e) => e.key === "Enter" && handleNameSubmit()}
             className="h-8 text-sm font-medium"
             autoFocus
             onFocus={(e) => e.target.select()}
@@ -129,10 +156,10 @@ const FieldDisplay: React.FC<FieldDisplayProps> = ({
         )}
         {isEditingDesc ? (
           <Input
-            value={description}
-            onChange={(e) => onDescriptionChange(e.target.value)}
-            onBlur={() => setIsEditingDesc(false)}
-            onKeyDown={(e) => e.key === "Enter" && setIsEditingDesc(false)}
+            value={tempDesc}
+            onChange={(e) => setTempDesc(e.target.value)}
+            onBlur={handleDescSubmit}
+            onKeyDown={(e) => e.key === "Enter" && handleDescSubmit()}
             placeholder="Add description..."
             className="h-8 text-xs text-muted-foreground italic flex-1"
             autoFocus
