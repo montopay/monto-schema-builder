@@ -1,66 +1,7 @@
+import type { JSONSchema } from "@/types/jsonSchema";
 import type React from "react";
 
-export type JSONValue =
-  | string
-  | number
-  | boolean
-  | null
-  | JSONObject
-  | JSONArray;
-export type JSONObject = { [key: string]: JSONValue };
-export type JSONArray = JSONValue[];
-
-export type SchemaType = "string" | "number" | "boolean" | "object" | "array";
-
-export interface BaseJSONSchema {
-  type: SchemaType;
-  description?: string;
-  required?: string[];
-}
-
-export interface StringSchema extends BaseJSONSchema {
-  type: "string";
-  minLength?: number;
-  maxLength?: number;
-  pattern?: string;
-}
-
-export interface NumberSchema extends BaseJSONSchema {
-  type: "number";
-  minimum?: number;
-  maximum?: number;
-  multipleOf?: number;
-}
-
-export interface BooleanSchema extends BaseJSONSchema {
-  type: "boolean";
-}
-
-export interface ArraySchema extends BaseJSONSchema {
-  type: "array";
-  items: JSONSchemaType;
-  minItems?: number;
-  maxItems?: number;
-  uniqueItems?: boolean;
-}
-
-export interface ObjectSchema extends BaseJSONSchema {
-  type: "object";
-  properties?: Record<string, JSONSchemaType>;
-  required?: string[];
-  additionalProperties?: boolean;
-  minProperties?: number;
-  maxProperties?: number;
-}
-
-export type JSONSchemaType =
-  | StringSchema
-  | NumberSchema
-  | BooleanSchema
-  | ArraySchema
-  | ObjectSchema;
-
-export const exampleSchema: ObjectSchema = {
+export const exampleSchema: JSONSchema = {
   type: "object",
   properties: {
     person: {

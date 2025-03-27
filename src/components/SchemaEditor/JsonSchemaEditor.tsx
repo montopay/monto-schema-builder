@@ -1,10 +1,10 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSchemaEditor } from "@/hooks/useSchemaEditor";
 import { cn } from "@/lib/utils";
+import type { JSONSchemaType } from "@/types/jsonSchema";
 import type React from "react";
 import { useEffect } from "react";
 import JsonSchemaVisualizer from "./JsonSchemaVisualizer";
-import type { JSONSchemaType } from "./SchemaExample";
 import SchemaVisualEditor from "./SchemaVisualEditor";
 
 interface JsonSchemaEditorProps {

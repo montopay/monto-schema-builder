@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
+import type { SchemaType } from "@/types/jsonSchema";
 import type React from "react";
-import type { SchemaType } from "./SchemaExample";
 
 interface SchemaTypeSelectorProps {
   id?: string;
@@ -14,12 +14,37 @@ interface TypeOption {
   description: string;
 }
 
-const types: TypeOption[] = [
-  { id: "string", label: "Text", description: "Letters, words, sentences" },
-  { id: "number", label: "Number", description: "Integer or decimal values" },
-  { id: "boolean", label: "Yes/No", description: "True or false values" },
-  { id: "object", label: "Group", description: "Contains multiple fields" },
-  { id: "array", label: "List", description: "Collection of items" },
+const typeOptions: { id: SchemaType; label: string; description: string }[] = [
+  {
+    id: "string",
+    label: "Text",
+    description: "For text values like names, descriptions, etc.",
+  },
+  {
+    id: "number",
+    label: "Number",
+    description: "For decimal or whole numbers",
+  },
+  {
+    id: "integer",
+    label: "Integer",
+    description: "For whole numbers only",
+  },
+  {
+    id: "boolean",
+    label: "Yes/No",
+    description: "For true/false values",
+  },
+  {
+    id: "object",
+    label: "Group",
+    description: "For grouping related fields together",
+  },
+  {
+    id: "array",
+    label: "List",
+    description: "For collections of items",
+  },
 ];
 
 const SchemaTypeSelector: React.FC<SchemaTypeSelectorProps> = ({
@@ -32,7 +57,7 @@ const SchemaTypeSelector: React.FC<SchemaTypeSelectorProps> = ({
       id={id}
       className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-2"
     >
-      {types.map((type) => (
+      {typeOptions.map((type) => (
         <button
           type="button"
           key={type.id}

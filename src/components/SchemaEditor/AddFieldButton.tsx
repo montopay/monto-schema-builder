@@ -1,23 +1,23 @@
-import type { SchemaType } from "@/components/SchemaEditor/SchemaExample";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
+import type { SchemaType } from "@/types/jsonSchema";
 import type { NewField } from "@/types/schema";
 import { CirclePlus, HelpCircle, Info } from "lucide-react";
 import type React from "react";
@@ -77,7 +77,9 @@ const AddFieldButton: React.FC<AddFieldButtonProps> = ({
           <DialogHeader className="mb-4">
             <DialogTitle className="text-xl flex flex-wrap items-center gap-2">
               Add New Field
-              <Badge variant="secondary" className="text-xs">Schema Builder</Badge>
+              <Badge variant="secondary" className="text-xs">
+                Schema Builder
+              </Badge>
             </DialogTitle>
             <DialogDescription className="text-sm">
               Create a new field for your JSON schema
@@ -89,14 +91,19 @@ const AddFieldButton: React.FC<AddFieldButtonProps> = ({
               <div className="space-y-4 min-w-[280px]">
                 <div>
                   <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                    <label htmlFor="fieldName" className="text-sm font-medium">Field Name</label>
+                    <label htmlFor="fieldName" className="text-sm font-medium">
+                      Field Name
+                    </label>
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Info className="h-4 w-4 text-muted-foreground shrink-0" />
                         </TooltipTrigger>
                         <TooltipContent className="max-w-[90vw]">
-                          <p>Use camelCase for better readability (e.g., firstName)</p>
+                          <p>
+                            Use camelCase for better readability (e.g.,
+                            firstName)
+                          </p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -113,7 +120,9 @@ const AddFieldButton: React.FC<AddFieldButtonProps> = ({
 
                 <div>
                   <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                    <label htmlFor="fieldDesc" className="text-sm font-medium">Description</label>
+                    <label htmlFor="fieldDesc" className="text-sm font-medium">
+                      Description
+                    </label>
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -151,19 +160,26 @@ const AddFieldButton: React.FC<AddFieldButtonProps> = ({
               <div className="space-y-4 min-w-[280px]">
                 <div>
                   <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                    <label htmlFor="fieldType" className="text-sm font-medium">Field Type</label>
+                    <label htmlFor="fieldType" className="text-sm font-medium">
+                      Field Type
+                    </label>
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <HelpCircle className="h-4 w-4 text-muted-foreground shrink-0" />
                         </TooltipTrigger>
-                        <TooltipContent side="left" className="w-72 max-w-[90vw]">
+                        <TooltipContent
+                          side="left"
+                          className="w-72 max-w-[90vw]"
+                        >
                           <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
                             <div>• string: Text</div>
                             <div>• number: Numeric</div>
                             <div>• boolean: True/false</div>
                             <div>• object: Nested JSON</div>
-                            <div className="col-span-2">• array: Lists of values</div>
+                            <div className="col-span-2">
+                              • array: Lists of values
+                            </div>
                           </div>
                         </TooltipContent>
                       </Tooltip>
@@ -198,7 +214,9 @@ const AddFieldButton: React.FC<AddFieldButtonProps> = ({
               >
                 Cancel
               </Button>
-              <Button type="submit" size="sm">Add Field</Button>
+              <Button type="submit" size="sm">
+                Add Field
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>

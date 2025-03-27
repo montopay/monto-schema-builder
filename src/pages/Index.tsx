@@ -1,9 +1,7 @@
 import JsonSchemaEditor from "@/components/SchemaEditor/JsonSchemaEditor";
-import {
-  type JSONSchemaType,
-  exampleSchema,
-} from "@/components/SchemaEditor/SchemaExample";
+import { exampleSchema } from "@/components/SchemaEditor/SchemaExample";
 import { Button } from "@/components/ui/button";
+import type { JSONSchemaType } from "@/types/jsonSchema";
 import { CirclePlus, FileJson, RefreshCw } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "sonner";

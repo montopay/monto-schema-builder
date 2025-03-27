@@ -1,12 +1,12 @@
-import type { SchemaType } from "@/components/SchemaEditor/SchemaExample";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
+import type { SchemaType } from "@/types/jsonSchema";
 import type { NewField } from "@/types/schema";
-import { ChevronDown, ChevronUp, Edit, X, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight, ChevronUp, Edit, X } from "lucide-react";
 import type React from "react";
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface SchemaFieldProps {
   name: string;
@@ -25,6 +25,7 @@ const getTypeColor = (type: SchemaType): string => {
     case "string":
       return "text-blue-500 bg-blue-50";
     case "number":
+    case "integer":
       return "text-purple-500 bg-purple-50";
     case "boolean":
       return "text-green-500 bg-green-50";
@@ -40,6 +41,7 @@ const getTypeLabel = (type: SchemaType): string => {
     case "string":
       return "Text";
     case "number":
+    case "integer":
       return "Number";
     case "boolean":
       return "Yes/No";
@@ -78,13 +80,16 @@ const FieldDisplay: React.FC<FieldDisplayProps> = ({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (typeDropdownRef.current && !typeDropdownRef.current.contains(event.target as Node)) {
+      if (
+        typeDropdownRef.current &&
+        !typeDropdownRef.current.contains(event.target as Node)
+      ) {
         setIsTypeOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -101,7 +106,7 @@ const FieldDisplay: React.FC<FieldDisplayProps> = ({
             onFocus={(e) => e.target.select()}
           />
         ) : (
-          <button 
+          <button
             type="button"
             onClick={() => setIsEditingName(true)}
             onKeyDown={(e) => e.key === "Enter" && setIsEditingName(true)}
@@ -122,7 +127,7 @@ const FieldDisplay: React.FC<FieldDisplayProps> = ({
             onFocus={(e) => e.target.select()}
           />
         ) : description ? (
-          <button 
+          <button
             type="button"
             onClick={() => setIsEditingDesc(true)}
             onKeyDown={(e) => e.key === "Enter" && setIsEditingDesc(true)}
@@ -131,7 +136,7 @@ const FieldDisplay: React.FC<FieldDisplayProps> = ({
             {description}
           </button>
         ) : (
-          <button 
+          <button
             type="button"
             onClick={() => setIsEditingDesc(true)}
             onKeyDown={(e) => e.key === "Enter" && setIsEditingDesc(true)}
@@ -150,22 +155,26 @@ const FieldDisplay: React.FC<FieldDisplayProps> = ({
             className={cn(
               "text-xs px-3.5 py-1.5 rounded-md font-medium w-[92px] text-left cursor-pointer hover:shadow-sm hover:ring-1 hover:ring-ring/20 active:scale-[0.98] transition-all flex items-center justify-between gap-2",
               getTypeColor(type),
-              isTypeOpen && "ring-2 ring-ring/30"
+              isTypeOpen && "ring-2 ring-ring/30",
             )}
           >
             {getTypeLabel(type)}
-            <ChevronDown 
-              size={14} 
+            <ChevronDown
+              size={14}
               className={cn(
                 "text-current opacity-60 transition-transform duration-200",
-                isTypeOpen && "rotate-180"
+                isTypeOpen && "rotate-180",
               )}
             />
           </button>
-          <div className={cn(
-            "absolute right-0 top-[calc(100%+6px)] w-[160px] rounded-lg shadow-lg border border-border/40 bg-popover/95 backdrop-blur-sm p-2 transition-all duration-200 origin-top-right z-50",
-            isTypeOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"
-          )}>
+          <div
+            className={cn(
+              "absolute right-0 top-[calc(100%+6px)] w-[160px] rounded-lg shadow-lg border border-border/40 bg-popover/95 backdrop-blur-sm p-2 transition-all duration-200 origin-top-right z-50",
+              isTypeOpen
+                ? "scale-100 opacity-100"
+                : "scale-95 opacity-0 pointer-events-none",
+            )}
+          >
             {["string", "number", "boolean", "object", "array"].map((t, i) => (
               <button
                 type="button"
@@ -179,10 +188,12 @@ const FieldDisplay: React.FC<FieldDisplayProps> = ({
                   getTypeColor(t as SchemaType),
                   "hover:ring-1 hover:ring-ring/20 hover:shadow-sm",
                   t === type && "ring-1 ring-ring/40 shadow-sm",
-                  i > 0 && "mt-2"
+                  i > 0 && "mt-2",
                 )}
               >
-                <span className="font-medium">{getTypeLabel(t as SchemaType)}</span>
+                <span className="font-medium">
+                  {getTypeLabel(t as SchemaType)}
+                </span>
                 {t === type && (
                   <ChevronRight size={14} className="text-current opacity-60" />
                 )}
@@ -195,7 +206,9 @@ const FieldDisplay: React.FC<FieldDisplayProps> = ({
           onClick={() => onRequiredChange(!required)}
           className={cn(
             "text-xs px-2 py-1 rounded-md font-medium w-20 text-center cursor-pointer hover:shadow-sm hover:ring-2 hover:ring-ring/30 active:scale-95 transition-all",
-            required ? "bg-red-50 text-red-500" : "bg-secondary text-muted-foreground"
+            required
+              ? "bg-red-50 text-red-500"
+              : "bg-secondary text-muted-foreground",
           )}
         >
           {required ? "Required" : "Optional"}
@@ -315,7 +328,12 @@ const FieldContent: React.FC<FieldContentProps> = ({
         className="h-8 text-sm flex-1"
       />
       <div className="flex gap-2">
-        <Button variant="outline" size="sm" onClick={onCancelEdit} className="h-8">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onCancelEdit}
+          className="h-8"
+        >
           Cancel
         </Button>
         <Button size="sm" onClick={onSave} className="h-8">
@@ -371,11 +389,13 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
   };
 
   return (
-    <div className={cn(
-      "mb-2 animate-in rounded-lg border border-border transition-all duration-200",
-      depth > 0 && "ml-4 border-l-2",
-      isNested && "mt-2",
-    )}>
+    <div
+      className={cn(
+        "mb-2 animate-in rounded-lg border border-border transition-all duration-200",
+        depth > 0 && "ml-4 border-l-2",
+        isNested && "mt-2",
+      )}
+    >
       <div className="relative json-field-row justify-between group">
         <div className="flex items-center gap-2 flex-grow">
           {isExpandable && (
@@ -393,7 +413,9 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
             onTypeChange={(type) => handleFieldChange({ type })}
             onRequiredChange={(required) => handleFieldChange({ required })}
             onNameChange={(name) => handleFieldChange({ name })}
-            onDescriptionChange={(description) => handleFieldChange({ description })}
+            onDescriptionChange={(description) =>
+              handleFieldChange({ description })
+            }
           />
         </div>
 

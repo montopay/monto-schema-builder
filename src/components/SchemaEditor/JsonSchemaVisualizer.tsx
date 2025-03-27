@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
+import type { JSONSchemaType } from "@/types/jsonSchema";
 import { Check, Copy, FileJson } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import type { JSONSchemaType } from "./SchemaExample";
 
 interface JsonSchemaVisualizerProps {
   schema: JSONSchemaType;
