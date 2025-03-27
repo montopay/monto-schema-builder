@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import JsonSchemaEditor from '@/components/SchemaEditor/JsonSchemaEditor';
 import { exampleSchema } from '@/components/SchemaEditor/SchemaExample';
@@ -21,10 +22,30 @@ const Index = () => {
   const handleClear = () => {
     setIsReset(true);
     setTimeout(() => {
-      // Create a truly empty schema object
+      // Create an empty schema that maintains the expected structure
       setSchema({
         type: 'object',
-        properties: {},
+        properties: {
+          person: {
+            type: 'object',
+            description: '',
+            properties: {},
+            required: []
+          },
+          address: {
+            type: 'object',
+            description: '',
+            properties: {}
+          },
+          hobbies: {
+            type: 'array',
+            description: '',
+            items: {
+              type: 'object',
+              properties: {}
+            }
+          }
+        },
         required: []
       });
       setIsReset(false);
