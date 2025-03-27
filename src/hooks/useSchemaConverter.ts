@@ -1,27 +1,10 @@
 import type { JSONSchemaType } from "@/components/SchemaEditor/SchemaExample";
+import type { Field, SchemaConverterState } from "@/types/schema";
 import { useEffect, useState } from "react";
 
-export type Field = {
-  id: string;
-  name: string;
-  type: string;
-  description: string;
-  required: boolean;
-  parent?: string | null;
-  children?: string[];
-};
-
-export type SchemaToFieldsResult = {
-  fields: Record<string, Field>;
-  rootFields: string[];
-};
-
-/**
- * Hook to convert between JSON Schema and internal field representation
- */
 export const useSchemaConverter = (
   initialSchema: JSONSchemaType = { type: "object" },
-) => {
+): SchemaConverterState => {
   const [fields, setFields] = useState<Record<string, Field>>({});
   const [rootFields, setRootFields] = useState<string[]>([]);
   const [schema, setSchema] = useState<JSONSchemaType>(initialSchema);
@@ -29,7 +12,7 @@ export const useSchemaConverter = (
   useEffect(() => {
     const convertSchemaToFields = (
       schema: JSONSchemaType,
-    ): SchemaToFieldsResult => {
+    ): { fields: Record<string, Field>; rootFields: string[] } => {
       if (!schema || !schema.properties) return { fields: {}, rootFields: [] };
 
       const result: Record<string, Field> = {};
@@ -43,14 +26,16 @@ export const useSchemaConverter = (
         for (const [name, config] of Object.entries(props)) {
           const id = parentId ? `${parentId}_${name}` : name;
           const isRequired = required.includes(name);
+          const type = config.type as Field["type"];
 
           result[id] = {
             id,
             name,
-            type: config.type,
+            type,
             description: config.description || "",
             required: isRequired,
             parent: parentId,
+            children: [],
           };
 
           if (!parentId) {
@@ -87,7 +72,7 @@ export const useSchemaConverter = (
       if (!field.parent && result.properties) {
         result.properties[field.name] = {
           type: field.type,
-          description: field.description,
+          description: field.description || undefined,
         };
 
         if (field.required) {

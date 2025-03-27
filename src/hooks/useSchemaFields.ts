@@ -1,82 +1,75 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import type { Field } from "./useSchemaConverter";
+import type { Field, NewField, SchemaFieldsState } from "@/types/schema";
 
-export const useSchemaFields = (initialFields = {}, initialRootFields = []) => {
+export const useSchemaFields = (
+  initialFields: Record<string, Field> = {},
+  initialRootFields: string[] = [],
+): SchemaFieldsState => {
   const [fields, setFields] = useState<Record<string, Field>>(initialFields);
   const [rootFields, setRootFields] = useState<string[]>(initialRootFields);
 
-  const handleAddField = (
-    newField: {
-      name: string;
-      type: string;
-      description: string;
-      required: boolean;
-    },
-    parentId?: string,
-  ) => {
+  const handleAddField = (newField: NewField, parentId?: string) => {
     const id = `${parentId ? `${parentId}_` : ""}${newField.name}`;
 
-    // Check if field name already exists at this level
-    const isDuplicate = (
-      parentId ? fields[parentId]?.children : rootFields
-    )?.some((fieldId) => fields[fieldId].name === newField.name);
-
-    if (isDuplicate) {
-      toast.error(
-        `A field named "${newField.name}" already exists at this level`,
-      );
+    // Check if parent exists if parentId is provided
+    if (parentId && !fields[parentId]) {
+      toast.error(`Parent field "${parentId}" does not exist`);
       return;
     }
 
+    // Check if field name already exists at this level
+    const siblings = parentId ? fields[parentId].children : rootFields;
+    const isDuplicate = siblings.some((fieldId) => fields[fieldId].name === newField.name);
+
+    if (isDuplicate) {
+      toast.error(`A field named "${newField.name}" already exists at this level`);
+      return;
+    }
+
+    // Create new field with strict typing
+    const field: Field = {
+      id,
+      ...newField,
+      parent: parentId || null,
+      children: [],
+    };
+
+    // Update fields state
     setFields((prev) => ({
       ...prev,
-      [id]: {
-        id,
-        ...newField,
-        parent: parentId || null,
-        children: [],
-      },
-    }));
-
-    if (parentId) {
-      if (!fields[parentId]) {
-        toast.error(`Parent field "${parentId}" does not exist`);
-        return;
-      }
-      setFields((prev) => ({
-        ...prev,
+      [id]: field,
+      ...(parentId && {
         [parentId]: {
           ...prev[parentId],
-          children: [...(prev[parentId].children || []), id],
+          children: [...prev[parentId].children, id],
         },
-      }));
-    } else {
+      }),
+    }));
+
+    // Update root fields if no parent
+    if (!parentId) {
       setRootFields((prev) => [...prev, id]);
     }
 
     toast.success(`Added field "${newField.name}"`);
   };
 
-  const handleEditField = (
-    id: string,
-    updatedField: {
-      name: string;
-      type: string;
-      description: string;
-      required: boolean;
-    },
-  ) => {
+  const handleEditField = (id: string, updatedField: NewField) => {
     const field = fields[id];
+    if (!field) {
+      toast.error(`Field "${id}" does not exist`);
+      return;
+    }
+
     const parentId = field.parent;
+    const siblings = parentId
+      ? fields[parentId].children.filter((childId) => childId !== id)
+      : rootFields.filter((rootId) => rootId !== id);
 
-    // Check if the updated field name would cause a duplicate
+    // Check for duplicates only if name is changing
     if (field.name !== updatedField.name) {
-      const siblings = parentId
-        ? fields[parentId].children?.filter((childId) => childId !== id)
-        : rootFields.filter((rootId) => rootId !== id);
-
-      const isDuplicate = siblings?.some(
+      const isDuplicate = siblings.some(
         (siblingId) => fields[siblingId].name === updatedField.name,
       );
 
@@ -91,7 +84,7 @@ export const useSchemaFields = (initialFields = {}, initialRootFields = []) => {
     setFields((prev) => ({
       ...prev,
       [id]: {
-        ...prev[id],
+        ...field,
         ...updatedField,
       },
     }));
@@ -101,16 +94,20 @@ export const useSchemaFields = (initialFields = {}, initialRootFields = []) => {
 
   const handleDeleteField = (id: string) => {
     const field = fields[id];
+    if (!field) {
+      toast.error(`Field "${id}" does not exist`);
+      return;
+    }
+
     const parentId = field.parent;
 
-    // Remove field from parent's children
+    // Remove field from parent's children if it has a parent
     if (parentId) {
       setFields((prev) => ({
         ...prev,
         [parentId]: {
           ...prev[parentId],
-          children:
-            prev[parentId].children?.filter((childId) => childId !== id) || [],
+          children: prev[parentId].children.filter((childId) => childId !== id),
         },
       }));
     } else {
@@ -119,7 +116,7 @@ export const useSchemaFields = (initialFields = {}, initialRootFields = []) => {
 
     // Remove this field and all its children recursively
     const getAllChildrenIds = (fieldId: string): string[] => {
-      const childIds = fields[fieldId].children || [];
+      const childIds = fields[fieldId].children;
       const allDescendants = [...childIds];
 
       for (const childId of childIds) {
