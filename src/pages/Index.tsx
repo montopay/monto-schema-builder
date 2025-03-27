@@ -22,7 +22,7 @@ const Index = () => {
   const handleClear = () => {
     setIsReset(true);
     setTimeout(() => {
-      // Create an empty schema that matches the expected structure
+      // Create an empty schema that matches the expected structure exactly
       setSchema({
         type: 'object',
         properties: {
@@ -31,7 +31,9 @@ const Index = () => {
             description: '',
             properties: {
               firstName: { type: 'string', description: '' },
-              lastName: { type: 'string', description: '' }
+              lastName: { type: 'string', description: '' },
+              age: { type: 'number', description: '' },
+              isEmployed: { type: 'boolean', description: '' }
             },
             required: []
           },
@@ -39,7 +41,9 @@ const Index = () => {
             type: 'object',
             description: '',
             properties: {
-              street: { type: 'string', description: '' }
+              street: { type: 'string', description: '' },
+              city: { type: 'string', description: '' },
+              zipCode: { type: 'string', description: '' }
             }
           },
           hobbies: {
@@ -48,7 +52,8 @@ const Index = () => {
             items: {
               type: 'object',
               properties: {
-                name: { type: 'string', description: '' }
+                name: { type: 'string', description: '' },
+                yearsExperience: { type: 'number', description: '' }
               }
             }
           }
