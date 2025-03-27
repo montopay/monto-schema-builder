@@ -1,76 +1,45 @@
-import type { Field } from "@/types/schema";
+import type {
+  JSONSchema as JSONSchemaType,
+  NewField,
+} from "@/types/jsonSchema";
 import type React from "react";
-import { toast } from "sonner";
-import AddFieldButton from "./AddFieldButton";
 import SchemaField from "./SchemaField";
 
 interface SchemaFieldListProps {
-  fieldIds: string[];
-  fields: Record<string, Field>;
-  onAddField: (
-    newField: {
-      name: string;
-      type: string;
-      description: string;
-      required: boolean;
-    },
-    parentId?: string,
-  ) => void;
-  onEditField: (
-    id: string,
-    updatedField: {
-      name: string;
-      type: string;
-      description: string;
-      required: boolean;
-    },
-  ) => void;
-  onDeleteField: (id: string) => void;
+  fields: Array<{
+    name: string;
+    path: string[];
+    schema: JSONSchemaType;
+    required: boolean;
+  }>;
+  onAddField: (newField: NewField, parentPath?: string[]) => void;
+  onEditField: (path: string[], updatedField: NewField) => void;
+  onDeleteField: (path: string[]) => void;
   depth?: number;
 }
 
 const SchemaFieldList: React.FC<SchemaFieldListProps> = ({
-  fieldIds,
   fields,
   onAddField,
   onEditField,
   onDeleteField,
   depth = 0,
 }) => {
-  const renderFieldsRecursively = (ids: string[], currentDepth: number) => {
-    return ids.map((id) => {
-      const field = fields[id];
-      return (
-        <SchemaField
-          key={id}
-          name={field.name}
-          type={field.type}
-          description={field.description}
-          required={field.required}
-          onDelete={() => onDeleteField(id)}
-          onEdit={(updatedField) => onEditField(id, updatedField)}
-          isNested={currentDepth > 0}
-          depth={currentDepth}
-        >
-          {field.children &&
-            renderFieldsRecursively(field.children, currentDepth + 1)}
-
-          {(field.type === "object" || field.type === "array") && (
-            <div className="mt-3 ml-4">
-              <AddFieldButton
-                onAddField={(newField) => onAddField(newField, id)}
-                variant="secondary"
-              />
-            </div>
-          )}
-        </SchemaField>
-      );
-    });
-  };
-
   return (
     <div className="space-y-2 animate-in">
-      {renderFieldsRecursively(fieldIds, depth)}
+      {fields.map((field) => (
+        <SchemaField
+          key={field.path.join(".")}
+          name={field.name}
+          schema={field.schema}
+          required={field.required}
+          onDelete={() => onDeleteField(field.path)}
+          onEdit={(updatedField) => onEditField(field.path, updatedField)}
+          onAddField={(newField) => onAddField(newField, field.path)}
+          isNested={depth > 0}
+          depth={depth}
+        />
+      ))}
     </div>
   );
 };

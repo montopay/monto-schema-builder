@@ -1,15 +1,15 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSchemaEditor } from "@/hooks/useSchemaEditor";
 import { cn } from "@/lib/utils";
-import type { JSONSchemaType } from "@/types/jsonSchema";
+import type { JSONSchema } from "@/types/jsonSchema";
 import type React from "react";
 import { useEffect } from "react";
 import JsonSchemaVisualizer from "./JsonSchemaVisualizer";
 import SchemaVisualEditor from "./SchemaVisualEditor";
 
 interface JsonSchemaEditorProps {
-  initialSchema?: JSONSchemaType;
-  onChange?: (schema: JSONSchemaType) => void;
+  initialSchema?: JSONSchema;
+  onChange?: (schema: JSONSchema) => void;
   className?: string;
 }
 
@@ -19,9 +19,8 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
   className,
 }) => {
   const {
-    fields,
-    rootFields,
     schema,
+    fieldInfo,
     handleAddField,
     handleEditField,
     handleDeleteField,
@@ -45,8 +44,7 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
 
         <TabsContent value="visual" className="focus:outline-none">
           <SchemaVisualEditor
-            fields={fields}
-            rootFields={rootFields}
+            fieldInfo={fieldInfo}
             onAddField={handleAddField}
             onEditField={handleEditField}
             onDeleteField={handleDeleteField}

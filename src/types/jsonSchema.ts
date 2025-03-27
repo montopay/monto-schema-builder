@@ -10,15 +10,10 @@ const simpleTypes = [
   "array",
   "null",
 ] as const;
-export type SchemaType = (typeof simpleTypes)[number];
 
-// Forward reference for recursive types
-export const jsonSchemaType: z.ZodType = z.lazy(() =>
-  z.union([jsonSchema, z.boolean()]),
-);
-
-// Base schema properties that all schemas can have
-const baseSchemaProps = z.object({
+// Define base schema first - Zod is the source of truth
+export const baseSchema = z.object({
+  // Base schema properties
   $id: z.string().optional(),
   $schema: z.string().optional(),
   $ref: z.string().optional(),
@@ -27,110 +22,112 @@ const baseSchemaProps = z.object({
   $dynamicAnchor: z.string().optional(),
   $vocabulary: z.record(z.boolean()).optional(),
   $comment: z.string().optional(),
-  $defs: z.record(jsonSchemaType).optional(),
   title: z.string().optional(),
   description: z.string().optional(),
-  default: z.any().optional(),
+  default: z.unknown().optional(),
   deprecated: z.boolean().optional(),
   readOnly: z.boolean().optional(),
   writeOnly: z.boolean().optional(),
-  examples: z.array(z.any()).optional(),
-});
+  examples: z.array(z.unknown()).optional(),
+  type: z.union([z.enum(simpleTypes), z.array(z.enum(simpleTypes))]).optional(),
 
-// String schema specific validations
-const stringValidations = z.object({
+  // String validations
   minLength: z.number().int().min(0).optional(),
   maxLength: z.number().int().min(0).optional(),
   pattern: z.string().optional(),
   format: z.string().optional(),
   contentMediaType: z.string().optional(),
   contentEncoding: z.string().optional(),
-  contentSchema: jsonSchemaType.optional(),
-});
 
-// Number schema specific validations
-const numberValidations = z.object({
+  // Number validations
   multipleOf: z.number().positive().optional(),
   minimum: z.number().optional(),
   maximum: z.number().optional(),
   exclusiveMinimum: z.number().optional(),
   exclusiveMaximum: z.number().optional(),
-});
 
-// Array schema specific validations
-const arrayValidations = z.object({
-  items: jsonSchemaType.optional(),
-  prefixItems: z.array(jsonSchemaType).optional(),
+  // Array validations
   minItems: z.number().int().min(0).optional(),
   maxItems: z.number().int().min(0).optional(),
   uniqueItems: z.boolean().optional(),
-  contains: jsonSchemaType.optional(),
   minContains: z.number().int().min(0).optional(),
   maxContains: z.number().int().min(0).optional(),
-  unevaluatedItems: jsonSchemaType.optional(),
-});
 
-// Object schema specific validations
-const objectValidations = z.object({
-  properties: z.record(jsonSchemaType).optional(),
-  patternProperties: z.record(jsonSchemaType).optional(),
-  additionalProperties: z.union([jsonSchemaType, z.boolean()]).optional(),
+  // Object validations
   required: z.array(z.string()).optional(),
-  propertyNames: jsonSchemaType.optional(),
   minProperties: z.number().int().min(0).optional(),
   maxProperties: z.number().int().min(0).optional(),
   dependentRequired: z.record(z.array(z.string())).optional(),
-  dependentSchemas: z.record(jsonSchemaType).optional(),
-  unevaluatedProperties: jsonSchemaType.optional(),
+
+  // Value validations
+  const: z.unknown().optional(),
+  enum: z.array(z.unknown()).optional(),
 });
 
-// Combining schemas
-const combiners = z.object({
-  allOf: z.array(jsonSchemaType).optional(),
-  anyOf: z.array(jsonSchemaType).optional(),
-  oneOf: z.array(jsonSchemaType).optional(),
-  not: jsonSchemaType.optional(),
-  if: jsonSchemaType.optional(),
-  // biome-ignore lint/suspicious/noThenProperty: The property is named "then" in the JSON Schema spec
-  then: jsonSchemaType.optional(),
-  else: jsonSchemaType.optional(),
-});
+// Define recursive schema type
+export type JSONSchema =
+  | boolean
+  | (z.infer<typeof baseSchema> & {
+      // Recursive properties
+      $defs?: Record<string, JSONSchema>;
+      contentSchema?: JSONSchema;
+      items?: JSONSchema;
+      prefixItems?: JSONSchema[];
+      contains?: JSONSchema;
+      unevaluatedItems?: JSONSchema;
+      properties?: Record<string, JSONSchema>;
+      patternProperties?: Record<string, JSONSchema>;
+      additionalProperties?: JSONSchema | boolean;
+      propertyNames?: JSONSchema;
+      dependentSchemas?: Record<string, JSONSchema>;
+      unevaluatedProperties?: JSONSchema;
+      allOf?: JSONSchema[];
+      anyOf?: JSONSchema[];
+      oneOf?: JSONSchema[];
+      not?: JSONSchema;
+      if?: JSONSchema;
+      then?: JSONSchema;
+      else?: JSONSchema;
+    });
 
-// Value validations
-const valueValidations = z.object({
-  const: z.any().optional(),
-  enum: z.array(z.any()).optional(),
-});
+// Define Zod schema with recursive types
+export const jsonSchemaType: z.ZodType<JSONSchema> = z.lazy(() =>
+  z.union([
+    baseSchema.extend({
+      $defs: z.record(jsonSchemaType).optional(),
+      contentSchema: jsonSchemaType.optional(),
+      items: jsonSchemaType.optional(),
+      prefixItems: z.array(jsonSchemaType).optional(),
+      contains: jsonSchemaType.optional(),
+      unevaluatedItems: jsonSchemaType.optional(),
+      properties: z.record(jsonSchemaType).optional(),
+      patternProperties: z.record(jsonSchemaType).optional(),
+      additionalProperties: z.union([jsonSchemaType, z.boolean()]).optional(),
+      propertyNames: jsonSchemaType.optional(),
+      dependentSchemas: z.record(jsonSchemaType).optional(),
+      unevaluatedProperties: jsonSchemaType.optional(),
+      allOf: z.array(jsonSchemaType).optional(),
+      anyOf: z.array(jsonSchemaType).optional(),
+      oneOf: z.array(jsonSchemaType).optional(),
+      not: jsonSchemaType.optional(),
+      if: jsonSchemaType.optional(),
+      // biome-ignore lint/suspicious/noThenProperty: This is a required property name in JSON Schema
+      then: jsonSchemaType.optional(),
+      else: jsonSchemaType.optional(),
+    }),
+    z.boolean(),
+  ]),
+);
 
-// The main JSON Schema definition
-export const jsonSchema = baseSchemaProps
-  .extend({
-    type: z
-      .union([z.enum(simpleTypes), z.array(z.enum(simpleTypes))])
-      .optional(),
-  })
-  .and(stringValidations)
-  .and(numberValidations)
-  .and(arrayValidations)
-  .and(objectValidations)
-  .and(combiners)
-  .and(valueValidations);
+// Derive our types from the schema
+export type SchemaType = (typeof simpleTypes)[number];
 
-// Export types
-export type JSONSchema = z.infer<typeof jsonSchema>;
-export type JSONSchemaType = z.infer<typeof jsonSchemaType>;
-
-// Field type for the visual editor
-export interface Field {
-  id: string;
+export interface NewField {
   name: string;
   type: SchemaType;
   description: string;
   required: boolean;
-  parent: string | null;
-  children: string[];
-  // Additional properties from JSON Schema that we support in UI
-  validation: {
+  validation?: {
     // String validations
     minLength?: number;
     maxLength?: number;
@@ -153,20 +150,19 @@ export interface Field {
   };
 }
 
-export interface NewField {
-  name: string;
-  type: SchemaType;
-  description: string;
-  required: boolean;
-  validation?: Field["validation"];
-}
-
 export interface SchemaEditorState {
-  fields: Record<string, Field>;
-  rootFields: string[];
-  schema: JSONSchemaType;
-  handleAddField: (newField: NewField, parentId?: string) => void;
-  handleEditField: (id: string, updatedField: NewField) => void;
-  handleDeleteField: (id: string) => void;
-  handleSchemaEdit: (schema: JSONSchemaType) => void;
+  schema: JSONSchema;
+  fieldInfo: {
+    type: SchemaType;
+    properties: Array<{
+      name: string;
+      path: string[];
+      schema: JSONSchema;
+      required: boolean;
+    }>;
+  } | null;
+  handleAddField: (newField: NewField, parentPath?: string[]) => void;
+  handleEditField: (path: string[], updatedField: NewField) => void;
+  handleDeleteField: (path: string[]) => void;
+  handleSchemaEdit: (schema: JSONSchema) => void;
 }

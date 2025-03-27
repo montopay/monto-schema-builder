@@ -9,16 +9,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import type { SchemaType } from "@/types/jsonSchema";
-import type { NewField } from "@/types/schema";
+import type { NewField, SchemaType } from "@/types/jsonSchema";
 import { CirclePlus, HelpCircle, Info } from "lucide-react";
 import type React from "react";
 import { useState } from "react";

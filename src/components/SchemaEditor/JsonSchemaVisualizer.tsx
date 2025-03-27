@@ -1,14 +1,14 @@
 import { cn } from "@/lib/utils";
-import type { JSONSchemaType } from "@/types/jsonSchema";
+import type { JSONSchema } from "@/types/jsonSchema";
 import { Check, Copy, FileJson } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 interface JsonSchemaVisualizerProps {
-  schema: JSONSchemaType;
+  schema: JSONSchema;
   className?: string;
-  onChange?: (schema: JSONSchemaType) => void;
+  onChange?: (schema: JSONSchema) => void;
 }
 
 const JsonSchemaVisualizer: React.FC<JsonSchemaVisualizerProps> = ({

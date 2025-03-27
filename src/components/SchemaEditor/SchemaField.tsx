@@ -1,21 +1,25 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { getChildren, hasChildren } from "@/hooks/useSchemaEditor";
 import { cn } from "@/lib/utils";
-import type { SchemaType } from "@/types/jsonSchema";
-import type { NewField } from "@/types/schema";
+import type {
+  JSONSchema as JSONSchemaType,
+  NewField,
+  SchemaType,
+} from "@/types/jsonSchema";
 import { ChevronDown, ChevronRight, ChevronUp, Edit, X } from "lucide-react";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
+import AddFieldButton from "./AddFieldButton";
 
 interface SchemaFieldProps {
   name: string;
-  type: SchemaType;
-  description?: string;
+  schema: JSONSchemaType;
   required?: boolean;
-  children?: React.ReactNode;
   onDelete: () => void;
   onEdit: (field: NewField) => void;
+  onAddField?: (newField: NewField) => void;
   isNested?: boolean;
   depth?: number;
 }
@@ -33,6 +37,8 @@ const getTypeColor = (type: SchemaType): string => {
       return "text-orange-500 bg-orange-50";
     case "array":
       return "text-pink-500 bg-pink-50";
+    case "null":
+      return "text-gray-500 bg-gray-50";
   }
 };
 
@@ -49,14 +55,15 @@ const getTypeLabel = (type: SchemaType): string => {
       return "Group";
     case "array":
       return "List";
+    case "null":
+      return "Empty";
   }
 };
 
 interface FieldDisplayProps {
   name: string;
-  type: SchemaType;
+  schema: JSONSchemaType;
   required: boolean;
-  description: string;
   onTypeChange: (type: SchemaType) => void;
   onRequiredChange: (required: boolean) => void;
   onNameChange: (name: string) => void;
@@ -65,9 +72,8 @@ interface FieldDisplayProps {
 
 const FieldDisplay: React.FC<FieldDisplayProps> = ({
   name,
-  type,
+  schema,
   required,
-  description,
   onTypeChange,
   onRequiredChange,
   onNameChange,
@@ -77,6 +83,12 @@ const FieldDisplay: React.FC<FieldDisplayProps> = ({
   const [isEditingDesc, setIsEditingDesc] = useState(false);
   const [isTypeOpen, setIsTypeOpen] = useState(false);
   const typeDropdownRef = useRef<HTMLDivElement>(null);
+  const type =
+    typeof schema === "boolean"
+      ? "object"
+      : ((schema.type || "object") as SchemaType);
+  const description =
+    typeof schema === "boolean" ? "" : schema.description || "";
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -175,30 +187,33 @@ const FieldDisplay: React.FC<FieldDisplayProps> = ({
                 : "scale-95 opacity-0 pointer-events-none",
             )}
           >
-            {["string", "number", "boolean", "object", "array"].map((t, i) => (
-              <button
-                type="button"
-                key={t}
-                onClick={() => {
-                  onTypeChange(t as SchemaType);
-                  setIsTypeOpen(false);
-                }}
-                className={cn(
-                  "w-full text-left px-3 py-2 text-sm rounded-md transition-all duration-150 flex items-center justify-between gap-2 group relative",
-                  getTypeColor(t as SchemaType),
-                  "hover:ring-1 hover:ring-ring/20 hover:shadow-sm",
-                  t === type && "ring-1 ring-ring/40 shadow-sm",
-                  i > 0 && "mt-2",
-                )}
-              >
-                <span className="font-medium">
-                  {getTypeLabel(t as SchemaType)}
-                </span>
-                {t === type && (
-                  <ChevronRight size={14} className="text-current opacity-60" />
-                )}
-              </button>
-            ))}
+            {(["string", "number", "boolean", "object", "array"] as const).map(
+              (t, i) => (
+                <button
+                  type="button"
+                  key={t}
+                  onClick={() => {
+                    onTypeChange(t);
+                    setIsTypeOpen(false);
+                  }}
+                  className={cn(
+                    "w-full text-left px-3 py-2 text-sm rounded-md transition-all duration-150 flex items-center justify-between gap-2 group relative",
+                    getTypeColor(t),
+                    "hover:ring-1 hover:ring-ring/20 hover:shadow-sm",
+                    t === type && "ring-1 ring-ring/40 shadow-sm",
+                    i > 0 && "mt-2",
+                  )}
+                >
+                  <span className="font-medium">{getTypeLabel(t)}</span>
+                  {t === type && (
+                    <ChevronRight
+                      size={14}
+                      className="text-current opacity-60"
+                    />
+                  )}
+                </button>
+              ),
+            )}
           </div>
         </div>
         <button
@@ -251,143 +266,41 @@ const FieldActions: React.FC<FieldActionsProps> = ({ onDelete }) => (
   </div>
 );
 
-interface FieldContentProps {
-  isEditing: boolean;
-  fieldName: string;
-  setFieldName: (name: string) => void;
-  fieldType: SchemaType;
-  setFieldType: (type: SchemaType) => void;
-  fieldDesc: string;
-  setFieldDesc: (desc: string) => void;
-  fieldRequired: boolean;
-  setFieldRequired: (required: boolean) => void;
-  onSave: () => void;
-  onCancelEdit: () => void;
-  name: string;
-  type: SchemaType;
-  required: boolean;
-  description: string;
-}
-
-const FieldContent: React.FC<FieldContentProps> = ({
-  isEditing,
-  fieldName,
-  setFieldName,
-  fieldType,
-  setFieldType,
-  fieldDesc,
-  setFieldDesc,
-  fieldRequired,
-  setFieldRequired,
-  onSave,
-  onCancelEdit,
-  name,
-  type,
-  required,
-  description,
-}) =>
-  isEditing ? (
-    <div className="flex items-center gap-2 flex-grow">
-      <select
-        value={fieldType}
-        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-          const value = e.target.value;
-          if (
-            value === "string" ||
-            value === "number" ||
-            value === "boolean" ||
-            value === "object" ||
-            value === "array"
-          ) {
-            setFieldType(value);
-          }
-        }}
-        className="h-8 rounded-md border border-input bg-background px-3 py-1 text-sm w-24"
-      >
-        <option value="string">Text</option>
-        <option value="number">Number</option>
-        <option value="boolean">Yes/No</option>
-        <option value="object">Group</option>
-        <option value="array">List</option>
-      </select>
-      <Switch
-        checked={fieldRequired}
-        onCheckedChange={setFieldRequired}
-        className="data-[state=checked]:bg-red-500"
-      />
-      <Input
-        value={fieldName}
-        onChange={(e) => setFieldName(e.target.value)}
-        placeholder="Field name"
-        className="h-8 text-sm w-40"
-      />
-      <Input
-        value={fieldDesc}
-        onChange={(e) => setFieldDesc(e.target.value)}
-        placeholder="Description (optional)"
-        className="h-8 text-sm flex-1"
-      />
-      <div className="flex gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onCancelEdit}
-          className="h-8"
-        >
-          Cancel
-        </Button>
-        <Button size="sm" onClick={onSave} className="h-8">
-          Save
-        </Button>
-      </div>
-    </div>
-  ) : (
-    <FieldDisplay
-      name={name}
-      type={type}
-      required={required}
-      description={description}
-      onTypeChange={(type) => setFieldType(type)}
-      onRequiredChange={(required) => setFieldRequired(required)}
-      onNameChange={(name) => setFieldName(name)}
-      onDescriptionChange={(description) => setFieldDesc(description)}
-    />
-  );
-
 const SchemaField: React.FC<SchemaFieldProps> = ({
   name,
-  type,
-  description = "",
+  schema,
   required = false,
-  children,
   onDelete,
   onEdit,
+  onAddField,
   isNested = false,
   depth = 0,
 }) => {
   const [expanded, setExpanded] = useState(true);
   const [fieldName, setFieldName] = useState(name);
-  const [fieldType, setFieldType] = useState<SchemaType>(type);
-  const [fieldDesc, setFieldDesc] = useState(description);
-  const [fieldRequired, setFieldRequired] = useState(required);
+  const type =
+    typeof schema === "boolean"
+      ? "object"
+      : ((schema.type || "object") as SchemaType);
+  const description =
+    typeof schema === "boolean" ? "" : schema.description || "";
 
   const isExpandable = type === "object" || type === "array";
 
   const handleFieldChange = (changes: Partial<NewField>) => {
     const newField = {
       name: fieldName,
-      type: fieldType,
-      description: fieldDesc,
-      required: fieldRequired,
+      type,
+      description,
+      required,
       ...changes,
     };
     setFieldName(newField.name);
-    setFieldType(newField.type);
-    setFieldDesc(newField.description);
-    setFieldRequired(newField.required);
     onEdit(newField);
   };
 
+  const children = getChildren(schema);
+  const showChildren = expanded && isExpandable && children.length > 0;
   return (
     <div
       className={cn(
@@ -407,9 +320,8 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
 
           <FieldDisplay
             name={fieldName}
-            type={fieldType}
-            required={fieldRequired}
-            description={fieldDesc}
+            schema={schema}
+            required={required}
             onTypeChange={(type) => handleFieldChange({ type })}
             onRequiredChange={(required) => handleFieldChange({ required })}
             onNameChange={(name) => handleFieldChange({ name })}
@@ -422,8 +334,25 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
         <FieldActions onDelete={onDelete} />
       </div>
 
-      {expanded && isExpandable && (
-        <div className="pt-1 pb-2 px-2 animate-in">{children}</div>
+      {showChildren && (
+        <div className="pt-1 pb-2 px-2 animate-in">
+          {children.map((child) => (
+            <SchemaField
+              key={child.name}
+              name={child.name}
+              schema={child.schema}
+              required={child.required}
+              onDelete={onDelete}
+              onEdit={onEdit}
+              onAddField={onAddField}
+              isNested={true}
+              depth={depth + 1}
+            />
+          ))}
+          <div className="mt-3 ml-4">
+            <AddFieldButton onAddField={onAddField} variant="secondary" />
+          </div>
+        </div>
       )}
     </div>
   );
