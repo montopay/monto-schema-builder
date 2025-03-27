@@ -30,22 +30,22 @@ const SchemaTypeSelector: React.FC<SchemaTypeSelectorProps> = ({
   return (
     <div
       id={id}
-      className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 mb-4"
+      className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-2"
     >
       {types.map((type) => (
         <button
           type="button"
           key={type.id}
           className={cn(
-            "p-3 rounded-lg border-2 text-left transition-all duration-200",
+            "p-2.5 rounded-lg border-2 text-left transition-all duration-200",
             value === type.id
               ? "border-primary bg-primary/5 shadow-sm"
               : "border-border hover:border-primary/30 hover:bg-secondary",
           )}
           onClick={() => onChange(type.id)}
         >
-          <div className="font-medium mb-1">{type.label}</div>
-          <div className="text-xs text-muted-foreground">
+          <div className="font-medium text-sm">{type.label}</div>
+          <div className="text-xs text-muted-foreground line-clamp-1">
             {type.description}
           </div>
         </button>

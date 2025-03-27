@@ -6,10 +6,20 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 import type { NewField } from "@/types/schema";
-import { CirclePlus } from "lucide-react";
+import { CirclePlus, HelpCircle, Info } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 import SchemaTypeSelector from "./SchemaTypeSelector";
@@ -63,70 +73,132 @@ const AddFieldButton: React.FC<AddFieldButtonProps> = ({
       </Button>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-[425px] animate-in">
-          <DialogHeader>
-            <DialogTitle>Add New Field</DialogTitle>
+        <DialogContent className="md:max-w-[1200px] max-h-[85vh] w-[95vw] p-4 sm:p-6">
+          <DialogHeader className="mb-4">
+            <DialogTitle className="text-xl flex flex-wrap items-center gap-2">
+              Add New Field
+              <Badge variant="secondary" className="text-xs">Schema Builder</Badge>
+            </DialogTitle>
+            <DialogDescription className="text-sm">
+              Create a new field for your JSON schema
+            </DialogDescription>
           </DialogHeader>
 
-          <form onSubmit={handleSubmit} className="mt-4 space-y-4">
-            <div className="space-y-2">
-              <label htmlFor="fieldName" className="text-sm font-medium">
-                Field Name
-              </label>
-              <Input
-                id="fieldName"
-                value={fieldName}
-                onChange={(e) => setFieldName(e.target.value)}
-                placeholder="e.g. firstName, age, isActive"
-                required
-              />
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="space-y-4 min-w-[280px]">
+                <div>
+                  <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                    <label htmlFor="fieldName" className="text-sm font-medium">Field Name</label>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Info className="h-4 w-4 text-muted-foreground shrink-0" />
+                        </TooltipTrigger>
+                        <TooltipContent className="max-w-[90vw]">
+                          <p>Use camelCase for better readability (e.g., firstName)</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  <Input
+                    id="fieldName"
+                    value={fieldName}
+                    onChange={(e) => setFieldName(e.target.value)}
+                    placeholder="e.g. firstName, age, isActive"
+                    className="font-mono text-sm w-full"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                    <label htmlFor="fieldDesc" className="text-sm font-medium">Description</label>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Info className="h-4 w-4 text-muted-foreground shrink-0" />
+                        </TooltipTrigger>
+                        <TooltipContent className="max-w-[90vw]">
+                          <p>Add context about what this field represents</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  <Input
+                    id="fieldDesc"
+                    value={fieldDesc}
+                    onChange={(e) => setFieldDesc(e.target.value)}
+                    placeholder="Describe the purpose of this field"
+                    className="text-sm w-full"
+                  />
+                </div>
+
+                <div className="flex items-center gap-3 p-3 rounded-lg border bg-muted/50">
+                  <input
+                    type="checkbox"
+                    id="fieldRequired"
+                    checked={fieldRequired}
+                    onChange={(e) => setFieldRequired(e.target.checked)}
+                    className="rounded border-gray-300 shrink-0"
+                  />
+                  <label htmlFor="fieldRequired" className="text-sm">
+                    Required Field
+                  </label>
+                </div>
+              </div>
+
+              <div className="space-y-4 min-w-[280px]">
+                <div>
+                  <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                    <label htmlFor="fieldType" className="text-sm font-medium">Field Type</label>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <HelpCircle className="h-4 w-4 text-muted-foreground shrink-0" />
+                        </TooltipTrigger>
+                        <TooltipContent side="left" className="w-72 max-w-[90vw]">
+                          <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+                            <div>• string: Text</div>
+                            <div>• number: Numeric</div>
+                            <div>• boolean: True/false</div>
+                            <div>• object: Nested JSON</div>
+                            <div className="col-span-2">• array: Lists of values</div>
+                          </div>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  <SchemaTypeSelector
+                    id="fieldType"
+                    value={fieldType}
+                    onChange={setFieldType}
+                  />
+                </div>
+
+                <div className="rounded-lg border bg-muted/50 p-3 hidden md:block">
+                  <p className="text-xs font-medium mb-2">Example:</p>
+                  <code className="text-sm bg-background/80 p-2 rounded block overflow-x-auto">
+                    {fieldType === "string" && '"example"'}
+                    {fieldType === "number" && "42"}
+                    {fieldType === "boolean" && "true"}
+                    {fieldType === "object" && '{ "key": "value" }'}
+                    {fieldType === "array" && '["item1", "item2"]'}
+                  </code>
+                </div>
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <label htmlFor="fieldType" className="text-sm font-medium">
-                Field Type
-              </label>
-              <SchemaTypeSelector
-                id="fieldType"
-                value={fieldType}
-                onChange={setFieldType}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label htmlFor="fieldDesc" className="text-sm font-medium">
-                Description (Optional)
-              </label>
-              <Input
-                id="fieldDesc"
-                value={fieldDesc}
-                onChange={(e) => setFieldDesc(e.target.value)}
-                placeholder="What this field represents"
-              />
-            </div>
-
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="fieldRequired"
-                checked={fieldRequired}
-                onChange={(e) => setFieldRequired(e.target.checked)}
-                className="rounded border-gray-300"
-              />
-              <label htmlFor="fieldRequired" className="text-sm font-medium">
-                Is this field required?
-              </label>
-            </div>
-
-            <DialogFooter>
+            <DialogFooter className="mt-6 gap-2 flex-wrap">
               <Button
                 type="button"
                 variant="outline"
+                size="sm"
                 onClick={() => setDialogOpen(false)}
               >
                 Cancel
               </Button>
-              <Button type="submit">Add Field</Button>
+              <Button type="submit" size="sm">Add Field</Button>
             </DialogFooter>
           </form>
         </DialogContent>
