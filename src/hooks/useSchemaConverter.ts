@@ -59,8 +59,9 @@ export const useSchemaConverter = (
 
           if (config.type === "object" && config.properties) {
             processObject(config.properties, id);
-          } else if (config.type === "array" && config.items?.properties) {
-            processObject(config.items.properties, id);
+          } else if (config.type === "array" && config.items && typeof config.items === "object") {
+            const itemsProperties = (config.items as { properties?: Record<string, JSONSchemaType> }).properties;
+            if (itemsProperties) processObject(itemsProperties, id);
           }
         }
       };
