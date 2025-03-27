@@ -1,8 +1,8 @@
+import type { Field } from "@/hooks/useSchemaConverter";
 import type React from "react";
 import { toast } from "sonner";
-import SchemaField from "./SchemaField";
 import AddFieldButton from "./AddFieldButton";
-import type { Field } from "@/hooks/useSchemaConverter";
+import SchemaField from "./SchemaField";
 
 interface SchemaFieldListProps {
   fieldIds: string[];

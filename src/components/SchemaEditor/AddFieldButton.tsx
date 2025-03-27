@@ -1,15 +1,15 @@
-import type React from "react";
-import { useState } from "react";
-import { CirclePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { CirclePlus } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
 import SchemaTypeSelector from "./SchemaTypeSelector";
 
 interface AddFieldButtonProps {

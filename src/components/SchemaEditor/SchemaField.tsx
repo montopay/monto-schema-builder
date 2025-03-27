@@ -1,10 +1,10 @@
-import type React from "react";
-import { useState } from "react";
-import { Edit, X, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
+import { ChevronDown, ChevronUp, Edit, X } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
 
 interface SchemaFieldProps {
   name: string;

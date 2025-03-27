@@ -1,7 +1,7 @@
+import type { Field } from "@/hooks/useSchemaConverter";
 import type React from "react";
 import AddFieldButton from "./AddFieldButton";
 import SchemaFieldList from "./SchemaFieldList";
-import type { Field } from "@/hooks/useSchemaConverter";
 
 interface SchemaVisualEditorProps {
   fields: Record<string, Field>;

@@ -1,11 +1,11 @@
-import React, { useState } from "react";
 import JsonSchemaEditor from "@/components/SchemaEditor/JsonSchemaEditor";
 import {
-  exampleSchema,
   type JSONSchemaType,
+  exampleSchema,
 } from "@/components/SchemaEditor/SchemaExample";
 import { Button } from "@/components/ui/button";
 import { CirclePlus, FileJson, RefreshCw } from "lucide-react";
+import React, { useState } from "react";
 import { toast } from "sonner";
 
 const Index = () => {

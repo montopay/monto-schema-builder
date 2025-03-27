@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
 import type { JSONSchemaType } from "@/components/SchemaEditor/SchemaExample";
+import { useEffect, useState } from "react";
 
 export type Field = {
   id: string;

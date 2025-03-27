@@ -1,7 +1,7 @@
-import type React from "react";
-import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { FileJson, Copy, Check } from "lucide-react";
+import { Check, Copy, FileJson } from "lucide-react";
+import type React from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import type { JSONSchemaType } from "./SchemaExample";
 

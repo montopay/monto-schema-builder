@@ -1,12 +1,12 @@
-import type React from "react";
-import { useEffect, useState, useCallback } from "react";
-import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import JsonSchemaVisualizer from "./JsonSchemaVisualizer";
-import SchemaVisualEditor from "./SchemaVisualEditor";
 import { useSchemaConverter } from "@/hooks/useSchemaConverter";
 import { useSchemaFields } from "@/hooks/useSchemaFields";
+import { cn } from "@/lib/utils";
+import type React from "react";
+import { useCallback, useEffect, useState } from "react";
+import JsonSchemaVisualizer from "./JsonSchemaVisualizer";
 import type { JSONSchemaType } from "./SchemaExample";
+import SchemaVisualEditor from "./SchemaVisualEditor";
 
 interface JsonSchemaEditorProps {
   initialSchema?: JSONSchemaType;

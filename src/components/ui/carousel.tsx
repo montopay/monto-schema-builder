@@ -1,12 +1,12 @@
-import type * as React from "react";
 import type { UseEmblaCarouselType } from "embla-carousel-react";
 import type useEmblaCarousel from "embla-carousel-react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import type * as React from "react";
 import { DayPicker } from "react-day-picker";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type CarouselApi = UseEmblaCarouselType[1];
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
