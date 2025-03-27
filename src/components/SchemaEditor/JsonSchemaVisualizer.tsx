@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
 import type { JSONSchema } from "@/types/jsonSchema";
-import { Check, Copy, FileJson } from "lucide-react";
+import { FileJson, Loader2 } from "lucide-react";
 import type React from "react";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { useRef } from "react";
+import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
 
 interface JsonSchemaVisualizerProps {
   schema: JSONSchema;
@@ -16,39 +16,41 @@ const JsonSchemaVisualizer: React.FC<JsonSchemaVisualizerProps> = ({
   className,
   onChange,
 }) => {
-  const [jsonString, setJsonString] = useState("");
-  const [isCopied, setIsCopied] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editableJson, setEditableJson] = useState("");
+  const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
 
-  useEffect(() => {
-    const formatted = JSON.stringify(schema, null, 2);
-    setJsonString(formatted);
-    setEditableJson(formatted);
-  }, [schema]);
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(jsonString);
-    setIsCopied(true);
-    setTimeout(() => setIsCopied(false), 2000);
-    toast.success("JSON schema copied to clipboard");
+  const handleBeforeMount: BeforeMount = (monaco) => {
+    monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+      validate: true,
+      allowComments: false,
+      schemaValidation: "error",
+      schemas: [{
+        uri: "http://json-schema.org/draft-07/schema",
+        fileMatch: ["*"],
+        schema: {
+          $schema: "http://json-schema.org/draft-07/schema",
+          type: "object",
+          additionalProperties: true
+        }
+      }]
+    });
   };
 
-  const handleEditToggle = () => {
-    if (isEditing) {
-      try {
-        const parsedJson = JSON.parse(editableJson);
-        if (onChange) {
-          onChange(parsedJson);
-        }
-        setJsonString(JSON.stringify(parsedJson, null, 2));
-        toast.success("JSON schema updated");
-      } catch (error) {
-        toast.error("Invalid JSON format");
-        return;
+  const handleEditorDidMount: OnMount = (editor) => {
+    editorRef.current = editor;
+    editor.focus();
+  };
+
+  const handleEditorChange = (value: string | undefined) => {
+    if (!value) return;
+    
+    try {
+      const parsedJson = JSON.parse(value);
+      if (onChange) {
+        onChange(parsedJson);
       }
+    } catch (error) {
+      // Monaco will show the error inline, no need for additional error handling
     }
-    setIsEditing(!isEditing);
   };
 
   return (
@@ -58,37 +60,43 @@ const JsonSchemaVisualizer: React.FC<JsonSchemaVisualizerProps> = ({
           <FileJson size={18} />
           <span className="font-medium text-sm">JSON Schema</span>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={handleEditToggle}
-            className="p-1.5 rounded-md hover:bg-secondary-foreground/10 transition-colors text-muted-foreground hover:text-foreground"
-            aria-label={isEditing ? "Save changes" : "Edit JSON"}
-          >
-            {isEditing ? "Save" : "Edit"}
-          </button>
-          <button
-            type="button"
-            onClick={copyToClipboard}
-            className="p-1.5 rounded-md hover:bg-secondary-foreground/10 transition-colors text-muted-foreground hover:text-foreground"
-            aria-label="Copy to clipboard"
-          >
-            {isCopied ? <Check size={16} /> : <Copy size={16} />}
-          </button>
-        </div>
       </div>
-      {isEditing ? (
-        <textarea
-          className="w-full bg-secondary/30 p-4 font-mono text-sm min-h-[500px] focus:outline-none focus:ring-1 focus:ring-primary/50"
-          value={editableJson}
-          onChange={(e) => setEditableJson(e.target.value)}
-          spellCheck={false}
-        />
-      ) : (
-        <pre className="bg-secondary/30 p-4 overflow-auto max-h-[500px] text-sm">
-          <code className="text-xs sm:text-sm font-mono">{jsonString}</code>
-        </pre>
-      )}
+      <Editor
+        height="500px"
+        defaultLanguage="json"
+        value={JSON.stringify(schema, null, 2)}
+        onChange={handleEditorChange}
+        beforeMount={handleBeforeMount}
+        onMount={handleEditorDidMount}
+        loading={<div className="flex items-center justify-center h-[500px] bg-secondary/30">
+          <Loader2 className="h-6 w-6 animate-spin" />
+        </div>}
+        options={{
+          minimap: { enabled: false },
+          fontSize: 14,
+          lineNumbers: "on",
+          roundedSelection: false,
+          scrollBeyondLastLine: false,
+          readOnly: false,
+          automaticLayout: true,
+          formatOnPaste: true,
+          formatOnType: true,
+          tabSize: 2,
+          insertSpaces: true,
+          detectIndentation: true,
+          folding: true,
+          foldingStrategy: "indentation",
+          renderLineHighlight: "all",
+          matchBrackets: "always",
+          autoClosingBrackets: "always",
+          autoClosingQuotes: "always",
+          guides: {
+            bracketPairs: true,
+            indentation: true
+          }
+        }}
+        theme="light"
+      />
     </div>
   );
 };
