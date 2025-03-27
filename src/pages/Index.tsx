@@ -22,34 +22,41 @@ const Index = () => {
   const handleClear = () => {
     setIsReset(true);
     setTimeout(() => {
-      // Create an empty schema that maintains the expected structure
+      // Create an empty schema that matches the expected structure
       setSchema({
         type: 'object',
         properties: {
           person: {
             type: 'object',
             description: '',
-            properties: {},
+            properties: {
+              firstName: { type: 'string', description: '' },
+              lastName: { type: 'string', description: '' }
+            },
             required: []
           },
           address: {
             type: 'object',
             description: '',
-            properties: {}
+            properties: {
+              street: { type: 'string', description: '' }
+            }
           },
           hobbies: {
             type: 'array',
             description: '',
             items: {
               type: 'object',
-              properties: {}
+              properties: {
+                name: { type: 'string', description: '' }
+              }
             }
           }
         },
         required: []
       });
       setIsReset(false);
-      toast.success('Cleared schema');
+      toast.success('Cleared all fields');
     }, 300);
   };
 
