@@ -49,6 +49,8 @@ export const useSchemaConverter = (
 
           if (!parentId) {
             rootFieldIds.push(id);
+          } else if (result[parentId]) {
+            result[parentId].children.push(id);
           }
 
           if (

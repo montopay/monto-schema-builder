@@ -40,13 +40,11 @@ const SchemaFieldList: React.FC<SchemaFieldListProps> = ({
   const renderFieldsRecursively = (ids: string[], currentDepth: number) => {
     return ids.map((id) => {
       const field = fields[id];
+      console.log(field);
       const isPrimitive =
         field.type === "string" ||
         field.type === "number" ||
         field.type === "boolean";
-      const hasChildren =
-        !isPrimitive && field.children && field.children.length > 0;
-
       return (
         <SchemaField
           key={id}
@@ -59,8 +57,8 @@ const SchemaFieldList: React.FC<SchemaFieldListProps> = ({
           isNested={currentDepth > 0}
           depth={currentDepth}
         >
-          {hasChildren &&
-            renderFieldsRecursively(field.children || [], currentDepth + 1)}
+          {field.children &&
+            renderFieldsRecursively(field.children, currentDepth + 1)}
 
           {(field.type === "object" || field.type === "array") && (
             <div className="mt-3 ml-4">
