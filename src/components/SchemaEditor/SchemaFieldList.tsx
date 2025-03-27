@@ -40,7 +40,6 @@ const SchemaFieldList: React.FC<SchemaFieldListProps> = ({
   const renderFieldsRecursively = (ids: string[], currentDepth: number) => {
     return ids.map((id) => {
       const field = fields[id];
-      console.log(`Rendering ${field.name} with type ${field.type} and ${field.children?.length} children`);
       return (
         <SchemaField
           key={id}
