@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
 import type { JSONSchema } from "@/types/jsonSchema";
+import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
 import { FileJson, Loader2 } from "lucide-react";
 import type React from "react";
 import { useRef } from "react";
-import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
 
 interface JsonSchemaVisualizerProps {
   schema: JSONSchema;
@@ -23,15 +23,17 @@ const JsonSchemaVisualizer: React.FC<JsonSchemaVisualizerProps> = ({
       validate: true,
       allowComments: false,
       schemaValidation: "error",
-      schemas: [{
-        uri: "http://json-schema.org/draft-07/schema",
-        fileMatch: ["*"],
-        schema: {
-          $schema: "http://json-schema.org/draft-07/schema",
-          type: "object",
-          additionalProperties: true
-        }
-      }]
+      schemas: [
+        {
+          uri: "http://json-schema.org/draft-07/schema",
+          fileMatch: ["*"],
+          schema: {
+            $schema: "http://json-schema.org/draft-07/schema",
+            type: "object",
+            additionalProperties: true,
+          },
+        },
+      ],
     });
   };
 
@@ -42,7 +44,7 @@ const JsonSchemaVisualizer: React.FC<JsonSchemaVisualizerProps> = ({
 
   const handleEditorChange = (value: string | undefined) => {
     if (!value) return;
-    
+
     try {
       const parsedJson = JSON.parse(value);
       if (onChange) {
@@ -68,9 +70,11 @@ const JsonSchemaVisualizer: React.FC<JsonSchemaVisualizerProps> = ({
         onChange={handleEditorChange}
         beforeMount={handleBeforeMount}
         onMount={handleEditorDidMount}
-        loading={<div className="flex items-center justify-center h-[500px] bg-secondary/30">
-          <Loader2 className="h-6 w-6 animate-spin" />
-        </div>}
+        loading={
+          <div className="flex items-center justify-center h-[500px] bg-secondary/30">
+            <Loader2 className="h-6 w-6 animate-spin" />
+          </div>
+        }
         options={{
           minimap: { enabled: false },
           fontSize: 14,
@@ -92,8 +96,8 @@ const JsonSchemaVisualizer: React.FC<JsonSchemaVisualizerProps> = ({
           autoClosingQuotes: "always",
           guides: {
             bracketPairs: true,
-            indentation: true
-          }
+            indentation: true,
+          },
         }}
         theme="light"
       />

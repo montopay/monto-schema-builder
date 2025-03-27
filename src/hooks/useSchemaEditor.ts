@@ -71,31 +71,30 @@ function setSchemaProperty(
   path: string[],
   value: JSONSchema,
 ): JSONSchema {
-  if (typeof schema === "boolean" || path.length === 0) return value;
-
-  const [head, ...rest] = path;
-  const newSchema = copySchema(schema);
-
-  if (rest.length === 0) {
-    if (!newSchema.properties) newSchema.properties = {};
-    newSchema.properties = { ...newSchema.properties, [head]: value };
-    return newSchema;
-  }
-
-  if (!newSchema.properties) newSchema.properties = {};
-  if (
-    !newSchema.properties[head] ||
-    typeof newSchema.properties[head] === "boolean"
-  ) {
-    newSchema.properties[head] = { type: "object", properties: {} };
-  }
-
-  newSchema.properties = {
-    ...newSchema.properties,
-    [head]: setSchemaProperty(newSchema.properties[head], rest, value),
+  if (path.length === 0 || typeof schema !== "object") return value;
+  const children = getChildren(schema);
+  const child = children.find((child) => child.name === path[0]);
+  if (!child) return schema;
+  return {
+    ...schema,
+    properties: {
+      ...schema.properties,
+      [child.name]: setSchemaProperty(child.schema, path.slice(1), value),
+    },
   };
+}
 
-  return newSchema;
+export function isObject(
+  value: JSONSchema,
+): value is JSONSchema & {
+  type: "object";
+  properties: Record<string, JSONSchema>;
+} {
+  return (
+    typeof value === "object" &&
+    value.type === "object" &&
+    "properties" in value
+  );
 }
 
 function deleteSchemaProperty(schema: JSONSchema, path: string[]): JSONSchema {
@@ -191,12 +190,11 @@ export function useSchemaEditor(initialSchema?: JSONSchema) {
           const oldName = path[path.length - 1];
           const newPath = [...parentPath, updatedField.name];
 
-          let newSchema = deleteSchemaProperty(prevSchema, path) as JSONSchema;
-          newSchema = setSchemaProperty(newSchema, newPath, {
+          const newSchema = setSchemaProperty(prevSchema, newPath, {
             type: updatedField.type,
             description: updatedField.description,
             ...updatedField.validation,
-          }) as JSONSchema;
+          });
 
           const parentSchema =
             parentPath.length === 0
@@ -206,7 +204,7 @@ export function useSchemaEditor(initialSchema?: JSONSchema) {
                     typeof acc === "boolean" || !acc.properties
                       ? acc
                       : acc.properties[curr],
-                  newSchema as JSONSchema,
+                  newSchema,
                 );
 
           if (typeof parentSchema !== "boolean") {
