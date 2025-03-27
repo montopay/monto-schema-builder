@@ -4,9 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import type { NewField } from "@/types/schema";
-import { ChevronDown, ChevronUp, Edit, X } from "lucide-react";
+import { ChevronDown, ChevronUp, Edit, X, ChevronRight } from "lucide-react";
 import type React from "react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 interface SchemaFieldProps {
   name: string;
@@ -74,6 +74,18 @@ const FieldDisplay: React.FC<FieldDisplayProps> = ({
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingDesc, setIsEditingDesc] = useState(false);
   const [isTypeOpen, setIsTypeOpen] = useState(false);
+  const typeDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (typeDropdownRef.current && !typeDropdownRef.current.contains(event.target as Node)) {
+        setIsTypeOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <div className="flex items-center gap-2 flex-grow group">
@@ -130,38 +142,53 @@ const FieldDisplay: React.FC<FieldDisplayProps> = ({
         )}
       </div>
       <div className="flex items-center gap-2">
-        <div className="relative">
+        <div className="relative" ref={typeDropdownRef}>
           <button
             type="button"
-            onClick={() => setIsTypeOpen(true)}
-            onKeyDown={(e) => e.key === "Enter" && setIsTypeOpen(true)}
+            onClick={() => setIsTypeOpen(!isTypeOpen)}
+            onKeyDown={(e) => e.key === "Enter" && setIsTypeOpen(!isTypeOpen)}
             className={cn(
-              "text-xs px-2 py-1 rounded-md font-medium w-16 text-center cursor-pointer hover:shadow-sm hover:ring-2 hover:ring-ring/30 active:scale-95 transition-all",
-              getTypeColor(type)
+              "text-xs px-3.5 py-1.5 rounded-md font-medium w-[92px] text-left cursor-pointer hover:shadow-sm hover:ring-1 hover:ring-ring/20 active:scale-[0.98] transition-all flex items-center justify-between gap-2",
+              getTypeColor(type),
+              isTypeOpen && "ring-2 ring-ring/30"
             )}
           >
             {getTypeLabel(type)}
+            <ChevronDown 
+              size={14} 
+              className={cn(
+                "text-current opacity-60 transition-transform duration-200",
+                isTypeOpen && "rotate-180"
+              )}
+            />
           </button>
-          {isTypeOpen && (
-            <div className="absolute right-0 top-full mt-1 bg-popover rounded-md shadow-lg border border-border p-1 min-w-[120px] z-10">
-              {["string", "number", "boolean", "object", "array"].map((t) => (
-                <button
-                  type="button"
-                  key={t}
-                  onClick={() => {
-                    onTypeChange(t as SchemaType);
-                    setIsTypeOpen(false);
-                  }}
-                  className={cn(
-                    "w-full text-left px-2 py-1 text-sm rounded-sm hover:bg-accent transition-colors",
-                    t === type && "bg-accent"
-                  )}
-                >
-                  {getTypeLabel(t as SchemaType)}
-                </button>
-              ))}
-            </div>
-          )}
+          <div className={cn(
+            "absolute right-0 top-[calc(100%+6px)] w-[160px] rounded-lg shadow-lg border border-border/40 bg-popover/95 backdrop-blur-sm p-2 transition-all duration-200 origin-top-right z-50",
+            isTypeOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"
+          )}>
+            {["string", "number", "boolean", "object", "array"].map((t, i) => (
+              <button
+                type="button"
+                key={t}
+                onClick={() => {
+                  onTypeChange(t as SchemaType);
+                  setIsTypeOpen(false);
+                }}
+                className={cn(
+                  "w-full text-left px-3 py-2 text-sm rounded-md transition-all duration-150 flex items-center justify-between gap-2 group relative",
+                  getTypeColor(t as SchemaType),
+                  "hover:ring-1 hover:ring-ring/20 hover:shadow-sm",
+                  t === type && "ring-1 ring-ring/40 shadow-sm",
+                  i > 0 && "mt-2"
+                )}
+              >
+                <span className="font-medium">{getTypeLabel(t as SchemaType)}</span>
+                {t === type && (
+                  <ChevronRight size={14} className="text-current opacity-60" />
+                )}
+              </button>
+            ))}
+          </div>
         </div>
         <button
           type="button"
@@ -302,10 +329,10 @@ const FieldContent: React.FC<FieldContentProps> = ({
       type={type}
       required={required}
       description={description}
-      onTypeChange={setFieldType}
-      onRequiredChange={setFieldRequired}
-      onNameChange={setFieldName}
-      onDescriptionChange={setFieldDesc}
+      onTypeChange={(type) => setFieldType(type)}
+      onRequiredChange={(required) => setFieldRequired(required)}
+      onNameChange={(name) => setFieldName(name)}
+      onDescriptionChange={(description) => setFieldDesc(description)}
     />
   );
 
