@@ -1,6 +1,6 @@
+import type { Field, NewField, SchemaFieldsState } from "@/types/schema";
 import { useState } from "react";
 import { toast } from "sonner";
-import type { Field, NewField, SchemaFieldsState } from "@/types/schema";
 
 export const useSchemaFields = (
   initialFields: Record<string, Field> = {},
@@ -20,10 +20,14 @@ export const useSchemaFields = (
 
     // Check if field name already exists at this level
     const siblings = parentId ? fields[parentId].children : rootFields;
-    const isDuplicate = siblings.some((fieldId) => fields[fieldId].name === newField.name);
+    const isDuplicate = siblings.some(
+      (fieldId) => fields[fieldId].name === newField.name,
+    );
 
     if (isDuplicate) {
-      toast.error(`A field named "${newField.name}" already exists at this level`);
+      toast.error(
+        `A field named "${newField.name}" already exists at this level`,
+      );
       return;
     }
 

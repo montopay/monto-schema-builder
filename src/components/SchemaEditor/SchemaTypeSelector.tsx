@@ -1,25 +1,32 @@
 import { cn } from "@/lib/utils";
 import type React from "react";
+import type { SchemaType } from "./SchemaExample";
 
 interface SchemaTypeSelectorProps {
   id?: string;
-  value: string;
-  onChange: (value: string) => void;
+  value: SchemaType;
+  onChange: (value: SchemaType) => void;
 }
+
+interface TypeOption {
+  id: SchemaType;
+  label: string;
+  description: string;
+}
+
+const types: TypeOption[] = [
+  { id: "string", label: "Text", description: "Letters, words, sentences" },
+  { id: "number", label: "Number", description: "Integer or decimal values" },
+  { id: "boolean", label: "Yes/No", description: "True or false values" },
+  { id: "object", label: "Group", description: "Contains multiple fields" },
+  { id: "array", label: "List", description: "Collection of items" },
+];
 
 const SchemaTypeSelector: React.FC<SchemaTypeSelectorProps> = ({
   id,
   value,
   onChange,
 }) => {
-  const types = [
-    { id: "string", label: "Text", description: "Letters, words, sentences" },
-    { id: "number", label: "Number", description: "Integer or decimal values" },
-    { id: "boolean", label: "Yes/No", description: "True or false values" },
-    { id: "object", label: "Group", description: "Contains multiple fields" },
-    { id: "array", label: "List", description: "Collection of items" },
-  ];
-
   return (
     <div
       id={id}

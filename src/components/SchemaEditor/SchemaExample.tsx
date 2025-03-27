@@ -10,17 +10,57 @@ export type JSONValue =
 export type JSONObject = { [key: string]: JSONValue };
 export type JSONArray = JSONValue[];
 
-// Define a generic JSON Schema type that can handle any structure
-export type JSONSchemaType = {
-  type: string;
-  properties?: Record<string, JSONSchemaType>;
-  items?: JSONSchemaType | Record<string, JSONSchemaType>;
-  required?: string[];
-  description?: string;
-  [key: string]: JSONValue | undefined;
-};
+export type SchemaType = "string" | "number" | "boolean" | "object" | "array";
 
-export const exampleSchema: JSONSchemaType = {
+export interface BaseJSONSchema {
+  type: SchemaType;
+  description?: string;
+  required?: string[];
+}
+
+export interface StringSchema extends BaseJSONSchema {
+  type: "string";
+  minLength?: number;
+  maxLength?: number;
+  pattern?: string;
+}
+
+export interface NumberSchema extends BaseJSONSchema {
+  type: "number";
+  minimum?: number;
+  maximum?: number;
+  multipleOf?: number;
+}
+
+export interface BooleanSchema extends BaseJSONSchema {
+  type: "boolean";
+}
+
+export interface ArraySchema extends BaseJSONSchema {
+  type: "array";
+  items: JSONSchemaType;
+  minItems?: number;
+  maxItems?: number;
+  uniqueItems?: boolean;
+}
+
+export interface ObjectSchema extends BaseJSONSchema {
+  type: "object";
+  properties?: Record<string, JSONSchemaType>;
+  required?: string[];
+  additionalProperties?: boolean;
+  minProperties?: number;
+  maxProperties?: number;
+}
+
+export type JSONSchemaType =
+  | StringSchema
+  | NumberSchema
+  | BooleanSchema
+  | ArraySchema
+  | ObjectSchema;
+
+export const exampleSchema: ObjectSchema = {
   type: "object",
   properties: {
     person: {

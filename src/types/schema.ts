@@ -34,4 +34,4 @@ export interface SchemaFieldsState extends FieldsState {
   handleAddField: (newField: NewField, parentId?: string) => void;
   handleEditField: (id: string, updatedField: NewField) => void;
   handleDeleteField: (id: string) => void;
-} 
+}

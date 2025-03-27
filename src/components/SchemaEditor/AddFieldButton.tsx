@@ -1,3 +1,4 @@
+import type { SchemaType } from "@/components/SchemaEditor/SchemaExample";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -7,18 +8,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import type { NewField } from "@/types/schema";
 import { CirclePlus } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 import SchemaTypeSelector from "./SchemaTypeSelector";
 
 interface AddFieldButtonProps {
-  onAddField: (field: {
-    name: string;
-    type: string;
-    description: string;
-    required: boolean;
-  }) => void;
+  onAddField: (field: NewField) => void;
   variant?: "primary" | "secondary";
 }
 
@@ -28,7 +25,7 @@ const AddFieldButton: React.FC<AddFieldButtonProps> = ({
 }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [fieldName, setFieldName] = useState("");
-  const [fieldType, setFieldType] = useState("string");
+  const [fieldType, setFieldType] = useState<SchemaType>("string");
   const [fieldDesc, setFieldDesc] = useState("");
   const [fieldRequired, setFieldRequired] = useState(false);
 

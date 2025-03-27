@@ -2,11 +2,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSchemaConverter } from "@/hooks/useSchemaConverter";
 import { useSchemaFields } from "@/hooks/useSchemaFields";
 import { cn } from "@/lib/utils";
-import type { JSONSchemaType } from "./SchemaExample";
 import type { SchemaConverterState, SchemaFieldsState } from "@/types/schema";
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
 import JsonSchemaVisualizer from "./JsonSchemaVisualizer";
+import type { JSONSchemaType } from "./SchemaExample";
 import SchemaVisualEditor from "./SchemaVisualEditor";
 
 interface JsonSchemaEditorProps {
@@ -24,8 +24,13 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
   const [lastGeneratedSchema, setLastGeneratedSchema] =
     useState<JSONSchemaType>(initialSchema);
 
-  const { fields, rootFields, schema, setSchema, convertFieldsToSchema }: SchemaConverterState =
-    useSchemaConverter(initialSchema);
+  const {
+    fields,
+    rootFields,
+    schema,
+    setSchema,
+    convertFieldsToSchema,
+  }: SchemaConverterState = useSchemaConverter(initialSchema);
 
   const {
     handleAddField,

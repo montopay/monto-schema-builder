@@ -1,4 +1,4 @@
-import type { Field } from "@/hooks/useSchemaConverter";
+import type { Field, NewField } from "@/types/schema";
 import type React from "react";
 import AddFieldButton from "./AddFieldButton";
 import SchemaFieldList from "./SchemaFieldList";
@@ -6,24 +6,8 @@ import SchemaFieldList from "./SchemaFieldList";
 interface SchemaVisualEditorProps {
   fields: Record<string, Field>;
   rootFields: string[];
-  onAddField: (
-    newField: {
-      name: string;
-      type: string;
-      description: string;
-      required: boolean;
-    },
-    parentId?: string,
-  ) => void;
-  onEditField: (
-    id: string,
-    updatedField: {
-      name: string;
-      type: string;
-      description: string;
-      required: boolean;
-    },
-  ) => void;
+  onAddField: (newField: NewField, parentId?: string) => void;
+  onEditField: (id: string, updatedField: NewField) => void;
   onDeleteField: (id: string) => void;
 }
 

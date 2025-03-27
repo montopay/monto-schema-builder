@@ -1,24 +1,21 @@
+import type { SchemaType } from "@/components/SchemaEditor/SchemaExample";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
+import type { NewField } from "@/types/schema";
 import { ChevronDown, ChevronUp, Edit, X } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 
 interface SchemaFieldProps {
   name: string;
-  type: string;
+  type: SchemaType;
   description?: string;
   required?: boolean;
   children?: React.ReactNode;
   onDelete: () => void;
-  onEdit: (field: {
-    name: string;
-    type: string;
-    description: string;
-    required: boolean;
-  }) => void;
+  onEdit: (field: NewField) => void;
   isNested?: boolean;
   depth?: number;
 }
@@ -37,7 +34,7 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
   const [expanded, setExpanded] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [fieldName, setFieldName] = useState(name);
-  const [fieldType, setFieldType] = useState(type);
+  const [fieldType, setFieldType] = useState<SchemaType>(type);
   const [fieldDesc, setFieldDesc] = useState(description);
   const [fieldRequired, setFieldRequired] = useState(required);
 
@@ -55,7 +52,7 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
     setIsEditing(false);
   };
 
-  const getTypeColor = (type: string) => {
+  const getTypeColor = (type: SchemaType): string => {
     switch (type) {
       case "string":
         return "text-blue-500 bg-blue-50";
@@ -67,8 +64,21 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
         return "text-orange-500 bg-orange-50";
       case "array":
         return "text-pink-500 bg-pink-50";
-      default:
-        return "text-gray-500 bg-gray-50";
+    }
+  };
+
+  const getTypeLabel = (type: SchemaType): string => {
+    switch (type) {
+      case "string":
+        return "Text";
+      case "number":
+        return "Number";
+      case "boolean":
+        return "Yes/No";
+      case "object":
+        return "Group";
+      case "array":
+        return "List";
     }
   };
 
@@ -104,7 +114,7 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
                 />
                 <select
                   value={fieldType}
-                  onChange={(e) => setFieldType(e.target.value)}
+                  onChange={(e) => setFieldType(e.target.value as SchemaType)}
                   className="h-8 rounded-md border border-input bg-background px-3 py-1 text-sm"
                 >
                   <option value="string">Text</option>
@@ -164,17 +174,7 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
                     getTypeColor(type),
                   )}
                 >
-                  {type === "string"
-                    ? "Text"
-                    : type === "number"
-                      ? "Number"
-                      : type === "boolean"
-                        ? "Yes/No"
-                        : type === "object"
-                          ? "Group"
-                          : type === "array"
-                            ? "List"
-                            : type}
+                  {getTypeLabel(type)}
                 </span>
                 {description && (
                   <span className="text-xs text-muted-foreground italic max-w-[300px] truncate">
