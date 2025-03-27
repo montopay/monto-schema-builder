@@ -290,6 +290,8 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
   const [fieldDesc, setFieldDesc] = useState(description);
   const [fieldRequired, setFieldRequired] = useState(required);
 
+  const isExpandable = type === "object" || type === "array";
+
   const handleSave = () => {
     onEdit({
       name: fieldName,
@@ -310,7 +312,7 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
     >
       <div className="group relative json-field-row justify-between">
         <div className="flex items-center gap-2 flex-grow">
-          {children && (
+          {isExpandable && (
             <ExpandButton
               expanded={expanded}
               onClick={() => setExpanded(!expanded)}
@@ -341,7 +343,7 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
         )}
       </div>
 
-      {expanded && children && (
+      {expanded && isExpandable && (
         <div className="pt-1 pb-2 px-2 animate-in">{children}</div>
       )}
     </div>
