@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { Field } from "./useSchemaConverter";
+import type { Field } from "./useSchemaConverter";
 
 export const useSchemaFields = (initialFields = {}, initialRootFields = []) => {
   const [fields, setFields] = useState<Record<string, Field>>(initialFields);
@@ -118,9 +118,9 @@ export const useSchemaFields = (initialFields = {}, initialRootFields = []) => {
       const childIds = fields[fieldId].children || [];
       const allDescendants = [...childIds];
 
-      childIds.forEach((childId) => {
+      for (const childId of childIds) {
         allDescendants.push(...getAllChildrenIds(childId));
-      });
+      }
 
       return allDescendants;
     };
@@ -129,9 +129,9 @@ export const useSchemaFields = (initialFields = {}, initialRootFields = []) => {
     const newFields = { ...fields };
 
     // Delete children first
-    childrenIds.forEach((childId) => {
+    for (const childId of childrenIds) {
       delete newFields[childId];
-    });
+    }
 
     // Delete the field itself
     delete newFields[id];

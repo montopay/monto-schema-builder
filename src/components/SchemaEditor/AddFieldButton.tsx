@@ -89,7 +89,11 @@ const AddFieldButton: React.FC<AddFieldButtonProps> = ({
               <label htmlFor="fieldType" className="text-sm font-medium">
                 Field Type
               </label>
-              <SchemaTypeSelector id="fieldType" value={fieldType} onChange={setFieldType} />
+              <SchemaTypeSelector
+                id="fieldType"
+                value={fieldType}
+                onChange={setFieldType}
+              />
             </div>
 
             <div className="space-y-2">

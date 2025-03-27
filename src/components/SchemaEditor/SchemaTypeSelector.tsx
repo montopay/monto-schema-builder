@@ -21,7 +21,10 @@ const SchemaTypeSelector: React.FC<SchemaTypeSelectorProps> = ({
   ];
 
   return (
-    <div id={id} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 mb-4">
+    <div
+      id={id}
+      className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 mb-4"
+    >
       {types.map((type) => (
         <button
           type="button"

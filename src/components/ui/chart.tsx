@@ -1,5 +1,7 @@
 import * as React from "react";
 import * as RechartsPrimitive from "recharts";
+import { createGlobalStyle } from "styled-components";
+import styles from './chart.module.css';
 
 import { cn } from "@/lib/utils";
 
@@ -97,6 +99,21 @@ ${colorConfig
     />
   );
 };
+
+const ChartStyles = createGlobalStyle`
+  ${Object.entries(THEMES)
+    .map(([name, theme]) => {
+      return `
+        [data-theme='${name}'] {
+          --chart-primary: ${theme.primary};
+          --chart-secondary: ${theme.secondary};
+          --chart-shade: ${theme.shade};
+          --chart-text: ${theme.text};
+        }
+      `;
+    })
+    .join("")}
+`;
 
 const ChartTooltip = RechartsPrimitive.Tooltip;
 
@@ -353,6 +370,19 @@ function getPayloadConfigFromPayload(
     : config[key as keyof typeof config];
 }
 
+const Chart = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn("recharts-wrapper", className)}
+    {...props}
+  />
+));
+
+Chart.displayName = "Chart";
+
 export {
   ChartContainer,
   ChartTooltip,
@@ -360,4 +390,6 @@ export {
   ChartLegend,
   ChartLegendContent,
   ChartStyle,
+  ChartStyles,
+  Chart,
 };

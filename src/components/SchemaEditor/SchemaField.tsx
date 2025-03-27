@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import { Edit, X, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -83,6 +84,7 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
         <div className="flex items-center gap-2 flex-grow">
           {hasChildren && (
             <button
+              type="button"
               className="text-muted-foreground hover:text-foreground transition-colors"
               onClick={() => setExpanded(!expanded)}
               aria-label={expanded ? "Collapse" : "Expand"}
@@ -187,6 +189,7 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
         {!isEditing && (
           <div className="flex items-center gap-1 text-muted-foreground">
             <button
+              type="button"
               onClick={() => setIsEditing(true)}
               className="p-1 rounded-md hover:bg-secondary hover:text-foreground transition-colors"
               aria-label="Edit field"
@@ -194,6 +197,7 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
               <Edit size={16} />
             </button>
             <button
+              type="button"
               onClick={onDelete}
               className="p-1 rounded-md hover:bg-secondary hover:text-destructive transition-colors"
               aria-label="Delete field"
