@@ -1,9 +1,9 @@
-import type { JSONSchemaType } from "@/components/SchemaEditor/SchemaExample";
+import type { JSONSchemaType, ObjectSchema, StringSchema, NumberSchema, BooleanSchema, ArraySchema } from "@/components/SchemaEditor/SchemaExample";
 import type { Field, SchemaConverterState } from "@/types/schema";
 import { useEffect, useState } from "react";
 
 export const useSchemaConverter = (
-  initialSchema: JSONSchemaType = { type: "object" },
+  initialSchema: JSONSchemaType = { type: "object", properties: {} },
 ): SchemaConverterState => {
   const [fields, setFields] = useState<Record<string, Field>>({});
   const [rootFields, setRootFields] = useState<string[]>([]);
@@ -13,7 +13,9 @@ export const useSchemaConverter = (
     const convertSchemaToFields = (
       schema: JSONSchemaType,
     ): { fields: Record<string, Field>; rootFields: string[] } => {
-      if (!schema || !schema.properties) return { fields: {}, rootFields: [] };
+      if (schema.type !== "object" || !schema.properties) {
+        return { fields: {}, rootFields: [] };
+      }
 
       const result: Record<string, Field> = {};
       const rootFieldIds: string[] = [];
@@ -26,7 +28,7 @@ export const useSchemaConverter = (
         for (const [name, config] of Object.entries(props)) {
           const id = parentId ? `${parentId}_${name}` : name;
           const isRequired = required.includes(name);
-          const type = config.type as Field["type"];
+          const type = config.type;
 
           result[id] = {
             id,
@@ -42,17 +44,18 @@ export const useSchemaConverter = (
             rootFieldIds.push(id);
           }
 
-          if (config.type === "object" && config.properties) {
+          if (config.type === "object" && "properties" in config && config.properties) {
             processObject(config.properties, id);
           } else if (
             config.type === "array" &&
+            "items" in config &&
             config.items &&
-            typeof config.items === "object"
+            typeof config.items === "object" &&
+            config.items.type === "object" &&
+            "properties" in config.items &&
+            config.items.properties
           ) {
-            const itemsProperties = (
-              config.items as { properties?: Record<string, JSONSchemaType> }
-            ).properties;
-            if (itemsProperties) processObject(itemsProperties, id);
+            processObject(config.items.properties, id);
           }
         }
       };
@@ -68,7 +71,7 @@ export const useSchemaConverter = (
   }, [schema]);
 
   const convertFieldsToSchema = (): JSONSchemaType => {
-    const result: JSONSchemaType = {
+    const result: ObjectSchema = {
       type: "object",
       properties: {},
       required: [],
@@ -76,10 +79,44 @@ export const useSchemaConverter = (
 
     const processField = (field: Field) => {
       if (!field.parent && result.properties) {
-        result.properties[field.name] = {
-          type: field.type,
-          description: field.description || undefined,
-        };
+        let fieldSchema: JSONSchemaType;
+
+        switch (field.type) {
+          case "string":
+            fieldSchema = {
+              type: "string",
+              description: field.description || undefined,
+            } as StringSchema;
+            break;
+          case "number":
+            fieldSchema = {
+              type: "number",
+              description: field.description || undefined,
+            } as NumberSchema;
+            break;
+          case "boolean":
+            fieldSchema = {
+              type: "boolean",
+              description: field.description || undefined,
+            } as BooleanSchema;
+            break;
+          case "array":
+            fieldSchema = {
+              type: "array",
+              description: field.description || undefined,
+              items: { type: "object", properties: {} },
+            } as ArraySchema;
+            break;
+          case "object":
+            fieldSchema = {
+              type: "object",
+              description: field.description || undefined,
+              properties: {},
+            } as ObjectSchema;
+            break;
+        }
+
+        result.properties[field.name] = fieldSchema;
 
         if (field.required) {
           result.required?.push(field.name);

@@ -2,7 +2,7 @@ import type { UseEmblaCarouselType } from "embla-carousel-react";
 import type useEmblaCarousel from "embla-carousel-react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import type * as React from "react";
+import * as React from "react";
 import { DayPicker } from "react-day-picker";
 
 import { Button } from "@/components/ui/button";
@@ -156,6 +156,18 @@ const CarouselNext = React.forwardRef<
   );
 });
 CarouselNext.displayName = "CarouselNext";
+
+const handleKeyDown = (event: React.KeyboardEvent) => {
+  if (event.key === "ArrowLeft") {
+    event.preventDefault();
+    const carousel = event.currentTarget.querySelector("[data-embla-container]");
+    carousel?.scrollBy({ left: -100, behavior: "smooth" });
+  } else if (event.key === "ArrowRight") {
+    event.preventDefault();
+    const carousel = event.currentTarget.querySelector("[data-embla-container]");
+    carousel?.scrollBy({ left: 100, behavior: "smooth" });
+  }
+};
 
 export {
   type CarouselApi,

@@ -1,4 +1,4 @@
-import type { Field } from "@/hooks/useSchemaConverter";
+import type { Field } from "@/types/schema";
 import type React from "react";
 import { toast } from "sonner";
 import AddFieldButton from "./AddFieldButton";
