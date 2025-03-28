@@ -134,15 +134,15 @@ const FieldDisplay: React.FC<FieldDisplayProps> = ({
   };
 
   return (
-    <div className="flex items-center gap-2 flex-grow group">
-      <div className="flex-grow flex items-center gap-2">
+    <div className="flex flex-wrap items-center gap-2 flex-grow group">
+      <div className="flex-grow flex flex-wrap items-center gap-2 min-w-[200px]">
         {isEditingName ? (
           <Input
             value={tempName}
             onChange={(e) => setTempName(e.target.value)}
             onBlur={handleNameSubmit}
             onKeyDown={(e) => e.key === "Enter" && handleNameSubmit()}
-            className="h-8 text-sm font-medium"
+            className="h-8 text-sm font-medium min-w-[120px] max-w-full"
             autoFocus
             onFocus={(e) => e.target.select()}
           />
@@ -151,7 +151,7 @@ const FieldDisplay: React.FC<FieldDisplayProps> = ({
             type="button"
             onClick={() => setIsEditingName(true)}
             onKeyDown={(e) => e.key === "Enter" && setIsEditingName(true)}
-            className="json-field-label font-medium cursor-text px-2 py-0.5 -mx-0.5 rounded-sm hover:bg-secondary/30 hover:shadow-sm hover:ring-1 hover:ring-ring/20 transition-all text-left"
+            className="json-field-label font-medium cursor-text px-2 py-0.5 -mx-0.5 rounded-sm hover:bg-secondary/30 hover:shadow-sm hover:ring-1 hover:ring-ring/20 transition-all text-left max-w-full truncate"
           >
             {name}
           </button>
@@ -163,7 +163,7 @@ const FieldDisplay: React.FC<FieldDisplayProps> = ({
             onBlur={handleDescSubmit}
             onKeyDown={(e) => e.key === "Enter" && handleDescSubmit()}
             placeholder="Add description..."
-            className="h-8 text-xs text-muted-foreground italic flex-1"
+            className="h-8 text-xs text-muted-foreground italic flex-1 min-w-[150px]"
             autoFocus
             onFocus={(e) => e.target.select()}
           />
@@ -172,7 +172,7 @@ const FieldDisplay: React.FC<FieldDisplayProps> = ({
             type="button"
             onClick={() => setIsEditingDesc(true)}
             onKeyDown={(e) => e.key === "Enter" && setIsEditingDesc(true)}
-            className="text-xs text-muted-foreground italic max-w-[300px] truncate cursor-text px-2 py-0.5 -mx-0.5 rounded-sm hover:bg-secondary/30 hover:shadow-sm hover:ring-1 hover:ring-ring/20 transition-all text-left"
+            className="text-xs text-muted-foreground italic max-w-full truncate cursor-text px-2 py-0.5 -mx-0.5 rounded-sm hover:bg-secondary/30 hover:shadow-sm hover:ring-1 hover:ring-ring/20 transition-all text-left min-w-0 flex-1"
           >
             {description}
           </button>
@@ -181,20 +181,20 @@ const FieldDisplay: React.FC<FieldDisplayProps> = ({
             type="button"
             onClick={() => setIsEditingDesc(true)}
             onKeyDown={(e) => e.key === "Enter" && setIsEditingDesc(true)}
-            className="text-xs text-muted-foreground/50 italic cursor-text px-2 py-0.5 -mx-0.5 rounded-sm hover:bg-secondary/30 hover:shadow-sm hover:ring-1 hover:ring-ring/20 transition-all opacity-0 group-hover:opacity-100 text-left"
+            className="text-xs text-muted-foreground/50 italic cursor-text px-2 py-0.5 -mx-0.5 rounded-sm hover:bg-secondary/30 hover:shadow-sm hover:ring-1 hover:ring-ring/20 transition-all opacity-0 group-hover:opacity-100 text-left min-w-0 flex-1"
           >
             Add description...
           </button>
         )}
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2 justify-end">
         <div className="relative" ref={typeDropdownRef}>
           <button
             type="button"
             onClick={() => setIsTypeOpen(!isTypeOpen)}
             onKeyDown={(e) => e.key === "Enter" && setIsTypeOpen(!isTypeOpen)}
             className={cn(
-              "text-xs px-3.5 py-1.5 rounded-md font-medium w-[92px] text-left cursor-pointer hover:shadow-sm hover:ring-1 hover:ring-ring/20 active:scale-[0.98] transition-all flex items-center justify-between gap-2",
+              "text-xs px-3.5 py-1.5 rounded-md font-medium w-[92px] text-left cursor-pointer hover:shadow-sm hover:ring-1 hover:ring-ring/20 active:scale-[0.98] transition-all flex items-center justify-between gap-2 whitespace-nowrap",
               getTypeColor(type),
               isTypeOpen && "ring-2 ring-ring/30",
             )}
@@ -210,7 +210,7 @@ const FieldDisplay: React.FC<FieldDisplayProps> = ({
           </button>
           <div
             className={cn(
-              "absolute right-0 top-[calc(100%+6px)] w-[160px] rounded-lg shadow-lg border border-border/40 bg-popover/95 backdrop-blur-sm p-2 transition-all duration-200 origin-top-right z-50",
+              "fixed sm:absolute sm:right-0 left-4 sm:left-auto bottom-4 sm:bottom-auto sm:top-[calc(100%+6px)] w-[calc(100%-32px)] sm:w-[160px] rounded-lg shadow-lg border border-border/40 bg-popover/95 backdrop-blur-sm p-2 transition-all duration-200 origin-bottom sm:origin-top-right z-50",
               isTypeOpen
                 ? "scale-100 opacity-100"
                 : "scale-95 opacity-0 pointer-events-none",
@@ -249,7 +249,7 @@ const FieldDisplay: React.FC<FieldDisplayProps> = ({
           type="button"
           onClick={() => onRequiredChange(!required)}
           className={cn(
-            "text-xs px-2 py-1 rounded-md font-medium w-20 text-center cursor-pointer hover:shadow-sm hover:ring-2 hover:ring-ring/30 active:scale-95 transition-all",
+            "text-xs px-2 py-1 rounded-md font-medium min-w-[80px] text-center cursor-pointer hover:shadow-sm hover:ring-2 hover:ring-ring/30 active:scale-95 transition-all whitespace-nowrap",
             required
               ? "bg-red-50 text-red-500"
               : "bg-secondary text-muted-foreground",
