@@ -1,5 +1,7 @@
 # JSON Schema Builder
 
+![image](https://github.com/user-attachments/assets/6be1cecf-e0d9-4597-ab04-7124e37e332d)
+
 A modern, React-based visual JSON Schema editor for creating and manipulating JSON Schema definitions with an intuitive interface.
 
 ## Features
