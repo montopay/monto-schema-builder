@@ -1,5 +1,3 @@
-import Ajv from "ajv";
-import addFormats from "ajv-formats";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,6 +9,8 @@ import {
 } from "@/components/ui/dialog";
 import type { JSONSchema } from "@/types/jsonSchema";
 import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
+import Ajv from "ajv";
+import addFormats from "ajv-formats";
 import { Loader2 } from "lucide-react";
 import { useRef, useState } from "react";
 
@@ -27,7 +27,11 @@ const ajv = new Ajv({
 });
 addFormats(ajv);
 
-export function JsonValidator({ open, onOpenChange, schema }: JsonValidatorProps) {
+export function JsonValidator({
+  open,
+  onOpenChange,
+  schema,
+}: JsonValidatorProps) {
   const [jsonInput, setJsonInput] = useState("");
   const [validationResult, setValidationResult] = useState<{
     valid: boolean;
@@ -55,32 +59,33 @@ export function JsonValidator({ open, onOpenChange, schema }: JsonValidatorProps
   const validateJsonAgainstSchema = () => {
     try {
       const jsonObject = JSON.parse(jsonInput);
-      
+
       // Use Ajv to validate the JSON against the schema
       const validate = ajv.compile(schema);
       const valid = validate(jsonObject);
-      
+
       if (!valid) {
-        const errors = validate.errors?.map(error => {
-          const path = error.instancePath || '/';
-          return `${path} ${error.message}`;
-        }) || [];
-        
+        const errors =
+          validate.errors?.map((error) => {
+            const path = error.instancePath || "/";
+            return `${path} ${error.message}`;
+          }) || [];
+
         setValidationResult({
           valid: false,
-          errors
+          errors,
         });
       } else {
         setValidationResult({
           valid: true,
-          errors: []
+          errors: [],
         });
       }
     } catch (error) {
       console.error("Invalid JSON input:", error);
       setValidationResult({
         valid: false,
-        errors: ["Invalid JSON format. Please check your input."]
+        errors: ["Invalid JSON format. Please check your input."],
       });
     }
   };
@@ -145,7 +150,7 @@ export function JsonValidator({ open, onOpenChange, schema }: JsonValidatorProps
               />
             </div>
           </div>
-          
+
           <div className="flex-1 flex flex-col min-h-0">
             <div className="text-sm font-medium mb-2">Current Schema:</div>
             <div className="border rounded-md flex-1 overflow-hidden">
@@ -174,7 +179,7 @@ export function JsonValidator({ open, onOpenChange, schema }: JsonValidatorProps
             </div>
           </div>
         </div>
-        
+
         {validationResult && !validationResult.valid && (
           <div className="text-sm text-destructive space-y-1 border-t pt-4">
             <p className="font-semibold">Validation errors:</p>
@@ -190,7 +195,7 @@ export function JsonValidator({ open, onOpenChange, schema }: JsonValidatorProps
             JSON is valid according to the schema! ✓
           </div>
         )}
-        
+
         <DialogFooter className="mt-4">
           <Button variant="outline" onClick={handleClose}>
             Cancel

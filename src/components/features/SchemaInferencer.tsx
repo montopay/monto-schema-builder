@@ -19,7 +19,11 @@ interface SchemaInferencerProps {
   onSchemaInferred: (schema: JSONSchema) => void;
 }
 
-export function SchemaInferencer({ open, onOpenChange, onSchemaInferred }: SchemaInferencerProps) {
+export function SchemaInferencer({
+  open,
+  onOpenChange,
+  onSchemaInferred,
+}: SchemaInferencerProps) {
   const [jsonInput, setJsonInput] = useState("");
   const [error, setError] = useState<string | null>(null);
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
@@ -45,10 +49,10 @@ export function SchemaInferencer({ open, onOpenChange, onSchemaInferred }: Schem
     try {
       const jsonObject = JSON.parse(jsonInput);
       setError(null);
-      
+
       // Use the schema inference service to create a schema
       const inferredSchema = createSchemaFromJson(jsonObject);
-      
+
       onSchemaInferred(inferredSchema);
       onOpenChange(false);
     } catch (error) {
@@ -113,11 +117,7 @@ export function SchemaInferencer({ open, onOpenChange, onSchemaInferred }: Schem
               }
             />
           </div>
-          {error && (
-            <p className="text-sm text-destructive mt-2">
-              {error}
-            </p>
-          )}
+          {error && <p className="text-sm text-destructive mt-2">{error}</p>}
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={handleClose}>

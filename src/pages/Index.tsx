@@ -1,10 +1,16 @@
 import JsonSchemaEditor from "@/components/SchemaEditor/JsonSchemaEditor";
-import { SchemaInferencer } from "@/components/features/SchemaInferencer";
-import { JsonValidator } from "@/components/features/JsonValidator";
 import { exampleSchema } from "@/components/SchemaEditor/SchemaExample";
+import { JsonValidator } from "@/components/features/JsonValidator";
+import { SchemaInferencer } from "@/components/features/SchemaInferencer";
 import { Button } from "@/components/ui/button";
 import type { JSONSchema } from "@/types/jsonSchema";
-import { CheckCircle, CirclePlus, Code, FileJson, RefreshCw } from "lucide-react";
+import {
+  CheckCircle,
+  CirclePlus,
+  Code,
+  FileJson,
+  RefreshCw,
+} from "lucide-react";
 import { useState } from "react";
 
 const Index = () => {
@@ -69,11 +75,19 @@ const Index = () => {
               <CirclePlus size={16} />
               Start from Scratch
             </Button>
-            <Button variant="outline" onClick={handleInferSchema} className="gap-2">
+            <Button
+              variant="outline"
+              onClick={handleInferSchema}
+              className="gap-2"
+            >
               <Code size={16} />
               Infer from JSON
             </Button>
-            <Button variant="outline" onClick={handleValidateJson} className="gap-2">
+            <Button
+              variant="outline"
+              onClick={handleValidateJson}
+              className="gap-2"
+            >
               <CheckCircle size={16} />
               Validate JSON
             </Button>
