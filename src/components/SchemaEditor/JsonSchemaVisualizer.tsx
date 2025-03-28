@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import type { JSONSchema } from "@/types/jsonSchema";
 import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
-import { FileJson, Loader2 } from "lucide-react";
+import { Download, FileJson, Loader2 } from "lucide-react";
 import type React from "react";
 import { useRef } from "react";
 
@@ -55,18 +55,36 @@ const JsonSchemaVisualizer: React.FC<JsonSchemaVisualizerProps> = ({
     }
   };
 
+  const handleDownload = () => {
+    const content = JSON.stringify(schema, null, 2);
+    const blob = new Blob([content], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "schema.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div
-      className={cn(
-        "relative rounded-lg overflow-hidden h-full flex flex-col",
-        className,
-      )}
+      className={cn("relative overflow-hidden h-full flex flex-col", className)}
     >
       <div className="flex items-center justify-between bg-secondary/80 backdrop-blur-sm px-4 py-2 border-b flex-shrink-0">
         <div className="flex items-center gap-2">
           <FileJson size={18} />
-          <span className="font-medium text-sm">JSON Schema</span>
+          <span className="font-medium text-sm">JSON Schema Source</span>
         </div>
+        <button
+          type="button"
+          onClick={handleDownload}
+          className="p-1.5 hover:bg-secondary rounded-md transition-colors"
+          title="Download Schema"
+        >
+          <Download size={16} />
+        </button>
       </div>
       <div className="flex-grow flex min-h-0">
         <Editor
