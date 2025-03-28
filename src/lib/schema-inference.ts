@@ -1,4 +1,4 @@
-import type { JSONSchema } from "@/types/jsonSchema";
+import { type JSONSchema, asObjectSchema } from "@/types/jsonSchema";
 
 /**
  * Infers a JSON Schema from a JSON object
@@ -38,7 +38,8 @@ export function inferSchema(obj: unknown): JSONSchema {
 
       // Check if all types are the same
       const allSameType = itemSchemas.every(
-        (schema) => schema.type === itemSchemas[0].type,
+        (schema) =>
+          asObjectSchema(schema).type === asObjectSchema(itemSchemas[0]).type,
       );
 
       if (allSameType && itemSchemas.length > 0) {
@@ -112,7 +113,7 @@ export function createSchemaFromJson(jsonObject: unknown): JSONSchema {
 
   return {
     $schema: "http://json-schema.org/draft-07/schema#",
-    ...inferredSchema,
+    ...asObjectSchema(inferredSchema),
     title: "Generated Schema",
     description: "Generated from JSON data",
   };
