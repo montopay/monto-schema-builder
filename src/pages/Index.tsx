@@ -337,7 +337,7 @@ const Index = () => {
             </div>
             <div className="mt-6 text-center">
               <a
-                href="https://json-schema.org/implementations.html"
+                href="https://json-schema.org/tools"
                 target="_blank"
                 rel="nofollow noopener noreferrer"
                 className="text-sm text-primary hover:underline"
