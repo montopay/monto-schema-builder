@@ -1,12 +1,16 @@
 import JsonSchemaEditor from "@/components/SchemaEditor/JsonSchemaEditor";
+import { SchemaInferencer } from "@/components/features/SchemaInferencer";
+import { JsonValidator } from "@/components/features/JsonValidator";
 import { exampleSchema } from "@/components/SchemaEditor/SchemaExample";
 import { Button } from "@/components/ui/button";
 import type { JSONSchema } from "@/types/jsonSchema";
-import { CirclePlus, FileJson, RefreshCw } from "lucide-react";
+import { CheckCircle, CirclePlus, Code, FileJson, RefreshCw } from "lucide-react";
 import { useState } from "react";
 
 const Index = () => {
   const [schema, setSchema] = useState<JSONSchema>(exampleSchema);
+  const [inferDialogOpen, setInferDialogOpen] = useState(false);
+  const [validateDialogOpen, setValidateDialogOpen] = useState(false);
 
   const handleReset = () => setSchema(exampleSchema);
 
@@ -16,6 +20,14 @@ const Index = () => {
       properties: {},
       required: [],
     });
+
+  const handleInferSchema = () => {
+    setInferDialogOpen(true);
+  };
+
+  const handleValidateJson = () => {
+    setValidateDialogOpen(true);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-background/95 relative overflow-hidden">
@@ -57,6 +69,14 @@ const Index = () => {
               <CirclePlus size={16} />
               Start from Scratch
             </Button>
+            <Button variant="outline" onClick={handleInferSchema} className="gap-2">
+              <Code size={16} />
+              Infer from JSON
+            </Button>
+            <Button variant="outline" onClick={handleValidateJson} className="gap-2">
+              <CheckCircle size={16} />
+              Validate JSON
+            </Button>
           </div>
         </div>
 
@@ -68,6 +88,20 @@ const Index = () => {
             className="shadow-lg animate-in border-border/50 backdrop-blur-sm"
           />
         </div>
+
+        {/* Schema inferencer component */}
+        <SchemaInferencer
+          open={inferDialogOpen}
+          onOpenChange={setInferDialogOpen}
+          onSchemaInferred={setSchema}
+        />
+
+        {/* JSON validator component */}
+        <JsonValidator
+          open={validateDialogOpen}
+          onOpenChange={setValidateDialogOpen}
+          schema={schema}
+        />
 
         {/* How It Works - kept within max-w-4xl */}
         <div className="max-w-4xl mx-auto">
