@@ -7,22 +7,20 @@ import JsonSchemaVisualizer from "./JsonSchemaVisualizer";
 import SchemaVisualEditor from "./SchemaVisualEditor";
 
 interface JsonSchemaEditorProps {
-  initialSchema?: JSONSchema;
-  onChange?: (schema: JSONSchema) => void;
+  schema?: JSONSchema;
+  setSchema?: (schema: JSONSchema) => void;
   className?: string;
 }
 
 const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
-  initialSchema = { type: "object" },
-  onChange,
+  schema = { type: "object" },
+  setSchema,
   className,
 }) => {
-  const [schema, setSchema] = useState<JSONSchema>(initialSchema);
 
   // Handle schema changes and propagate to parent if needed
   const handleSchemaChange = (newSchema: JSONSchema) => {
     setSchema(newSchema);
-    onChange?.(newSchema);
   };
 
   return (

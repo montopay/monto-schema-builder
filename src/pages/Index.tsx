@@ -3,35 +3,19 @@ import { exampleSchema } from "@/components/SchemaEditor/SchemaExample";
 import { Button } from "@/components/ui/button";
 import type { JSONSchema } from "@/types/jsonSchema";
 import { CirclePlus, FileJson, RefreshCw } from "lucide-react";
-import React, { useState } from "react";
-import { toast } from "sonner";
+import { useState } from "react";
 
 const Index = () => {
   const [schema, setSchema] = useState<JSONSchema>(exampleSchema);
-  const [isReset, setIsReset] = useState(false);
 
-  const handleReset = () => {
-    setIsReset(true);
-    setTimeout(() => {
-      setSchema(exampleSchema);
-      setIsReset(false);
-      toast.success("Reset to example schema");
-    }, 300);
-  };
+  const handleReset = () => setSchema(exampleSchema);
 
-  const handleClear = () => {
-    setIsReset(true);
-    setTimeout(() => {
-      // Create a minimal empty schema that satisfies the JSONSchemaType
-      setSchema({
-        type: "object",
-        properties: {},
-        required: [],
-      });
-      setIsReset(false);
-      toast.success("Cleared all fields");
-    }, 300);
-  };
+  const handleClear = () =>
+    setSchema({
+      type: "object",
+      properties: {},
+      required: [],
+    });
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-background/95 relative overflow-hidden">
@@ -69,7 +53,6 @@ const Index = () => {
               variant="outline"
               onClick={handleReset}
               className="gap-2"
-              disabled={isReset}
             >
               <RefreshCw size={16} />
               Reset to Example
@@ -78,7 +61,6 @@ const Index = () => {
               variant="outline"
               onClick={handleClear}
               className="gap-2"
-              disabled={isReset}
             >
               <CirclePlus size={16} />
               Start from Scratch
@@ -87,12 +69,10 @@ const Index = () => {
         </div>
 
         {/* Schema Editor - full width on large screens */}
-        <div
-          className={`transition-opacity duration-300 ${isReset ? "opacity-0" : "opacity-100"} max-w-4xl mx-auto lg:max-w-none`}
-        >
+        <div className="max-w-4xl mx-auto lg:max-w-none">
           <JsonSchemaEditor
-            initialSchema={schema}
-            onChange={setSchema}
+            schema={schema}
+            setSchema={setSchema}
             className="shadow-lg animate-in border-border/50 backdrop-blur-sm"
           />
         </div>
