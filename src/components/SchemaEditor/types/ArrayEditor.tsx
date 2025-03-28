@@ -1,22 +1,13 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { getArrayItemsSchema } from "@/lib/schemaEditor";
 import { cn } from "@/lib/utils";
 import type {
-  JSONSchema,
   ObjectJSONSchema,
   SchemaType,
 } from "@/types/jsonSchema";
-import { ChevronDown } from "lucide-react";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import type { TypeEditorProps } from "../TypeEditor";
 import TypeEditor from "../TypeEditor";
 
@@ -189,20 +180,11 @@ const ArrayEditor: React.FC<TypeEditorProps> = ({
         </div>
 
         {/* Item schema editor */}
-        <div
-          className={cn(
-            "px-3 py-2 rounded-lg border",
-            getTypeColor(itemType)
-              .replace("bg-", "border-")
-              .replace("50", "200/30"),
-          )}
-        >
-          <TypeEditor
-            schema={itemsSchema}
-            onChange={handleItemSchemaChange}
-            depth={depth + 1}
-          />
-        </div>
+        <TypeEditor
+          schema={itemsSchema}
+          onChange={handleItemSchemaChange}
+          depth={depth + 1}
+        />
       </div>
     </div>
   );
