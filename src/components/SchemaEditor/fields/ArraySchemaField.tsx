@@ -1,13 +1,9 @@
 import { getArrayItemsSchema, updateArrayItems } from "@/lib/schemaEditor";
 import { cn } from "@/lib/utils";
-import type { JSONSchema, NewField, SchemaType } from "@/types/jsonSchema";
+import { type ObjectJSONSchema, type JSONSchema, type NewField, type SchemaType, isObjectSchema, asObjectSchema } from "@/types/jsonSchema";
 import { useState } from "react";
-import AddFieldButton from "../AddFieldButton";
 import { ExpandButton, FieldActions, FieldDisplay } from "../SchemaField";
-
-// Solve circular dependency using lazy loading
-import { Suspense, lazy } from "react";
-const SchemaField = lazy(() => import("../SchemaField"));
+import ArrayItemType from "./ArrayItemType";
 
 interface ArraySchemaFieldProps {
   name: string;
@@ -26,7 +22,6 @@ const ArraySchemaField: React.FC<ArraySchemaFieldProps> = ({
   required = false,
   onDelete,
   onEdit,
-  onAddField,
   isNested = false,
   depth = 0,
 }) => {
@@ -56,24 +51,7 @@ const ArraySchemaField: React.FC<ArraySchemaFieldProps> = ({
   };
 
   // Handle updates to the array's item schema
-  const handleItemsEdit = (updatedField: NewField) => {
-    if (!onAddField) return; // Need onAddField to make schema changes
-
-    const newItemsSchema = {
-      type: updatedField.type,
-      description: updatedField.description,
-      ...(updatedField.validation || {}),
-    };
-
-    // Update the array schema with the new items schema
-    const newArraySchema = updateArrayItems(
-      typeof schema === "boolean" ? { type: "array" as const } : { ...schema },
-      newItemsSchema,
-    );
-
-    const items =
-      typeof newArraySchema === "boolean" ? undefined : newArraySchema.items;
-
+  const handleItemsEdit = (items: ObjectJSONSchema) => {
     // Update the parent with the new array schema
     onEdit({
       name: fieldName,
@@ -81,8 +59,9 @@ const ArraySchemaField: React.FC<ArraySchemaFieldProps> = ({
       description,
       required,
       validation: {
-        ...(items && { items }),
-      },
+        ...asObjectSchema(schema),
+        items
+      }
     });
   };
 
@@ -120,22 +99,11 @@ const ArraySchemaField: React.FC<ArraySchemaFieldProps> = ({
       {showItems && (
         <div className="pt-1 pb-2 px-2 sm:px-3 animate-in">
           <div className="ml-0 sm:ml-4">
-            <div className="text-xs font-medium text-muted-foreground mb-2">
-              Items:
-            </div>
-            <Suspense fallback={<div>Loading...</div>}>
-              <SchemaField
-                name="items"
-                schema={itemsSchema}
-                required={false}
-                onDelete={() => {
-                  /* Items schema cannot be deleted */
-                }}
-                onEdit={handleItemsEdit}
-                depth={depth + 1}
-                isNested={true}
-              />
-            </Suspense>
+            <ArrayItemType
+              schema={itemsSchema}
+              onEdit={handleItemsEdit}
+              depth={depth + 1}
+            />
           </div>
         </div>
       )}

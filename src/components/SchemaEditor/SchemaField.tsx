@@ -15,6 +15,7 @@ import AddFieldButton from "./AddFieldButton";
 
 // Lazy load the field type components to avoid circular dependencies
 const ObjectSchemaField = lazy(() => import("./fields/ObjectSchemaField.tsx"));
+const ObjectSchema = lazy(() => import("./fields/ObjectSchema.tsx"));
 const ArraySchemaField = lazy(() => import("./fields/ArraySchemaField.tsx"));
 const PrimitiveSchemaField = lazy(
   () => import("./fields/PrimitiveSchemaField.tsx"),

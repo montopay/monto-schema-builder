@@ -95,25 +95,28 @@ export function updateArrayItems(
   schema: JSONSchema,
   itemsSchema: JSONSchema,
 ): JSONSchema {
-  if (typeof schema === "boolean") return schema;
-
-  const newSchema = copySchema(schema);
-  if (newSchema.type === "array") {
-    newSchema.items = itemsSchema;
+  if (isObjectSchema(schema) && schema.type === "array") {
+    return {
+      ...schema,
+      items: itemsSchema,
+    };
   }
-
-  return newSchema;
+  return schema;
 }
 
 /**
  * Creates a schema for a new field
  */
 export function createFieldSchema(field: NewField): JSONSchema {
-  return {
-    type: field.type,
-    description: field.description,
-    ...field.validation,
-  };
+  const { type, description, validation } = field;
+  if (isObjectSchema(validation)) {
+    return {
+      type,
+      description,
+      ...validation,
+    };
+  }
+  return validation;
 }
 
 /**
