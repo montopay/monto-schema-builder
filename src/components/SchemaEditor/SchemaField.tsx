@@ -83,7 +83,9 @@ const FieldDisplay: React.FC<FieldDisplayProps> = ({
   const [isEditingDesc, setIsEditingDesc] = useState(false);
   const [isTypeOpen, setIsTypeOpen] = useState(false);
   const [tempName, setTempName] = useState(name);
-  const [tempDesc, setTempDesc] = useState(typeof schema === "boolean" ? "" : schema.description || "");
+  const [tempDesc, setTempDesc] = useState(
+    typeof schema === "boolean" ? "" : schema.description || "",
+  );
   const typeDropdownRef = useRef<HTMLDivElement>(null);
   const type =
     typeof schema === "boolean"
