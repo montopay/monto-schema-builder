@@ -334,12 +334,12 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
     <div
       className={cn(
         "mb-2 animate-in rounded-lg border border-border transition-all duration-200",
-        depth > 0 && "ml-4 border-l-2",
+        depth > 0 && "ml-0 sm:ml-4 border-l-2",
         isNested && "mt-2",
       )}
     >
       <div className="relative json-field-row justify-between group">
-        <div className="flex items-center gap-2 flex-grow">
+        <div className="flex items-center gap-2 flex-grow min-w-0">
           {isExpandable && (
             <ExpandButton
               expanded={expanded}
@@ -364,7 +364,7 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
       </div>
 
       {showChildren && (
-        <div className="pt-1 pb-2 px-2 animate-in">
+        <div className="pt-1 pb-2 px-2 sm:px-3 animate-in">
           {children.map((child) => (
             <SchemaField
               key={child.name}
@@ -378,7 +378,7 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
               depth={depth + 1}
             />
           ))}
-          <div className="mt-3 ml-4">
+          <div className="mt-3 ml-0 sm:ml-4">
             <AddFieldButton onAddField={onAddField} variant="secondary" />
           </div>
         </div>
