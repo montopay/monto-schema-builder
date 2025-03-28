@@ -36,7 +36,7 @@ export const getTypeLabel = (type: SchemaType): string => {
     case "boolean":
       return "Yes/No";
     case "object":
-      return "Group";
+      return "Object";
     case "array":
       return "List";
     case "null":

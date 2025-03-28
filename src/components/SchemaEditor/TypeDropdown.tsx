@@ -12,7 +12,6 @@ export interface TypeDropdownProps {
 const typeOptions: SchemaType[] = [
   "string",
   "number",
-  "integer",
   "boolean",
   "object",
   "array",
