@@ -26,11 +26,6 @@ const typeOptions: { id: SchemaType; label: string; description: string }[] = [
     description: "For decimal or whole numbers",
   },
   {
-    id: "integer",
-    label: "Integer",
-    description: "For whole numbers only",
-  },
-  {
     id: "boolean",
     label: "Yes/No",
     description: "For true/false values",
@@ -61,6 +56,7 @@ const SchemaTypeSelector: React.FC<SchemaTypeSelectorProps> = ({
         <button
           type="button"
           key={type.id}
+          title={type.description}
           className={cn(
             "p-2.5 rounded-lg border-2 text-left transition-all duration-200",
             value === type.id
