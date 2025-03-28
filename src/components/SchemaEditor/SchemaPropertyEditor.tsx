@@ -15,6 +15,7 @@ import {
 } from "@/types/jsonSchema";
 import { ChevronDown, ChevronRight, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import TypeDropdown from "./TypeDropdown";
 import TypeEditor from "./TypeEditor";
 
 export interface SchemaPropertyEditorProps {
@@ -165,14 +166,15 @@ export const SchemaPropertyEditor: React.FC<SchemaPropertyEditorProps> = ({
 
             {/* Type display */}
             <div className="flex items-center gap-2 justify-end flex-shrink-0">
-              <div
-                className={cn(
-                  "text-xs px-3.5 py-1.5 rounded-md font-medium w-[92px] text-center",
-                  getTypeColor(type),
-                )}
-              >
-                {getTypeLabel(type)}
-              </div>
+              <TypeDropdown 
+                value={type} 
+                onChange={(newType) => {
+                  onSchemaChange({
+                    ...asObjectSchema(schema),
+                    type: newType,
+                  });
+                }}
+              />
 
               {/* Required toggle */}
               <button

@@ -11,6 +11,7 @@ import type {
 import { isBooleanSchema, withObjectSchema } from "@/types/jsonSchema";
 import { useState } from "react";
 import type { TypeEditorProps } from "../TypeEditor";
+import TypeDropdown from "../TypeDropdown";
 import TypeEditor from "../TypeEditor";
 
 const ArrayEditor: React.FC<TypeEditorProps> = ({
@@ -134,14 +135,15 @@ const ArrayEditor: React.FC<TypeEditorProps> = ({
       <div className="space-y-2 pt-4 border-t border-border/40">
         <div className="flex items-center justify-between mb-4">
           <Label>Item Type</Label>
-          <div
-            className={cn(
-              "text-xs px-3.5 py-1.5 rounded-md font-medium",
-              getTypeColor(itemType),
-            )}
-          >
-            {getTypeLabel(itemType)}
-          </div>
+          <TypeDropdown
+            value={itemType}
+            onChange={(newType) => {
+              handleItemSchemaChange({
+                ...withObjectSchema(itemsSchema, (s) => s, {}),
+                type: newType,
+              });
+            }}
+          />
         </div>
 
         {/* Item schema editor */}
