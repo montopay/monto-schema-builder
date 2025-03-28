@@ -1,12 +1,17 @@
-import { useState } from "react";
-import type { JSONSchema, NewField, SchemaType } from "@/types/jsonSchema";
-import { getSchemaProperties, updateObjectProperty, updatePropertyRequired, removeObjectProperty } from "@/lib/schemaEditor";
+import {
+  getSchemaProperties,
+  removeObjectProperty,
+  updateObjectProperty,
+  updatePropertyRequired,
+} from "@/lib/schemaEditor";
 import { cn } from "@/lib/utils";
-import { ExpandButton, FieldActions, FieldDisplay } from "../SchemaField";
+import type { JSONSchema, NewField, SchemaType } from "@/types/jsonSchema";
+import { useState } from "react";
 import AddFieldButton from "../AddFieldButton";
+import { ExpandButton, FieldActions, FieldDisplay } from "../SchemaField";
 
 // Solve circular dependency using lazy loading
-import { lazy, Suspense } from "react";
+import { Suspense, lazy } from "react";
 const SchemaField = lazy(() => import("../SchemaField"));
 
 interface ObjectSchemaFieldProps {
@@ -32,8 +37,12 @@ const ObjectSchemaField: React.FC<ObjectSchemaFieldProps> = ({
 }) => {
   const [expanded, setExpanded] = useState(true);
   const [fieldName, setFieldName] = useState(name);
-  const type = typeof schema === "boolean" ? "object" : (schema.type || "object") as SchemaType;
-  const description = typeof schema === "boolean" ? "" : schema.description || "";
+  const type =
+    typeof schema === "boolean"
+      ? "object"
+      : ((schema.type || "object") as SchemaType);
+  const description =
+    typeof schema === "boolean" ? "" : schema.description || "";
 
   // Get the object's properties
   const properties = getSchemaProperties(schema);
@@ -53,123 +62,127 @@ const ObjectSchemaField: React.FC<ObjectSchemaFieldProps> = ({
 
   // Extract object properties and required fields safely
   const getObjectValidation = (schema: JSONSchema) => {
-    if (typeof schema === 'boolean') return {};
-    
+    if (typeof schema === "boolean") return {};
+
     const validation: Record<string, unknown> = {};
-    
+
     if (schema.properties) {
       validation.properties = schema.properties;
     }
-    
+
     if (schema.required && schema.required.length > 0) {
       validation.required = schema.required;
     }
-    
+
     return validation;
   };
 
   // Handle property updates within this object
   const handleChildEdit = (childName: string, updatedField: NewField) => {
     if (!onAddField) return; // Need onAddField to make schema changes
-    
+
     const newChildSchema = {
       type: updatedField.type,
       description: updatedField.description,
-      ...(updatedField.validation || {})
+      ...(updatedField.validation || {}),
     };
-    
+
     // Create a new object schema with the updated property
-    let newObjectSchema = typeof schema === 'boolean' 
-      ? { type: 'object' as const, properties: {} } 
-      : { ...schema };
-    
+    let newObjectSchema =
+      typeof schema === "boolean"
+        ? { type: "object" as const, properties: {} }
+        : { ...schema };
+
     // Update or add the property
     newObjectSchema = updateObjectProperty(
       newObjectSchema,
       updatedField.name,
-      newChildSchema
+      newChildSchema,
     );
-    
+
     // Update required status
     newObjectSchema = updatePropertyRequired(
       newObjectSchema,
       updatedField.name,
-      updatedField.required || false
+      updatedField.required || false,
     );
-    
+
     // If name changed, remove the old property
     if (childName !== updatedField.name) {
       newObjectSchema = removeObjectProperty(newObjectSchema, childName);
     }
-    
+
     // Update the parent with the new object schema
     onEdit({
       name: fieldName,
-      type: 'object',
+      type: "object",
       description,
       required,
-      validation: getObjectValidation(newObjectSchema)
+      validation: getObjectValidation(newObjectSchema),
     });
   };
 
   // Handle property deletion within this object
   const handleChildDelete = (childName: string) => {
     if (!onAddField) return;
-    
+
     // Remove the property from the object schema
     const newObjectSchema = removeObjectProperty(
-      typeof schema === 'boolean' ? { type: 'object' as const, properties: {} } : { ...schema },
-      childName
+      typeof schema === "boolean"
+        ? { type: "object" as const, properties: {} }
+        : { ...schema },
+      childName,
     );
-    
+
     // Update the parent with the new object schema
     onEdit({
       name: fieldName,
-      type: 'object',
+      type: "object",
       description,
       required,
-      validation: getObjectValidation(newObjectSchema)
+      validation: getObjectValidation(newObjectSchema),
     });
   };
 
   // Add a field to this object
   const handleAddChildField = (childField: NewField) => {
     if (!onAddField) return;
-    
+
     // Add the field to the object schema
     const childSchema = {
       type: childField.type,
       description: childField.description,
-      ...(childField.validation || {})
+      ...(childField.validation || {}),
     };
-    
-    let newObjectSchema = typeof schema === 'boolean' 
-      ? { type: 'object' as const, properties: {} } 
-      : { ...schema };
-    
+
+    let newObjectSchema =
+      typeof schema === "boolean"
+        ? { type: "object" as const, properties: {} }
+        : { ...schema };
+
     // Add the property
     newObjectSchema = updateObjectProperty(
       newObjectSchema,
       childField.name,
-      childSchema
+      childSchema,
     );
-    
+
     // Update required status if needed
     if (childField.required) {
       newObjectSchema = updatePropertyRequired(
         newObjectSchema,
         childField.name,
-        true
+        true,
       );
     }
-    
+
     // Update the parent with the new object schema
     onEdit({
       name: fieldName,
-      type: 'object',
+      type: "object",
       description,
       required,
-      validation: getObjectValidation(newObjectSchema)
+      validation: getObjectValidation(newObjectSchema),
     });
   };
 
@@ -214,14 +227,19 @@ const ObjectSchemaField: React.FC<ObjectSchemaFieldProps> = ({
                 schema={prop.schema}
                 required={prop.required}
                 onDelete={() => handleChildDelete(prop.name)}
-                onEdit={(updatedField) => handleChildEdit(prop.name, updatedField)}
+                onEdit={(updatedField) =>
+                  handleChildEdit(prop.name, updatedField)
+                }
                 depth={depth + 1}
                 isNested={true}
               />
             ))}
           </Suspense>
           <div className="mt-3 ml-0 sm:ml-4">
-            <AddFieldButton onAddField={handleAddChildField} variant="secondary" />
+            <AddFieldButton
+              onAddField={handleAddChildField}
+              variant="secondary"
+            />
           </div>
         </div>
       )}
@@ -229,4 +247,4 @@ const ObjectSchemaField: React.FC<ObjectSchemaFieldProps> = ({
   );
 };
 
-export default ObjectSchemaField; 
+export default ObjectSchemaField;

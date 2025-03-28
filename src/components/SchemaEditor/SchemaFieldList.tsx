@@ -1,10 +1,10 @@
+import { getSchemaProperties } from "@/lib/schemaEditor";
 import type {
   JSONSchema as JSONSchemaType,
   NewField,
 } from "@/types/jsonSchema";
 import type React from "react";
 import SchemaField from "./SchemaField";
-import { getSchemaProperties } from "@/lib/schemaEditor";
 
 interface SchemaFieldListProps {
   schema: JSONSchemaType;

@@ -10,13 +10,15 @@ import type {
 } from "@/types/jsonSchema";
 import { ChevronDown, ChevronRight, ChevronUp, Edit, X } from "lucide-react";
 import type React from "react";
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, lazy, useEffect, useRef, useState } from "react";
 import AddFieldButton from "./AddFieldButton";
 
 // Lazy load the field type components to avoid circular dependencies
-const ObjectSchemaField = lazy(() => import("./fields/ObjectSchemaField"));
-const ArraySchemaField = lazy(() => import("./fields/ArraySchemaField"));
-const PrimitiveSchemaField = lazy(() => import("./fields/PrimitiveSchemaField"));
+const ObjectSchemaField = lazy(() => import("./fields/ObjectSchemaField.tsx"));
+const ArraySchemaField = lazy(() => import("./fields/ArraySchemaField.tsx"));
+const PrimitiveSchemaField = lazy(
+  () => import("./fields/PrimitiveSchemaField.tsx"),
+);
 
 interface SchemaFieldProps {
   name: string;
@@ -40,7 +42,9 @@ const SchemaField: React.FC<SchemaFieldProps> = (props) => {
       {/* Render the appropriate field type based on the schema */}
       {type === "object" && <ObjectSchemaField {...props} />}
       {type === "array" && <ArraySchemaField {...props} />}
-      {type !== "object" && type !== "array" && <PrimitiveSchemaField {...props} />}
+      {type !== "object" && type !== "array" && (
+        <PrimitiveSchemaField {...props} />
+      )}
     </Suspense>
   );
 };
@@ -291,7 +295,10 @@ export interface ExpandButtonProps {
   onClick: () => void;
 }
 
-export const ExpandButton: React.FC<ExpandButtonProps> = ({ expanded, onClick }) => (
+export const ExpandButton: React.FC<ExpandButtonProps> = ({
+  expanded,
+  onClick,
+}) => (
   <button
     type="button"
     className="text-muted-foreground hover:text-foreground transition-colors"

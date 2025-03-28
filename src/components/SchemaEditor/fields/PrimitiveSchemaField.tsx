@@ -1,6 +1,6 @@
-import { useState } from "react";
-import type { JSONSchema, NewField, SchemaType } from "@/types/jsonSchema";
 import { cn } from "@/lib/utils";
+import type { JSONSchema, NewField, SchemaType } from "@/types/jsonSchema";
+import { useState } from "react";
 import { FieldActions, FieldDisplay } from "../SchemaField";
 
 interface PrimitiveSchemaFieldProps {
@@ -24,10 +24,12 @@ const PrimitiveSchemaField: React.FC<PrimitiveSchemaFieldProps> = ({
   depth = 0,
 }) => {
   const [fieldName, setFieldName] = useState(name);
-  const type = typeof schema === "boolean"
-    ? "string" // Default to string for boolean schemas
-    : ((schema.type || "string") as SchemaType);
-  const description = typeof schema === "boolean" ? "" : schema.description || "";
+  const type =
+    typeof schema === "boolean"
+      ? "string" // Default to string for boolean schemas
+      : ((schema.type || "string") as SchemaType);
+  const description =
+    typeof schema === "boolean" ? "" : schema.description || "";
 
   const handleFieldChange = (changes: Partial<NewField>) => {
     const newField = {
@@ -52,7 +54,6 @@ const PrimitiveSchemaField: React.FC<PrimitiveSchemaFieldProps> = ({
       <div className="relative json-field-row justify-between group">
         <div className="flex items-center gap-2 flex-grow min-w-0">
           <div className="w-[18px]" /> {/* Spacer to align with other fields */}
-
           <FieldDisplay
             name={fieldName}
             schema={schema}
@@ -72,4 +73,4 @@ const PrimitiveSchemaField: React.FC<PrimitiveSchemaFieldProps> = ({
   );
 };
 
-export default PrimitiveSchemaField; 
+export default PrimitiveSchemaField;

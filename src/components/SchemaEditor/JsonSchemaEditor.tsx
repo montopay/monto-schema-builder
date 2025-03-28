@@ -37,10 +37,7 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
         </div>
 
         <TabsContent value="visual" className="focus:outline-none">
-          <SchemaVisualEditor
-            schema={schema}
-            onChange={handleSchemaChange}
-          />
+          <SchemaVisualEditor schema={schema} onChange={handleSchemaChange} />
         </TabsContent>
 
         <TabsContent value="json" className="focus:outline-none">

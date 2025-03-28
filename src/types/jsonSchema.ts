@@ -143,13 +143,13 @@ export interface NewField {
     minItems?: number;
     maxItems?: number;
     uniqueItems?: boolean;
-    items?: JSONSchema;  // For array types
+    items?: JSONSchema; // For array types
     // Object validations
     minProperties?: number;
     maxProperties?: number;
     additionalProperties?: boolean;
-    properties?: Record<string, JSONSchema>;  // For object types
-    required?: string[];  // For object types, list of required properties
+    properties?: Record<string, JSONSchema>; // For object types
+    required?: string[]; // For object types, list of required properties
   };
 }
 
@@ -187,7 +187,7 @@ export function getSchemaDescription(schema: JSONSchema): string {
 export function withObjectSchema<T>(
   schema: JSONSchema,
   fn: (schema: ObjectJSONSchema) => T,
-  defaultValue: T
+  defaultValue: T,
 ): T {
   return isObjectSchema(schema) ? fn(schema) : defaultValue;
 }
