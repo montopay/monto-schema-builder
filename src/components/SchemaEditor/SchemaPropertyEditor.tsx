@@ -107,15 +107,15 @@ export const SchemaPropertyEditor: React.FC<SchemaPropertyEditorProps> = ({
           </button>
 
           {/* Property name */}
-          <div className="flex flex-wrap items-center gap-2 flex-grow group">
-            <div className="flex-grow flex flex-wrap items-center gap-2 min-w-[200px]">
+          <div className="flex items-center gap-2 flex-grow min-w-0 overflow-visible">
+            <div className="flex items-center gap-2 min-w-0 flex-grow overflow-visible">
               {isEditingName ? (
                 <Input
                   value={tempName}
                   onChange={(e) => setTempName(e.target.value)}
                   onBlur={handleNameSubmit}
                   onKeyDown={(e) => e.key === "Enter" && handleNameSubmit()}
-                  className="h-8 text-sm font-medium min-w-[120px] max-w-full"
+                  className="h-8 text-sm font-medium min-w-[120px] max-w-full z-10"
                   autoFocus
                   onFocus={(e) => e.target.select()}
                 />
@@ -124,7 +124,7 @@ export const SchemaPropertyEditor: React.FC<SchemaPropertyEditorProps> = ({
                   type="button"
                   onClick={() => setIsEditingName(true)}
                   onKeyDown={(e) => e.key === "Enter" && setIsEditingName(true)}
-                  className="json-field-label font-medium cursor-text px-2 py-0.5 -mx-0.5 rounded-sm hover:bg-secondary/30 hover:shadow-sm hover:ring-1 hover:ring-ring/20 transition-all text-left max-w-full truncate"
+                  className="json-field-label font-medium cursor-text px-2 py-0.5 -mx-0.5 rounded-sm hover:bg-secondary/30 hover:shadow-sm hover:ring-1 hover:ring-ring/20 transition-all text-left truncate min-w-[80px] max-w-[50%]"
                 >
                   {name}
                 </button>
@@ -138,7 +138,7 @@ export const SchemaPropertyEditor: React.FC<SchemaPropertyEditorProps> = ({
                   onBlur={handleDescSubmit}
                   onKeyDown={(e) => e.key === "Enter" && handleDescSubmit()}
                   placeholder="Add description..."
-                  className="h-8 text-xs text-muted-foreground italic flex-1 min-w-[150px]"
+                  className="h-8 text-xs text-muted-foreground italic flex-1 min-w-[150px] z-10"
                   autoFocus
                   onFocus={(e) => e.target.select()}
                 />
@@ -147,7 +147,7 @@ export const SchemaPropertyEditor: React.FC<SchemaPropertyEditorProps> = ({
                   type="button"
                   onClick={() => setIsEditingDesc(true)}
                   onKeyDown={(e) => e.key === "Enter" && setIsEditingDesc(true)}
-                  className="text-xs text-muted-foreground italic max-w-full truncate cursor-text px-2 py-0.5 -mx-0.5 rounded-sm hover:bg-secondary/30 hover:shadow-sm hover:ring-1 hover:ring-ring/20 transition-all text-left min-w-0 flex-1"
+                  className="text-xs text-muted-foreground italic cursor-text px-2 py-0.5 -mx-0.5 rounded-sm hover:bg-secondary/30 hover:shadow-sm hover:ring-1 hover:ring-ring/20 transition-all text-left truncate flex-1 max-w-[40%] mr-2"
                 >
                   {tempDesc}
                 </button>
@@ -156,7 +156,7 @@ export const SchemaPropertyEditor: React.FC<SchemaPropertyEditorProps> = ({
                   type="button"
                   onClick={() => setIsEditingDesc(true)}
                   onKeyDown={(e) => e.key === "Enter" && setIsEditingDesc(true)}
-                  className="text-xs text-muted-foreground/50 italic cursor-text px-2 py-0.5 -mx-0.5 rounded-sm hover:bg-secondary/30 hover:shadow-sm hover:ring-1 hover:ring-ring/20 transition-all opacity-0 group-hover:opacity-100 text-left min-w-0 flex-1"
+                  className="text-xs text-muted-foreground/50 italic cursor-text px-2 py-0.5 -mx-0.5 rounded-sm hover:bg-secondary/30 hover:shadow-sm hover:ring-1 hover:ring-ring/20 transition-all opacity-0 group-hover:opacity-100 text-left truncate flex-1 max-w-[40%] mr-2"
                 >
                   Add description...
                 </button>
@@ -164,7 +164,7 @@ export const SchemaPropertyEditor: React.FC<SchemaPropertyEditorProps> = ({
             </div>
 
             {/* Type display */}
-            <div className="flex flex-wrap items-center gap-2 justify-end">
+            <div className="flex items-center gap-2 justify-end flex-shrink-0">
               <div
                 className={cn(
                   "text-xs px-3.5 py-1.5 rounded-md font-medium w-[92px] text-center",
