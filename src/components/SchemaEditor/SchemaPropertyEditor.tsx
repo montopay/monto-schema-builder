@@ -166,8 +166,8 @@ export const SchemaPropertyEditor: React.FC<SchemaPropertyEditorProps> = ({
 
             {/* Type display */}
             <div className="flex items-center gap-2 justify-end flex-shrink-0">
-              <TypeDropdown 
-                value={type} 
+              <TypeDropdown
+                value={type}
                 onChange={(newType) => {
                   onSchemaChange({
                     ...asObjectSchema(schema),

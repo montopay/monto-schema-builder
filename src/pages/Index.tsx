@@ -49,19 +49,11 @@ const Index = () => {
 
           {/* Action Buttons */}
           <div className="flex flex-wrap justify-center gap-4 mb-8 animate-in">
-            <Button
-              variant="outline"
-              onClick={handleReset}
-              className="gap-2"
-            >
+            <Button variant="outline" onClick={handleReset} className="gap-2">
               <RefreshCw size={16} />
               Reset to Example
             </Button>
-            <Button
-              variant="outline"
-              onClick={handleClear}
-              className="gap-2"
-            >
+            <Button variant="outline" onClick={handleClear} className="gap-2">
               <CirclePlus size={16} />
               Start from Scratch
             </Button>

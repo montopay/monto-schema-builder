@@ -17,7 +17,6 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
   setSchema,
   className,
 }) => {
-
   // Handle schema changes and propagate to parent if needed
   const handleSchemaChange = (newSchema: JSONSchema) => {
     setSchema(newSchema);

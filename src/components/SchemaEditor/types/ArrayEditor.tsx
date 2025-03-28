@@ -10,8 +10,8 @@ import type {
 } from "@/types/jsonSchema";
 import { isBooleanSchema, withObjectSchema } from "@/types/jsonSchema";
 import { useState } from "react";
-import type { TypeEditorProps } from "../TypeEditor";
 import TypeDropdown from "../TypeDropdown";
+import type { TypeEditorProps } from "../TypeEditor";
 import TypeEditor from "../TypeEditor";
 
 const ArrayEditor: React.FC<TypeEditorProps> = ({
