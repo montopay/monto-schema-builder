@@ -114,24 +114,26 @@ const SchemaVisualEditor: React.FC<SchemaVisualEditorProps> = ({
     Object.keys(schema.properties).length > 0;
 
   return (
-    <div className="p-4 focus:outline-none">
-      <div className="mb-6">
+    <div className="p-4 h-full flex flex-col overflow-auto">
+      <div className="mb-6 flex-shrink-0">
         <AddFieldButton onAddField={handleAddField} />
       </div>
 
-      {!hasFields ? (
-        <div className="text-center py-10 text-muted-foreground">
-          <p className="mb-3">No fields defined yet</p>
-          <p className="text-sm">Add your first field to get started</p>
-        </div>
-      ) : (
-        <SchemaFieldList
-          schema={schema}
-          onAddField={handleAddField}
-          onEditField={handleEditField}
-          onDeleteField={handleDeleteField}
-        />
-      )}
+      <div className="flex-grow overflow-auto">
+        {!hasFields ? (
+          <div className="text-center py-10 text-muted-foreground">
+            <p className="mb-3">No fields defined yet</p>
+            <p className="text-sm">Add your first field to get started</p>
+          </div>
+        ) : (
+          <SchemaFieldList
+            schema={schema}
+            onAddField={handleAddField}
+            onEditField={handleEditField}
+            onDeleteField={handleDeleteField}
+          />
+        )}
+      </div>
     </div>
   );
 };

@@ -84,19 +84,21 @@ const Index = () => {
               Start from Scratch
             </Button>
           </div>
+        </div>
 
-          {/* Schema Editor */}
-          <div
-            className={`transition-opacity duration-300 ${isReset ? "opacity-0" : "opacity-100"}`}
-          >
-            <JsonSchemaEditor
-              initialSchema={schema}
-              onChange={setSchema}
-              className="shadow-lg animate-in border-border/50 backdrop-blur-sm"
-            />
-          </div>
+        {/* Schema Editor - full width on large screens */}
+        <div
+          className={`transition-opacity duration-300 ${isReset ? "opacity-0" : "opacity-100"} max-w-4xl mx-auto lg:max-w-none`}
+        >
+          <JsonSchemaEditor
+            initialSchema={schema}
+            onChange={setSchema}
+            className="shadow-lg animate-in border-border/50 backdrop-blur-sm"
+          />
+        </div>
 
-          {/* How It Works */}
+        {/* How It Works - kept within max-w-4xl */}
+        <div className="max-w-4xl mx-auto">
           <div className="mt-16 grid md:grid-cols-3 gap-6 text-center animate-in">
             <div className="glass-panel p-6">
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
