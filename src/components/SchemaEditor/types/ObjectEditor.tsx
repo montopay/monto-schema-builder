@@ -71,15 +71,12 @@ const ObjectEditor: React.FC<TypeEditorProps> = ({
       propertySchemaObj,
     );
 
-    // Update required status
     if (property.required) {
       newSchema = updatePropertyRequired(newSchema, newName, true);
     }
 
-    // Remove old property
     newSchema = removeObjectProperty(newSchema, oldName);
 
-    // Update schema
     onChange(newSchema);
   };
 
@@ -96,27 +93,6 @@ const ObjectEditor: React.FC<TypeEditorProps> = ({
     onChange(newSchema);
   };
 
-  // Handle property description change
-  const handlePropertyDescriptionChange = (
-    propertyName: string,
-    description: string,
-  ) => {
-    const property = properties.find((p) => p.name === propertyName);
-    if (!property) return;
-
-    const propertySchema = isBooleanSchema(property.schema)
-      ? { type: "object" as const, description }
-      : { ...property.schema, description: description || undefined };
-
-    const newSchema = updateObjectProperty(
-      normalizedSchema,
-      propertyName,
-      propertySchema,
-    );
-    onChange(newSchema);
-  };
-
-  // Handle property schema change
   const handlePropertySchemaChange = (
     propertyName: string,
     propertySchema: ObjectJSONSchema,
