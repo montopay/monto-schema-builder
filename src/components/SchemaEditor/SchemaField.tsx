@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { getChildren, hasChildren } from "@/hooks/useSchemaEditor";
+import { getChildren, hasChildren } from "@/lib/schemaEditor";
 import { cn } from "@/lib/utils";
 import type {
   JSONSchema as JSONSchemaType,

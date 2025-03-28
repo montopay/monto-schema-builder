@@ -13,7 +13,7 @@
     "fix": "biome check --fix --unsafe",
     "typecheck": "tsc",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest run"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
