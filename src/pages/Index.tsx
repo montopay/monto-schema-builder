@@ -185,17 +185,21 @@ const Index = () => {
                 information, and order specifics - all with proper validation
                 rules.
               </p>
-              <div className="text-xs bg-muted/50 p-2 rounded text-left overflow-x-auto">
-                {`{
-  "type": "object",
-  "properties": {
-    "address": { "type": "object", "properties": {
-      "street": { "type": "string" },
-      "zipCode": { "type": "string", "pattern": "^\\d{5}$" }
-    }},
-    "paymentMethod": { "type": "string", "enum": ["credit", "paypal"] }
-  }
-}`}
+              <div className="text-xs text-wrap bg-muted/50 p-2 rounded text-left overflow-x-auto">
+                {JSON.stringify(
+                  {
+                    type: "object",
+                    properties: {
+                      zipCode: { type: "string", pattern: "^\\d{5}$" },
+                    },
+                    paymentMethod: {
+                      type: "string",
+                      enum: ["credit", "paypal"],
+                    },
+                  },
+                  null,
+                  2,
+                )}
               </div>
             </div>
           </div>
