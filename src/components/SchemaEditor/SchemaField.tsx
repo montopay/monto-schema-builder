@@ -333,8 +333,8 @@ const SchemaField: React.FC<SchemaFieldProps> = ({
   return (
     <div
       className={cn(
-        "mb-2 animate-in rounded-lg border border-border transition-all duration-200",
-        depth > 0 && "ml-0 sm:ml-4 border-l-2",
+        "mb-2 animate-in rounded-lg border transition-all duration-200",
+        depth > 0 && "ml-0 sm:ml-4 border-l border-l-border/40",
         isNested && "mt-2",
       )}
     >
