@@ -1,112 +1,106 @@
-# JSON Builder Project
+# JSON Schema Builder
 
-This is a JSON builder project that helps you create and manipulate JSON data structures with a user-friendly interface.
+A modern, React-based visual JSON Schema editor for creating and manipulating JSON Schema definitions with an intuitive interface.
 
-## Development
+## Features
 
-### Local Development
+- **Visual Schema Editor**: Design your JSON Schema through an intuitive interface without writing raw JSON
+- **Real-time JSON Preview**: See your schema in JSON format as you build it visually
+- **Schema Inference**: Generate schemas automatically from existing JSON data
+- **JSON Validation**: Test JSON data against your schema with detailed validation feedback
+- **Responsive Design**: Fully responsive interface that works on desktop and mobile devices
 
-To work locally using your own IDE:
+## Getting Started
 
-1. Clone this repository
-2. Install dependencies:
+### Installation
+
 ```bash
+git clone https://github.com/yourusername/jsonjoy-builder.git
+cd jsonjoy-builder
 npm install
 ```
-3. Start the development server:
+
+### Development
+
+Start the development server:
+
 ```bash
 npm run dev
 ```
 
+The application will be available at http://localhost:5173
+
 ### Building for Production
 
-To build the project for production:
+Build the application for production:
 
 ```bash
 npm run build
 ```
 
-### Deployment
+The built files will be available in the `dist` directory.
 
-To deploy your project:
+## Project Architecture
 
-1. Build the project
-2. Deploy the contents of the `dist` directory to your hosting provider
+### Core Components
 
-### Custom Domains
+- **JsonSchemaEditor**: The main component that provides tabs for switching between visual and JSON views
+- **SchemaVisualEditor**: Handles the visual representation and editing of schemas
+- **JsonSchemaVisualizer**: Provides JSON view with Monaco editor for direct schema editing
+- **SchemaInferencer**: Dialog component for generating schemas from JSON data
+- **JsonValidator**: Dialog component for validating JSON against the current schema
 
-For information about setting up custom domains, please refer to your hosting provider's documentation.
+### Key Features
+
+#### Schema Inference
+
+The application can automatically generate JSON Schema definitions from existing JSON data. This feature uses a recursion-based inference system to detect:
+
+- Object structures and properties
+- Array types and their item schemas
+- String formats (dates, emails, URIs)
+- Numeric types (integers vs. floats)
+- Required fields
+
+#### JSON Validation
+
+Validate any JSON document against your schema with:
+- Real-time feedback
+- Detailed error reporting
+- Format validation for emails, dates, and other special formats
+
+## Technology Stack
+
+- **React**: UI framework
+- **TypeScript**: Type-safe development
+- **Vite**: Build tool and development server
+- **ShadCN UI**: Component library
+- **Monaco Editor**: Code editor for JSON viewing/editing
+- **Ajv**: JSON Schema validation
+- **Zod**: Runtime schema validation
+- **React Router**: Navigation
+- **TanStack Query**: Data fetching
+- **Lucide Icons**: Icon library
+
+## Development Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm run build:dev` | Build with development settings |
+| `npm run lint` | Run linter |
+| `npm run format` | Format code |
+| `npm run check` | Type check the project |
+| `npm run fix` | Fix linting issues |
+| `npm run typecheck` | Type check with TypeScript |
+| `npm run preview` | Preview production build |
+| `npm run test` | Run tests |
 
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-# JSON Schema Editor
+## Author
 
-A component-based editor for creating and modifying JSON Schema objects.
-
-## Architecture
-
-The editor follows a component-based architecture where each component is responsible for managing its own piece of the schema. This approach provides several advantages:
-
-1. **Encapsulation**: Each component manages its own schema fragment
-2. **Locality**: Schema updates happen locally, not through a central manager
-3. **Composability**: Components can be easily composed to create complex schemas
-4. **Reusability**: Schema editing logic is contained within the components
-
-### Core Components
-
-#### `JsonSchemaEditor`
-- The root component that manages the overall schema
-- Provides tabs for switching between visual and JSON editing modes
-- Maintains the schema state and passes it to child components
-
-#### `SchemaField` Factory Component
-- Acts as a factory that renders the appropriate field type based on the schema type
-- Routes rendering to the specialized field components: `ObjectSchemaField`, `ArraySchemaField`, or `PrimitiveSchemaField`
-
-#### Type-Specific Field Components
-- **`ObjectSchemaField`**: Manages object-type schemas, handling properties and required fields
-- **`ArraySchemaField`**: Manages array-type schemas and their items schema
-- **`PrimitiveSchemaField`**: Manages primitive type schemas (string, number, boolean)
-
-#### Supporting Components
-- `SchemaFieldList`: Renders a list of schema fields for an object
-- `FieldDisplay`: Renders the UI for editing field properties (name, type, description, required)
-- `AddFieldButton`: Button for adding new fields to a schema
-
-### Schema Update Flow
-
-1. Each component manages updates to its own schema fragment
-2. When a change occurs, the component creates a new schema with the updates
-3. The component then calls its `onEdit` callback with the updated schema
-4. Changes propagate up the component tree until reaching the root `JsonSchemaEditor`
-5. The root component updates its state and triggers a re-render
-
-### Utility Functions
-
-The architecture relies on pure utility functions for schema manipulation:
-
-- `updateObjectProperty`: Adds or updates a property in an object schema
-- `removeObjectProperty`: Removes a property from an object schema
-- `updatePropertyRequired`: Updates the 'required' status of a property
-- `updateArrayItems`: Updates an array schema's items
-- `getSchemaProperties`: Gets properties from an object schema
-- `getArrayItemsSchema`: Gets the items schema from an array schema
-
-## Usage
-
-```jsx
-import { JsonSchemaEditor } from './components/SchemaEditor';
-
-function App() {
-  const [schema, setSchema] = useState({ type: 'object', properties: {} });
-  
-  return (
-    <JsonSchemaEditor
-      initialSchema={schema}
-      onChange={setSchema}
-    />
-  );
-}
-```
+[@ophir.dev](https://ophir.dev)
