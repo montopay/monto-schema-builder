@@ -38,12 +38,21 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
             </TabsList>
           </div>
 
-          <TabsContent value="visual" className="focus:outline-none w-full h-[500px]">
+          <TabsContent
+            value="visual"
+            className="focus:outline-none w-full h-[500px]"
+          >
             <SchemaVisualEditor schema={schema} onChange={handleSchemaChange} />
           </TabsContent>
 
-          <TabsContent value="json" className="focus:outline-none w-full h-[500px]">
-            <JsonSchemaVisualizer schema={schema} onChange={handleSchemaChange} />
+          <TabsContent
+            value="json"
+            className="focus:outline-none w-full h-[500px]"
+          >
+            <JsonSchemaVisualizer
+              schema={schema}
+              onChange={handleSchemaChange}
+            />
           </TabsContent>
         </Tabs>
       </div>
@@ -58,7 +67,10 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
             <SchemaVisualEditor schema={schema} onChange={handleSchemaChange} />
           </div>
           <div className="w-1/2 h-full min-h-0">
-            <JsonSchemaVisualizer schema={schema} onChange={handleSchemaChange} />
+            <JsonSchemaVisualizer
+              schema={schema}
+              onChange={handleSchemaChange}
+            />
           </div>
         </div>
       </div>

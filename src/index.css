@@ -128,11 +128,11 @@
   .hover-action {
     @apply opacity-0 group-hover:opacity-100 transition-opacity;
   }
-  
+
   .monaco-editor-container {
     @apply w-full h-full;
   }
-  
+
   .monaco-editor-container > div {
     @apply h-full;
   }

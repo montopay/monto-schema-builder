@@ -56,7 +56,12 @@ const JsonSchemaVisualizer: React.FC<JsonSchemaVisualizerProps> = ({
   };
 
   return (
-    <div className={cn("relative rounded-lg overflow-hidden h-full flex flex-col", className)}>
+    <div
+      className={cn(
+        "relative rounded-lg overflow-hidden h-full flex flex-col",
+        className,
+      )}
+    >
       <div className="flex items-center justify-between bg-secondary/80 backdrop-blur-sm px-4 py-2 border-b flex-shrink-0">
         <div className="flex items-center gap-2">
           <FileJson size={18} />

@@ -68,27 +68,27 @@ export const baseSchema = z.object({
 export type JSONSchema =
   | boolean
   | (z.infer<typeof baseSchema> & {
-    // Recursive properties
-    $defs?: Record<string, JSONSchema>;
-    contentSchema?: JSONSchema;
-    items?: JSONSchema;
-    prefixItems?: JSONSchema[];
-    contains?: JSONSchema;
-    unevaluatedItems?: JSONSchema;
-    properties?: Record<string, JSONSchema>;
-    patternProperties?: Record<string, JSONSchema>;
-    additionalProperties?: JSONSchema | boolean;
-    propertyNames?: JSONSchema;
-    dependentSchemas?: Record<string, JSONSchema>;
-    unevaluatedProperties?: JSONSchema;
-    allOf?: JSONSchema[];
-    anyOf?: JSONSchema[];
-    oneOf?: JSONSchema[];
-    not?: JSONSchema;
-    if?: JSONSchema;
-    then?: JSONSchema;
-    else?: JSONSchema;
-  });
+      // Recursive properties
+      $defs?: Record<string, JSONSchema>;
+      contentSchema?: JSONSchema;
+      items?: JSONSchema;
+      prefixItems?: JSONSchema[];
+      contains?: JSONSchema;
+      unevaluatedItems?: JSONSchema;
+      properties?: Record<string, JSONSchema>;
+      patternProperties?: Record<string, JSONSchema>;
+      additionalProperties?: JSONSchema | boolean;
+      propertyNames?: JSONSchema;
+      dependentSchemas?: Record<string, JSONSchema>;
+      unevaluatedProperties?: JSONSchema;
+      allOf?: JSONSchema[];
+      anyOf?: JSONSchema[];
+      oneOf?: JSONSchema[];
+      not?: JSONSchema;
+      if?: JSONSchema;
+      then?: JSONSchema;
+      else?: JSONSchema;
+    });
 
 // Define Zod schema with recursive types
 export const jsonSchemaType: z.ZodType<JSONSchema> = z.lazy(() =>
@@ -158,7 +158,7 @@ export function isObjectSchema(schema: JSONSchema): schema is ObjectJSONSchema {
 }
 
 export function asObjectSchema(schema: JSONSchema): ObjectJSONSchema {
-  return isObjectSchema(schema) ? schema : { type: 'null' };
+  return isObjectSchema(schema) ? schema : { type: "null" };
 }
 export function getSchemaDescription(schema: JSONSchema): string {
   return isObjectSchema(schema) ? schema.description || "" : "";
