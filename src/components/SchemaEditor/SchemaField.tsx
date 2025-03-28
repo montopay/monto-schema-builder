@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { getChildren, hasChildren } from "@/lib/schemaEditor";
+import { hasChildren } from "@/lib/schemaEditor";
 import { cn } from "@/lib/utils";
 import type {
   JSONSchema as JSONSchemaType,
@@ -10,21 +10,45 @@ import type {
 } from "@/types/jsonSchema";
 import { ChevronDown, ChevronRight, ChevronUp, Edit, X } from "lucide-react";
 import type React from "react";
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import AddFieldButton from "./AddFieldButton";
+
+// Lazy load the field type components to avoid circular dependencies
+const ObjectSchemaField = lazy(() => import("./fields/ObjectSchemaField"));
+const ArraySchemaField = lazy(() => import("./fields/ArraySchemaField"));
+const PrimitiveSchemaField = lazy(() => import("./fields/PrimitiveSchemaField"));
 
 interface SchemaFieldProps {
   name: string;
   schema: JSONSchemaType;
   required?: boolean;
   onDelete: () => void;
-  onEdit: (field: NewField) => void;
+  onEdit: (updatedField: NewField) => void;
   onAddField?: (newField: NewField) => void;
   isNested?: boolean;
   depth?: number;
 }
 
-const getTypeColor = (type: SchemaType): string => {
+// Factory component that renders the appropriate field type
+const SchemaField: React.FC<SchemaFieldProps> = (props) => {
+  const { schema } = props;
+  const type = typeof schema === "boolean" ? "object" : schema.type || "object";
+
+  // Wrap in Suspense to handle lazy loading
+  return (
+    <Suspense fallback={<div>Loading field...</div>}>
+      {/* Render the appropriate field type based on the schema */}
+      {type === "object" && <ObjectSchemaField {...props} />}
+      {type === "array" && <ArraySchemaField {...props} />}
+      {type !== "object" && type !== "array" && <PrimitiveSchemaField {...props} />}
+    </Suspense>
+  );
+};
+
+export default SchemaField;
+
+// Export common utilities that can be used by field type components
+export const getTypeColor = (type: SchemaType): string => {
   switch (type) {
     case "string":
       return "text-blue-500 bg-blue-50";
@@ -42,7 +66,7 @@ const getTypeColor = (type: SchemaType): string => {
   }
 };
 
-const getTypeLabel = (type: SchemaType): string => {
+export const getTypeLabel = (type: SchemaType): string => {
   switch (type) {
     case "string":
       return "Text";
@@ -60,7 +84,7 @@ const getTypeLabel = (type: SchemaType): string => {
   }
 };
 
-interface FieldDisplayProps {
+export interface FieldDisplayProps {
   name: string;
   schema: JSONSchemaType;
   required: boolean;
@@ -70,7 +94,7 @@ interface FieldDisplayProps {
   onDescriptionChange: (description: string) => void;
 }
 
-const FieldDisplay: React.FC<FieldDisplayProps> = ({
+export const FieldDisplay: React.FC<FieldDisplayProps> = ({
   name,
   schema,
   required,
@@ -262,27 +286,27 @@ const FieldDisplay: React.FC<FieldDisplayProps> = ({
   );
 };
 
-interface ExpandButtonProps {
+export interface ExpandButtonProps {
   expanded: boolean;
   onClick: () => void;
 }
 
-const ExpandButton: React.FC<ExpandButtonProps> = ({ expanded, onClick }) => (
+export const ExpandButton: React.FC<ExpandButtonProps> = ({ expanded, onClick }) => (
   <button
     type="button"
     className="text-muted-foreground hover:text-foreground transition-colors"
     onClick={onClick}
     aria-label={expanded ? "Collapse" : "Expand"}
   >
-    {expanded ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
+    {expanded ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
   </button>
 );
 
-interface FieldActionsProps {
+export interface FieldActionsProps {
   onDelete: () => void;
 }
 
-const FieldActions: React.FC<FieldActionsProps> = ({ onDelete }) => (
+export const FieldActions: React.FC<FieldActionsProps> = ({ onDelete }) => (
   <div className="flex items-center gap-1 text-muted-foreground">
     <button
       type="button"
@@ -294,97 +318,3 @@ const FieldActions: React.FC<FieldActionsProps> = ({ onDelete }) => (
     </button>
   </div>
 );
-
-const SchemaField: React.FC<SchemaFieldProps> = ({
-  name,
-  schema,
-  required = false,
-  onDelete,
-  onEdit,
-  onAddField,
-  isNested = false,
-  depth = 0,
-}) => {
-  const [expanded, setExpanded] = useState(true);
-  const [fieldName, setFieldName] = useState(name);
-  const type =
-    typeof schema === "boolean"
-      ? "object"
-      : ((schema.type || "object") as SchemaType);
-  const description =
-    typeof schema === "boolean" ? "" : schema.description || "";
-
-  const isExpandable = type === "object" || type === "array";
-
-  const handleFieldChange = (changes: Partial<NewField>) => {
-    const newField = {
-      name: fieldName,
-      type,
-      description,
-      required,
-      ...changes,
-    };
-    setFieldName(newField.name);
-    onEdit(newField);
-  };
-
-  const children = getChildren(schema);
-  const showChildren = expanded && isExpandable && children.length > 0;
-  return (
-    <div
-      className={cn(
-        "mb-2 animate-in rounded-lg border transition-all duration-200",
-        depth > 0 && "ml-0 sm:ml-4 border-l border-l-border/40",
-        isNested && "mt-2",
-      )}
-    >
-      <div className="relative json-field-row justify-between group">
-        <div className="flex items-center gap-2 flex-grow min-w-0">
-          {isExpandable && (
-            <ExpandButton
-              expanded={expanded}
-              onClick={() => setExpanded(!expanded)}
-            />
-          )}
-
-          <FieldDisplay
-            name={fieldName}
-            schema={schema}
-            required={required}
-            onTypeChange={(type) => handleFieldChange({ type })}
-            onRequiredChange={(required) => handleFieldChange({ required })}
-            onNameChange={(name) => handleFieldChange({ name })}
-            onDescriptionChange={(description) =>
-              handleFieldChange({ description })
-            }
-          />
-        </div>
-
-        <FieldActions onDelete={onDelete} />
-      </div>
-
-      {showChildren && (
-        <div className="pt-1 pb-2 px-2 sm:px-3 animate-in">
-          {children.map((child) => (
-            <SchemaField
-              key={child.name}
-              name={child.name}
-              schema={child.schema}
-              required={child.required}
-              onDelete={onDelete}
-              onEdit={onEdit}
-              onAddField={onAddField}
-              isNested={true}
-              depth={depth + 1}
-            />
-          ))}
-          <div className="mt-3 ml-0 sm:ml-4">
-            <AddFieldButton onAddField={onAddField} variant="secondary" />
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default SchemaField;

@@ -143,10 +143,13 @@ export interface NewField {
     minItems?: number;
     maxItems?: number;
     uniqueItems?: boolean;
+    items?: JSONSchema;  // For array types
     // Object validations
     minProperties?: number;
     maxProperties?: number;
     additionalProperties?: boolean;
+    properties?: Record<string, JSONSchema>;  // For object types
+    required?: string[];  // For object types, list of required properties
   };
 }
 
@@ -165,4 +168,26 @@ export interface SchemaEditorState {
   handleEditField: (path: string[], updatedField: NewField) => void;
   handleDeleteField: (path: string[]) => void;
   handleSchemaEdit: (schema: JSONSchema) => void;
+}
+
+export type ObjectJSONSchema = Exclude<JSONSchema, boolean>;
+
+export function isBooleanSchema(schema: JSONSchema): schema is boolean {
+  return typeof schema === "boolean";
+}
+
+export function isObjectSchema(schema: JSONSchema): schema is ObjectJSONSchema {
+  return !isBooleanSchema(schema);
+}
+
+export function getSchemaDescription(schema: JSONSchema): string {
+  return isObjectSchema(schema) ? schema.description || "" : "";
+}
+
+export function withObjectSchema<T>(
+  schema: JSONSchema,
+  fn: (schema: ObjectJSONSchema) => T,
+  defaultValue: T
+): T {
+  return isObjectSchema(schema) ? fn(schema) : defaultValue;
 }

@@ -1,4 +1,5 @@
-import type { JSONSchema, NewField } from "@/types/jsonSchema";
+import type { JSONSchema, NewField, ObjectJSONSchema } from "../types/jsonSchema";
+import { isBooleanSchema, isObjectSchema } from "../types/jsonSchema";
 
 export type Property = {
   name: string;
@@ -11,152 +12,94 @@ export function copySchema<T extends JSONSchema>(schema: T): T {
   return JSON.parse(JSON.stringify(schema));
 }
 
-export function isObject(schema: JSONSchema): schema is JSONSchema & {
-  type: "object";
-  properties: Record<string, JSONSchema>;
-  required?: string[];
-} {
-  return (
-    typeof schema === "object" &&
-    schema.type === "object" &&
-    "properties" in schema
-  );
-}
-
-export function getChildren(schema: JSONSchema): Property[] {
-  if (typeof schema === "boolean") return [];
-  if (schema.type === "object") {
-    return Object.entries(schema.properties || {}).map(([name, prop]) => ({
-      name,
-      schema: prop,
-      required: schema.required?.includes(name) || false,
-    }));
-  }
-  if (schema.type === "array") {
-    return [
-      {
-        name: "items",
-        schema: schema.items,
-        required: schema.required?.includes("items") || false,
-      },
-    ];
-  }
-  return [];
-}
-
-export function hasChildren(schema: JSONSchema): boolean {
-  if (typeof schema === "boolean") return false;
-  if (schema.type === "object") return !!schema.properties;
-  if (
-    schema.type === "array" &&
-    schema.items &&
-    typeof schema.items === "object"
-  ) {
-    return schema.items.type === "object" && !!schema.items.properties;
-  }
-  return false;
-}
-
-export function getParentSchema(
-  schema: JSONSchema,
-  path: string[],
-): JSONSchema | null {
-  if (path.length === 0) return schema;
-  const parentPath = path.slice(0, -1);
-  return parentPath.reduce((acc: JSONSchema | null, curr) => {
-    if (!acc || typeof acc === "boolean" || !acc.properties?.[curr])
-      return null;
-    return acc.properties[curr];
-  }, schema);
-}
-
-export function updateRequiredFields(
-  schema: JSONSchema,
-  path: string[],
-  required: boolean,
-): JSONSchema {
-  if (path.length === 0) return schema;
-  const parentPath = path.slice(0, -1);
-  const fieldName = path[path.length - 1];
-
-  const newSchema = copySchema(schema);
-  let currentSchema = newSchema;
-
-  // Navigate to the parent schema
-  for (const segment of parentPath) {
-    if (
-      typeof currentSchema !== "object" ||
-      !currentSchema.properties?.[segment]
-    ) {
-      return newSchema;
-    }
-    currentSchema = currentSchema.properties[segment];
-  }
-
-  if (!isObject(currentSchema)) return newSchema;
-
-  currentSchema.required = required
-    ? [...(currentSchema.required || []), fieldName]
-    : (currentSchema.required || []).filter((field) => field !== fieldName);
-
-  return newSchema;
-}
-
-export function setSchemaProperty(
-  schema: JSONSchema,
-  path: string[],
-  value: JSONSchema,
-): JSONSchema {
-  if (path.length === 0 || typeof schema !== "object") return value;
-  const [head, ...rest] = path;
-
+/**
+ * Updates a property in an object schema
+ */
+export function updateObjectProperty(
+  schema: ObjectJSONSchema,
+  propertyName: string,
+  propertySchema: JSONSchema
+): ObjectJSONSchema {
+  if (!isObjectSchema(schema)) return schema;
+  
   const newSchema = copySchema(schema);
   if (!newSchema.properties) {
     newSchema.properties = {};
   }
-
-  if (rest.length === 0) {
-    newSchema.properties[head] = value;
-  } else {
-    const childSchema = newSchema.properties[head] || {
-      type: "object",
-      properties: {},
-    };
-    newSchema.properties[head] = setSchemaProperty(childSchema, rest, value);
-  }
-
+  
+  newSchema.properties[propertyName] = propertySchema;
   return newSchema;
 }
 
-export function deleteSchemaProperty(
-  schema: JSONSchema,
-  path: string[],
-): JSONSchema {
-  if (typeof schema === "boolean" || path.length === 0) return schema;
-
-  const [head, ...rest] = path;
+/**
+ * Removes a property from an object schema
+ */
+export function removeObjectProperty(
+  schema: ObjectJSONSchema, 
+  propertyName: string
+): ObjectJSONSchema {
+  if (!isObjectSchema(schema) || !schema.properties) return schema;
+  
   const newSchema = copySchema(schema);
-  if (!newSchema.properties) return newSchema;
-
-  if (rest.length === 0) {
-    const { [head]: _, ...remaining } = newSchema.properties;
-    newSchema.properties = remaining;
-    if (newSchema.required) {
-      newSchema.required = newSchema.required.filter((field) => field !== head);
-    }
-    return newSchema;
+  const { [propertyName]: _, ...remainingProps } = newSchema.properties;
+  newSchema.properties = remainingProps;
+  
+  // Also remove from required array if present
+  if (newSchema.required) {
+    newSchema.required = newSchema.required.filter(name => name !== propertyName);
   }
-
-  if (newSchema.properties[head]) {
-    newSchema.properties = {
-      ...newSchema.properties,
-      [head]: deleteSchemaProperty(newSchema.properties[head], rest),
-    };
-  }
-
+  
   return newSchema;
 }
 
+/**
+ * Updates the 'required' status of a property
+ */
+export function updatePropertyRequired(
+  schema: ObjectJSONSchema,
+  propertyName: string, 
+  required: boolean
+): ObjectJSONSchema {
+  if (!isObjectSchema(schema)) return schema;
+  
+  const newSchema = copySchema(schema);
+  if (!newSchema.required) {
+    newSchema.required = [];
+  }
+  
+  if (required) {
+    // Add to required array if not already there
+    if (!newSchema.required.includes(propertyName)) {
+      newSchema.required.push(propertyName);
+    }
+  } else {
+    // Remove from required array
+    newSchema.required = newSchema.required.filter(name => name !== propertyName);
+  }
+  
+  return newSchema;
+}
+
+/**
+ * Updates an array schema's items
+ */
+export function updateArrayItems(
+  schema: JSONSchema,
+  itemsSchema: JSONSchema
+): JSONSchema {
+  if (typeof schema === 'boolean') return schema;
+  
+  const newSchema = copySchema(schema);
+  if (newSchema.type === 'array') {
+    newSchema.items = itemsSchema;
+  }
+  
+  return newSchema;
+}
+
+/**
+ * Creates a schema for a new field
+ */
 export function createFieldSchema(field: NewField): JSONSchema {
   return {
     type: field.type,
@@ -165,22 +108,57 @@ export function createFieldSchema(field: NewField): JSONSchema {
   };
 }
 
-export function getFieldInfo(schema: JSONSchema, path: string[] = []) {
-  if (typeof schema === "boolean") return null;
+/**
+ * Validates a field name
+ */
+export function validateFieldName(name: string): boolean {
+  if (!name || name.trim() === '') {
+    return false;
+  }
+  
+  // Check that the name doesn't contain invalid characters for property names
+  const validNamePattern = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/;
+  return validNamePattern.test(name);
+}
 
-  const type = schema.type || "object";
-  if (Array.isArray(type)) return null;
-
-  const properties = schema.properties || {};
+/**
+ * Gets properties from an object schema
+ */
+export function getSchemaProperties(schema: JSONSchema): Property[] {
+  if (!isObjectSchema(schema) || !schema.properties) return [];
+  
   const required = schema.required || [];
+  
+  return Object.entries(schema.properties).map(([name, propSchema]) => ({
+    name,
+    schema: propSchema,
+    required: required.includes(name),
+  }));
+}
 
-  return {
-    type,
-    properties: Object.entries(properties).map(([name, prop]) => ({
-      name,
-      path: [...path, name],
-      schema: prop,
-      required: required.includes(name),
-    })),
-  };
+/**
+ * Gets the items schema from an array schema
+ */
+export function getArrayItemsSchema(schema: JSONSchema): JSONSchema | null {
+  if (typeof schema === 'boolean') return null;
+  if (schema.type !== 'array') return null;
+  
+  return schema.items || null;
+}
+
+/**
+ * Checks if a schema has children
+ */
+export function hasChildren(schema: JSONSchema): boolean {
+  if (!isObjectSchema(schema)) return false;
+  
+  if (schema.type === "object" && schema.properties) {
+    return Object.keys(schema.properties).length > 0;
+  }
+  
+  if (schema.type === "array" && schema.items && isObjectSchema(schema.items)) {
+    return schema.items.type === "object" && !!schema.items.properties;
+  }
+  
+  return false;
 }

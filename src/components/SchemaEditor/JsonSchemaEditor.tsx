@@ -1,9 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useSchemaEditor } from "@/hooks/useSchemaEditor";
 import { cn } from "@/lib/utils";
 import type { JSONSchema } from "@/types/jsonSchema";
 import type React from "react";
-import { useEffect } from "react";
+import { useState } from "react";
 import JsonSchemaVisualizer from "./JsonSchemaVisualizer";
 import SchemaVisualEditor from "./SchemaVisualEditor";
 
@@ -18,18 +17,13 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
   onChange,
   className,
 }) => {
-  const {
-    schema,
-    fieldInfo,
-    handleAddField,
-    handleEditField,
-    handleDeleteField,
-    handleSchemaEdit,
-  } = useSchemaEditor(initialSchema);
+  const [schema, setSchema] = useState<JSONSchema>(initialSchema);
 
-  useEffect(() => {
-    onChange?.(schema);
-  }, [schema, onChange]);
+  // Handle schema changes and propagate to parent if needed
+  const handleSchemaChange = (newSchema: JSONSchema) => {
+    setSchema(newSchema);
+    onChange?.(newSchema);
+  };
 
   return (
     <div className={cn("json-editor-container", className)}>
@@ -44,15 +38,13 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
 
         <TabsContent value="visual" className="focus:outline-none">
           <SchemaVisualEditor
-            fieldInfo={fieldInfo}
-            onAddField={handleAddField}
-            onEditField={handleEditField}
-            onDeleteField={handleDeleteField}
+            schema={schema}
+            onChange={handleSchemaChange}
           />
         </TabsContent>
 
         <TabsContent value="json" className="focus:outline-none">
-          <JsonSchemaVisualizer schema={schema} onChange={handleSchemaEdit} />
+          <JsonSchemaVisualizer schema={schema} onChange={handleSchemaChange} />
         </TabsContent>
       </Tabs>
     </div>

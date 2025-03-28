@@ -4,40 +4,35 @@ import type {
 } from "@/types/jsonSchema";
 import type React from "react";
 import SchemaField from "./SchemaField";
+import { getSchemaProperties } from "@/lib/schemaEditor";
 
 interface SchemaFieldListProps {
-  fields: Array<{
-    name: string;
-    path: string[];
-    schema: JSONSchemaType;
-    required: boolean;
-  }>;
-  onAddField: (newField: NewField, parentPath?: string[]) => void;
-  onEditField: (path: string[], updatedField: NewField) => void;
-  onDeleteField: (path: string[]) => void;
-  depth?: number;
+  schema: JSONSchemaType;
+  onAddField: (newField: NewField) => void;
+  onEditField: (name: string, updatedField: NewField) => void;
+  onDeleteField: (name: string) => void;
 }
 
 const SchemaFieldList: React.FC<SchemaFieldListProps> = ({
-  fields,
+  schema,
   onAddField,
   onEditField,
   onDeleteField,
-  depth = 0,
 }) => {
+  // Get the properties from the schema
+  const properties = getSchemaProperties(schema);
+
   return (
     <div className="space-y-2 animate-in">
-      {fields.map((field) => (
+      {properties.map((property) => (
         <SchemaField
-          key={field.path.join(".")}
-          name={field.name}
-          schema={field.schema}
-          required={field.required}
-          onDelete={() => onDeleteField(field.path)}
-          onEdit={(updatedField) => onEditField(field.path, updatedField)}
-          onAddField={(newField) => onAddField(newField, field.path)}
-          isNested={depth > 0}
-          depth={depth}
+          key={property.name}
+          name={property.name}
+          schema={property.schema}
+          required={property.required}
+          onDelete={() => onDeleteField(property.name)}
+          onEdit={(updatedField) => onEditField(property.name, updatedField)}
+          onAddField={onAddField}
         />
       ))}
     </div>
