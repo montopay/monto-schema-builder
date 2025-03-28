@@ -124,10 +124,13 @@ const Index = () => {
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <span className="text-primary font-bold text-xl">1</span>
               </div>
-              <h3 className="text-lg font-medium mb-2">Define Schema Structure</h3>
+              <h3 className="text-lg font-medium mb-2">
+                Define Schema Structure
+              </h3>
               <p className="text-muted-foreground text-sm">
-                Create a user profile schema with name, email, and age fields. Specify 
-                string formats for emails, min/max for ages, and required fields.
+                Create a user profile schema with name, email, and age fields.
+                Specify string formats for emails, min/max for ages, and
+                required fields.
               </p>
             </div>
 
@@ -137,8 +140,8 @@ const Index = () => {
               </div>
               <h3 className="text-lg font-medium mb-2">Create Complex Types</h3>
               <p className="text-muted-foreground text-sm">
-                Build product catalogs with nested objects for variants, arrays for tags, 
-                and enums for predefined categories or status values.
+                Build product catalogs with nested objects for variants, arrays
+                for tags, and enums for predefined categories or status values.
               </p>
             </div>
 
@@ -148,8 +151,8 @@ const Index = () => {
               </div>
               <h3 className="text-lg font-medium mb-2">Use Your Schema</h3>
               <p className="text-muted-foreground text-sm">
-                Export for form validation in React Hook Form, API documentation with OpenAPI, 
-                or backend validation with libraries like Ajv.
+                Export for form validation in React Hook Form, API documentation
+                with OpenAPI, or backend validation with libraries like Ajv.
               </p>
             </div>
           </div>
@@ -159,8 +162,9 @@ const Index = () => {
             <div className="glass-panel p-6">
               <h3 className="text-lg font-medium mb-2">API Development</h3>
               <p className="text-muted-foreground text-sm mb-3">
-                Define request/response schemas for endpoints like <code>/api/users</code> to ensure 
-                proper data validation and consistent API documentation.
+                Define request/response schemas for endpoints like{" "}
+                <code>/api/users</code> to ensure proper data validation and
+                consistent API documentation.
               </p>
               <div className="text-xs bg-muted/50 p-2 rounded text-left overflow-x-auto">
                 {`{
@@ -173,12 +177,13 @@ const Index = () => {
 }`}
               </div>
             </div>
-            
+
             <div className="glass-panel p-6">
               <h3 className="text-lg font-medium mb-2">Form Validation</h3>
               <p className="text-muted-foreground text-sm mb-3">
-                Create schemas for checkout forms with shipping details, payment information, 
-                and order specifics - all with proper validation rules.
+                Create schemas for checkout forms with shipping details, payment
+                information, and order specifics - all with proper validation
+                rules.
               </p>
               <div className="text-xs bg-muted/50 p-2 rounded text-left overflow-x-auto">
                 {`{
@@ -205,7 +210,9 @@ const Index = () => {
 
           {/* Tools Section */}
           <div className="mt-12 animate-in">
-            <h2 className="text-2xl font-bold text-center mb-6">Ecosystem & Tools</h2>
+            <h2 className="text-2xl font-bold text-center mb-6">
+              Ecosystem & Tools
+            </h2>
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
               {[
                 {
@@ -214,14 +221,14 @@ const Index = () => {
                     {
                       url: "https://github.com/rjsf-team/react-jsonschema-form?tab=readme-ov-file#react-jsonschema-form",
                       name: "React JSON Schema Form",
-                      description: "Build forms from schemas"
+                      description: "Build forms from schemas",
                     },
                     {
                       url: "https://jsonforms.io/",
                       name: "JSON Forms",
-                      description: "Framework-agnostic form generation"
-                    }
-                  ]
+                      description: "Framework-agnostic form generation",
+                    },
+                  ],
                 },
                 {
                   title: "Validation Libraries",
@@ -229,14 +236,14 @@ const Index = () => {
                     {
                       url: "https://ajv.js.org/",
                       name: "Ajv",
-                      description: "The fastest JSON Schema validator"
+                      description: "The fastest JSON Schema validator",
                     },
                     {
                       url: "https://python-jsonschema.readthedocs.io/",
                       name: "jsonschema",
-                      description: "Python validation library"
-                    }
-                  ]
+                      description: "Python validation library",
+                    },
+                  ],
                 },
                 {
                   title: "Documentation",
@@ -244,14 +251,14 @@ const Index = () => {
                     {
                       url: "https://www.openapis.org/",
                       name: "OpenAPI",
-                      description: "API docs with JSON Schema"
+                      description: "API docs with JSON Schema",
                     },
                     {
                       url: "https://redocly.com/",
                       name: "Redoc",
-                      description: "Interactive API documentation"
-                    }
-                  ]
+                      description: "Interactive API documentation",
+                    },
+                  ],
                 },
                 {
                   title: "IDE Support",
@@ -259,14 +266,14 @@ const Index = () => {
                     {
                       url: "https://code.visualstudio.com/docs/languages/json#_json-schemas-and-settings",
                       name: "VS Code",
-                      description: "Built-in schema validation"
+                      description: "Built-in schema validation",
                     },
                     {
                       url: "https://www.jetbrains.com/help/idea/json.html#ws_json_using_schemas",
                       name: "JetBrains Idea",
-                      description: "Schema-aware completions"
-                    }
-                  ]
+                      description: "Schema-aware completions",
+                    },
+                  ],
                 },
                 {
                   title: "API Integration",
@@ -274,14 +281,14 @@ const Index = () => {
                     {
                       url: "https://www.postman.com/",
                       name: "Postman",
-                      description: "Test APIs with schema validation"
+                      description: "Test APIs with schema validation",
                     },
                     {
                       url: "https://swagger.io/",
                       name: "Swagger",
-                      description: "Design and document APIs"
-                    }
-                  ]
+                      description: "Design and document APIs",
+                    },
+                  ],
                 },
                 {
                   title: "Data Processing",
@@ -289,15 +296,15 @@ const Index = () => {
                     {
                       url: "https://github.com/json-schema-faker/json-schema-faker",
                       name: "json-schema-faker",
-                      description: "Generate mock data"
+                      description: "Generate mock data",
                     },
                     {
                       url: "https://quicktype.io/",
                       name: "QuickType",
-                      description: "Generate code from schema"
-                    }
-                  ]
-                }
+                      description: "Generate code from schema",
+                    },
+                  ],
+                },
               ].map((section) => (
                 <div key={section.title} className="glass-panel p-4">
                   <h3 className="text-md font-medium mb-2">{section.title}</h3>
@@ -307,11 +314,16 @@ const Index = () => {
                         <span className="text-primary mr-2">•</span>
                         <span>
                           <strong>
-                            <a href={link.url} target="_blank" rel="nofollow noopener noreferrer">
+                            <a
+                              href={link.url}
+                              target="_blank"
+                              rel="nofollow noopener noreferrer"
+                            >
                               {link.name}
                             </a>
                           </strong>
-                          {" - "}{link.description}
+                          {" - "}
+                          {link.description}
                         </span>
                       </li>
                     ))}
@@ -320,13 +332,39 @@ const Index = () => {
               ))}
             </div>
             <div className="mt-6 text-center">
-              <a 
-                href="https://json-schema.org/implementations.html" 
+              <a
+                href="https://json-schema.org/implementations.html"
                 target="_blank"
                 rel="nofollow noopener noreferrer"
                 className="text-sm text-primary hover:underline"
               >
                 Explore more JSON Schema tools →
+              </a>
+            </div>
+          </div>
+
+          {/* Author Footer */}
+          <div className="mt-16 py-4 border-t border-border/30 backdrop-blur-sm">
+            <div className="flex items-center justify-center gap-2 text-sm">
+              <span className="text-muted-foreground">Built by</span>
+              <a
+                href="https://ophir.dev"
+                className="font-medium text-primary hover:text-primary/80 transition-colors flex items-center gap-1"
+              >
+                <span>@ophir.dev</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="w-3.5 h-3.5 opacity-70"
+                >
+                  <title>External link</title>
+                  <path
+                    fillRule="evenodd"
+                    d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z"
+                    clipRule="evenodd"
+                  />
+                </svg>
               </a>
             </div>
           </div>
