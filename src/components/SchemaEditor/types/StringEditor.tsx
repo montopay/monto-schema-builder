@@ -8,6 +8,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { JSONSchema, ObjectJSONSchema } from "@/types/jsonSchema";
+import {
+  asObjectSchema,
+  isBooleanSchema,
+  withObjectSchema,
+} from "@/types/jsonSchema";
 import { X } from "lucide-react";
 import { useState } from "react";
 import type { TypeEditorProps } from "../TypeEditor";
@@ -16,26 +21,30 @@ const StringEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
   const [enumValue, setEnumValue] = useState("");
 
   // Extract string-specific validations
-  const minLength = typeof schema === "boolean" ? undefined : schema.minLength;
-  const maxLength = typeof schema === "boolean" ? undefined : schema.maxLength;
-  const pattern = typeof schema === "boolean" ? undefined : schema.pattern;
-  const format = typeof schema === "boolean" ? undefined : schema.format;
-  const enumValues =
-    typeof schema === "boolean" || !schema.enum
-      ? []
-      : (schema.enum as string[]);
+  const minLength = withObjectSchema(schema, (s) => s.minLength, undefined);
+  const maxLength = withObjectSchema(schema, (s) => s.maxLength, undefined);
+  const pattern = withObjectSchema(schema, (s) => s.pattern, undefined);
+  const format = withObjectSchema(schema, (s) => s.format, undefined);
+  const enumValues = withObjectSchema(
+    schema,
+    (s) => (s.enum as string[]) || [],
+    [],
+  );
 
   // Handle validation change
   const handleValidationChange = (property: string, value: unknown) => {
     // Create a safe base schema
-    const baseSchema =
-      typeof schema === "boolean" ? { type: "string" as const } : { ...schema };
+    const baseSchema = isBooleanSchema(schema)
+      ? { type: "string" as const }
+      : { ...schema };
 
     // Extract reusable properties while safely handling potential undefined description
-    const type =
-      typeof schema === "boolean" ? "string" : schema.type || "string";
-    const description =
-      typeof schema === "boolean" ? undefined : schema.description;
+    const type = withObjectSchema(schema, (s) => s.type || "string", "string");
+    const description = withObjectSchema(
+      schema,
+      (s) => s.description,
+      undefined,
+    );
 
     // Get all validation props except type and description
     const { type: _, description: __, ...validationProps } = baseSchema;
@@ -68,13 +77,12 @@ const StringEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
 
     if (newEnumValues.length === 0) {
       // If empty, remove the enum property entirely
-      const baseSchema =
-        typeof schema === "boolean"
-          ? { type: "string" as const }
-          : { ...schema };
+      const baseSchema = isBooleanSchema(schema)
+        ? { type: "string" as const }
+        : { ...schema };
 
       // Use a type safe approach
-      if (typeof baseSchema !== "boolean" && "enum" in baseSchema) {
+      if (!isBooleanSchema(baseSchema) && "enum" in baseSchema) {
         const { enum: _, ...rest } = baseSchema;
         onChange(rest as ObjectJSONSchema);
       } else {
@@ -141,7 +149,10 @@ const StringEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
         <Select
           value={format || "none"}
           onValueChange={(value) => {
-            handleValidationChange("format", value === "none" ? undefined : value);
+            handleValidationChange(
+              "format",
+              value === "none" ? undefined : value,
+            );
           }}
         >
           <SelectTrigger id="format" className="h-8">

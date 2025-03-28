@@ -151,7 +151,7 @@ export function getSchemaProperties(schema: JSONSchema): Property[] {
  * Gets the items schema from an array schema
  */
 export function getArrayItemsSchema(schema: JSONSchema): JSONSchema | null {
-  if (typeof schema === "boolean") return null;
+  if (isBooleanSchema(schema)) return null;
   if (schema.type !== "array") return null;
 
   return schema.items || null;

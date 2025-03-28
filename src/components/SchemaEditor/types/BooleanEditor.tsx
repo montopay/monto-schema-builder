@@ -1,6 +1,7 @@
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import type { ObjectJSONSchema } from "@/types/jsonSchema";
+import { isBooleanSchema, withObjectSchema } from "@/types/jsonSchema";
 import { X } from "lucide-react";
 import { useState } from "react";
 import type { TypeEditorProps } from "../TypeEditor";
@@ -10,10 +11,11 @@ const BooleanEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
   const [showFalse, setShowFalse] = useState(true);
 
   // Extract boolean-specific validation
-  const enumValues =
-    typeof schema === "boolean" || !schema.enum
-      ? null
-      : (schema.enum as boolean[]);
+  const enumValues = withObjectSchema(
+    schema,
+    (s) => s.enum as boolean[] | undefined,
+    null,
+  );
 
   // Determine if we have enum restrictions
   const hasRestrictions = Array.isArray(enumValues);
@@ -55,10 +57,9 @@ const BooleanEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
     }
 
     // Update the schema
-    const baseSchema =
-      typeof schema === "boolean"
-        ? { type: "boolean" as const }
-        : { ...schema };
+    const baseSchema = isBooleanSchema(schema)
+      ? { type: "boolean" as const }
+      : { ...schema };
 
     // Create a new validation object with just the type and enum
     const updatedValidation: ObjectJSONSchema = {

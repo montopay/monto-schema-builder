@@ -128,9 +128,6 @@ const SchemaFieldList: React.FC<SchemaFieldListProps> = ({
           onRequiredChange={(required) =>
             handleRequiredChange(property.name, required)
           }
-          onDescriptionChange={(desc) =>
-            handleDescriptionChange(property.name, desc)
-          }
           onSchemaChange={(schema) => handleSchemaChange(property.name, schema)}
         />
       ))}

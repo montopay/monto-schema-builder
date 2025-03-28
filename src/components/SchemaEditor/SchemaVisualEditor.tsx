@@ -4,6 +4,7 @@ import {
   updatePropertyRequired,
 } from "@/lib/schemaEditor";
 import type { JSONSchema, NewField } from "@/types/jsonSchema";
+import { asObjectSchema, isBooleanSchema } from "@/types/jsonSchema";
 import type React from "react";
 import AddFieldButton from "./AddFieldButton";
 import SchemaFieldList from "./SchemaFieldList";
@@ -24,7 +25,7 @@ const SchemaVisualEditor: React.FC<SchemaVisualEditorProps> = ({
 
     // Add the field to the schema
     let newSchema = updateObjectProperty(
-      typeof schema === "boolean" ? { type: "object", properties: {} } : schema,
+      asObjectSchema(schema),
       newField.name,
       fieldSchema,
     );
@@ -45,7 +46,7 @@ const SchemaVisualEditor: React.FC<SchemaVisualEditorProps> = ({
 
     // Update the field in the schema
     let newSchema = updateObjectProperty(
-      typeof schema === "boolean" ? { type: "object", properties: {} } : schema,
+      asObjectSchema(schema),
       updatedField.name,
       fieldSchema,
     );
@@ -87,7 +88,7 @@ const SchemaVisualEditor: React.FC<SchemaVisualEditorProps> = ({
   // Handle deleting a top-level field
   const handleDeleteField = (name: string) => {
     // Check if the schema is valid first
-    if (typeof schema === "boolean" || !schema.properties) {
+    if (isBooleanSchema(schema) || !schema.properties) {
       return;
     }
 
@@ -109,7 +110,7 @@ const SchemaVisualEditor: React.FC<SchemaVisualEditorProps> = ({
   };
 
   const hasFields =
-    typeof schema !== "boolean" &&
+    !isBooleanSchema(schema) &&
     schema.properties &&
     Object.keys(schema.properties).length > 0;
 

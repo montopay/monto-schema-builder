@@ -2,11 +2,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { getArrayItemsSchema } from "@/lib/schemaEditor";
-import { cn } from "@/lib/utils";
+import { cn, getTypeColor, getTypeLabel } from "@/lib/utils";
 import type {
+  JSONSchema,
   ObjectJSONSchema,
   SchemaType,
 } from "@/types/jsonSchema";
+import { isBooleanSchema, withObjectSchema } from "@/types/jsonSchema";
 import { useState } from "react";
 import type { TypeEditorProps } from "../TypeEditor";
 import TypeEditor from "../TypeEditor";
@@ -17,29 +19,30 @@ const ArrayEditor: React.FC<TypeEditorProps> = ({
   depth = 0,
 }) => {
   const [minItems, setMinItems] = useState<number | undefined>(
-    typeof schema === "boolean" ? undefined : schema.minItems,
+    withObjectSchema(schema, (s) => s.minItems, undefined),
   );
   const [maxItems, setMaxItems] = useState<number | undefined>(
-    typeof schema === "boolean" ? undefined : schema.maxItems,
+    withObjectSchema(schema, (s) => s.maxItems, undefined),
   );
   const [uniqueItems, setUniqueItems] = useState<boolean>(
-    typeof schema === "boolean" ? false : schema.uniqueItems || false,
+    withObjectSchema(schema, (s) => s.uniqueItems || false, false),
   );
 
   // Get the array's item schema
   const itemsSchema = getArrayItemsSchema(schema) || { type: "string" };
 
   // Get the type of the array items
-  const itemType =
-    typeof itemsSchema === "boolean"
-      ? ("string" as SchemaType)
-      : ((itemsSchema.type || "string") as SchemaType);
+  const itemType = withObjectSchema(
+    itemsSchema,
+    (s) => (s.type || "string") as SchemaType,
+    "string" as SchemaType,
+  );
 
   // Handle validation settings change
   const handleValidationChange = () => {
     const validationProps: ObjectJSONSchema = {
       type: "array",
-      ...(typeof schema === "boolean" ? {} : schema),
+      ...(isBooleanSchema(schema) ? {} : schema),
       minItems: minItems,
       maxItems: maxItems,
       uniqueItems: uniqueItems || undefined,
@@ -65,49 +68,11 @@ const ArrayEditor: React.FC<TypeEditorProps> = ({
   const handleItemSchemaChange = (updatedItemSchema: ObjectJSONSchema) => {
     const updatedSchema: ObjectJSONSchema = {
       type: "array",
-      ...(typeof schema === "boolean" ? {} : schema),
+      ...(isBooleanSchema(schema) ? {} : schema),
       items: updatedItemSchema,
     };
 
     onChange(updatedSchema);
-  };
-
-  // Get colors for type display
-  const getTypeColor = (type: SchemaType): string => {
-    switch (type) {
-      case "string":
-        return "text-blue-500 bg-blue-50";
-      case "number":
-      case "integer":
-        return "text-purple-500 bg-purple-50";
-      case "boolean":
-        return "text-green-500 bg-green-50";
-      case "object":
-        return "text-orange-500 bg-orange-50";
-      case "array":
-        return "text-pink-500 bg-pink-50";
-      case "null":
-        return "text-gray-500 bg-gray-50";
-    }
-  };
-
-  // Get type display label
-  const getTypeLabel = (type: SchemaType): string => {
-    switch (type) {
-      case "string":
-        return "Text";
-      case "number":
-      case "integer":
-        return "Number";
-      case "boolean":
-        return "Yes/No";
-      case "object":
-        return "Group";
-      case "array":
-        return "List";
-      case "null":
-        return "Empty";
-    }
   };
 
   return (

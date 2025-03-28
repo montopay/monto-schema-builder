@@ -1,11 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { cn, getTypeColor, getTypeLabel } from "@/lib/utils";
 import type {
   JSONSchema,
   NewField,
   ObjectJSONSchema,
   SchemaType,
+} from "@/types/jsonSchema";
+import {
+  asObjectSchema,
+  getSchemaDescription,
+  isBooleanSchema,
+  withObjectSchema,
 } from "@/types/jsonSchema";
 import { ChevronDown, ChevronRight, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -18,7 +24,6 @@ export interface SchemaPropertyEditorProps {
   onDelete: () => void;
   onNameChange: (newName: string) => void;
   onRequiredChange: (required: boolean) => void;
-  onDescriptionChange: (description: string) => void;
   onSchemaChange: (schema: ObjectJSONSchema) => void;
   depth?: number;
 }
@@ -30,7 +35,6 @@ export const SchemaPropertyEditor: React.FC<SchemaPropertyEditorProps> = ({
   onDelete,
   onNameChange,
   onRequiredChange,
-  onDescriptionChange,
   onSchemaChange,
   depth = 0,
 }) => {
@@ -38,18 +42,17 @@ export const SchemaPropertyEditor: React.FC<SchemaPropertyEditorProps> = ({
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingDesc, setIsEditingDesc] = useState(false);
   const [tempName, setTempName] = useState(name);
-  const [tempDesc, setTempDesc] = useState(
-    typeof schema === "boolean" ? "" : schema.description || "",
+  const [tempDesc, setTempDesc] = useState(getSchemaDescription(schema));
+  const type = withObjectSchema(
+    schema,
+    (s) => (s.type || "object") as SchemaType,
+    "object" as SchemaType,
   );
-  const type =
-    typeof schema === "boolean"
-      ? "object"
-      : ((schema.type || "object") as SchemaType);
 
   // Update temp values when props change
   useEffect(() => {
     setTempName(name);
-    setTempDesc(typeof schema === "boolean" ? "" : schema.description || "");
+    setTempDesc(getSchemaDescription(schema));
   }, [name, schema]);
 
   const handleNameSubmit = () => {
@@ -64,59 +67,20 @@ export const SchemaPropertyEditor: React.FC<SchemaPropertyEditorProps> = ({
 
   const handleDescSubmit = () => {
     const trimmedDesc = tempDesc.trim();
-    if (
-      trimmedDesc !==
-      (typeof schema === "boolean" ? "" : schema.description || "")
-    ) {
-      onDescriptionChange(trimmedDesc);
+    if (trimmedDesc !== getSchemaDescription(schema)) {
+      onSchemaChange({
+        ...asObjectSchema(schema),
+        description: trimmedDesc || undefined,
+      });
     } else {
-      setTempDesc(typeof schema === "boolean" ? "" : schema.description || "");
+      setTempDesc(getSchemaDescription(schema));
     }
     setIsEditingDesc(false);
   };
 
-  // Type-specific display color
-  const getTypeColor = (type: SchemaType): string => {
-    switch (type) {
-      case "string":
-        return "text-blue-500 bg-blue-50";
-      case "number":
-      case "integer":
-        return "text-purple-500 bg-purple-50";
-      case "boolean":
-        return "text-green-500 bg-green-50";
-      case "object":
-        return "text-orange-500 bg-orange-50";
-      case "array":
-        return "text-pink-500 bg-pink-50";
-      case "null":
-        return "text-gray-500 bg-gray-50";
-    }
-  };
-
-  // Type display label
-  const getTypeLabel = (type: SchemaType): string => {
-    switch (type) {
-      case "string":
-        return "Text";
-      case "number":
-      case "integer":
-        return "Number";
-      case "boolean":
-        return "Yes/No";
-      case "object":
-        return "Group";
-      case "array":
-        return "List";
-      case "null":
-        return "Empty";
-    }
-  };
-
   // Handle schema changes, preserving description
   const handleSchemaUpdate = (updatedSchema: ObjectJSONSchema) => {
-    const description =
-      typeof schema === "boolean" ? "" : schema.description || "";
+    const description = getSchemaDescription(schema);
     onSchemaChange({
       ...updatedSchema,
       description: description || undefined,

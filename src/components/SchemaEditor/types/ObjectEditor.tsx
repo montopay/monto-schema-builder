@@ -1,17 +1,12 @@
-import { Button } from "@/components/ui/button";
 import {
   getSchemaProperties,
   removeObjectProperty,
   updateObjectProperty,
   updatePropertyRequired,
 } from "@/lib/schemaEditor";
-import { cn } from "@/lib/utils";
-import type {
-  JSONSchema,
-  NewField,
-  ObjectJSONSchema,
-} from "@/types/jsonSchema";
-import { useEffect, useState } from "react";
+import type { NewField, ObjectJSONSchema } from "@/types/jsonSchema";
+import { asObjectSchema, isBooleanSchema } from "@/types/jsonSchema";
+import { useState } from "react";
 import AddFieldButton from "../AddFieldButton";
 import SchemaPropertyEditor from "../SchemaPropertyEditor";
 import type { TypeEditorProps } from "../TypeEditor";
@@ -21,21 +16,13 @@ const ObjectEditor: React.FC<TypeEditorProps> = ({
   onChange,
   depth = 0,
 }) => {
-  const [minProperties, setMinProperties] = useState<number | undefined>(
-    typeof schema === "boolean" ? undefined : schema.minProperties,
-  );
-  const [maxProperties, setMaxProperties] = useState<number | undefined>(
-    typeof schema === "boolean" ? undefined : schema.maxProperties,
-  );
-
   // Get object properties
   const properties = getSchemaProperties(schema);
 
   // Create a normalized schema object
-  const normalizedSchema: ObjectJSONSchema =
-    typeof schema === "boolean"
-      ? { type: "object", properties: {} }
-      : { ...schema, type: "object", properties: schema.properties || {} };
+  const normalizedSchema: ObjectJSONSchema = isBooleanSchema(schema)
+    ? { type: "object", properties: {} }
+    : { ...schema, type: "object", properties: schema.properties || {} };
 
   // Handle adding a new property
   const handleAddProperty = (newField: NewField) => {
@@ -75,10 +62,7 @@ const ObjectEditor: React.FC<TypeEditorProps> = ({
     const property = properties.find((p) => p.name === oldName);
     if (!property) return;
 
-    const propertySchemaObj =
-      typeof property.schema === "boolean"
-        ? { type: "object" as const }
-        : property.schema;
+    const propertySchemaObj = asObjectSchema(property.schema);
 
     // Add property with new name
     let newSchema = updateObjectProperty(
@@ -120,10 +104,9 @@ const ObjectEditor: React.FC<TypeEditorProps> = ({
     const property = properties.find((p) => p.name === propertyName);
     if (!property) return;
 
-    const propertySchema =
-      typeof property.schema === "boolean"
-        ? { type: "object" as const, description }
-        : { ...property.schema, description: description || undefined };
+    const propertySchema = isBooleanSchema(property.schema)
+      ? { type: "object" as const, description }
+      : { ...property.schema, description: description || undefined };
 
     const newSchema = updateObjectProperty(
       normalizedSchema,
@@ -162,9 +145,6 @@ const ObjectEditor: React.FC<TypeEditorProps> = ({
               }
               onRequiredChange={(required) =>
                 handlePropertyRequiredChange(property.name, required)
-              }
-              onDescriptionChange={(desc) =>
-                handlePropertyDescriptionChange(property.name, desc)
               }
               onSchemaChange={(schema) =>
                 handlePropertySchemaChange(property.name, schema)

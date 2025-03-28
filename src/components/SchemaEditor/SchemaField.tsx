@@ -4,6 +4,11 @@ import type {
   ObjectJSONSchema,
   SchemaType,
 } from "@/types/jsonSchema";
+import {
+  asObjectSchema,
+  getSchemaDescription,
+  withObjectSchema,
+} from "@/types/jsonSchema";
 import React, { Suspense, lazy } from "react";
 import SchemaPropertyEditor from "./SchemaPropertyEditor";
 
@@ -28,21 +33,21 @@ const SchemaField: React.FC<SchemaFieldProps> = (props) => {
     if (newName === name) return;
 
     // Get type in a safe way
-    const type = (
-      typeof schema === "boolean" ? "object" : schema.type || "object"
+    const type = withObjectSchema(
+      schema,
+      (s) => s.type || "object",
+      "object",
     ) as SchemaType;
 
     // Get description in a safe way
-    const description =
-      typeof schema === "boolean" ? "" : schema.description || "";
+    const description = getSchemaDescription(schema);
 
     onEdit({
       name: newName,
       type: Array.isArray(type) ? type[0] : type,
       description,
       required,
-      validation:
-        typeof schema === "boolean" ? { type: "object" as const } : schema,
+      validation: asObjectSchema(schema),
     });
   };
 
@@ -51,29 +56,31 @@ const SchemaField: React.FC<SchemaFieldProps> = (props) => {
     if (isRequired === required) return;
 
     // Get type in a safe way
-    const type = (
-      typeof schema === "boolean" ? "object" : schema.type || "object"
+    const type = withObjectSchema(
+      schema,
+      (s) => s.type || "object",
+      "object",
     ) as SchemaType;
 
     // Get description in a safe way
-    const description =
-      typeof schema === "boolean" ? "" : schema.description || "";
+    const description = getSchemaDescription(schema);
 
     onEdit({
       name,
       type: Array.isArray(type) ? type[0] : type,
       description,
       required: isRequired,
-      validation:
-        typeof schema === "boolean" ? { type: "object" as const } : schema,
+      validation: asObjectSchema(schema),
     });
   };
 
   // Handle description change
   const handleDescriptionChange = (newDescription: string) => {
     // Get type in a safe way
-    const type = (
-      typeof schema === "boolean" ? "object" : schema.type || "object"
+    const type = withObjectSchema(
+      schema,
+      (s) => s.type || "object",
+      "object",
     ) as SchemaType;
 
     onEdit({
@@ -81,8 +88,7 @@ const SchemaField: React.FC<SchemaFieldProps> = (props) => {
       type: Array.isArray(type) ? type[0] : type,
       description: newDescription,
       required,
-      validation:
-        typeof schema === "boolean" ? { type: "object" as const } : schema,
+      validation: asObjectSchema(schema),
     });
   };
 
@@ -111,7 +117,6 @@ const SchemaField: React.FC<SchemaFieldProps> = (props) => {
       onDelete={onDelete}
       onNameChange={handleNameChange}
       onRequiredChange={handleRequiredChange}
-      onDescriptionChange={handleDescriptionChange}
       onSchemaChange={handleSchemaChange}
       depth={depth}
     />
@@ -119,43 +124,6 @@ const SchemaField: React.FC<SchemaFieldProps> = (props) => {
 };
 
 export default SchemaField;
-
-// Helper functions for backward compatibility
-export const getTypeColor = (type: SchemaType): string => {
-  switch (type) {
-    case "string":
-      return "text-blue-500 bg-blue-50";
-    case "number":
-    case "integer":
-      return "text-purple-500 bg-purple-50";
-    case "boolean":
-      return "text-green-500 bg-green-50";
-    case "object":
-      return "text-orange-500 bg-orange-50";
-    case "array":
-      return "text-pink-500 bg-pink-50";
-    case "null":
-      return "text-gray-500 bg-gray-50";
-  }
-};
-
-export const getTypeLabel = (type: SchemaType): string => {
-  switch (type) {
-    case "string":
-      return "Text";
-    case "number":
-    case "integer":
-      return "Number";
-    case "boolean":
-      return "Yes/No";
-    case "object":
-      return "Group";
-    case "array":
-      return "List";
-    case "null":
-      return "Empty";
-  }
-};
 
 // ExpandButton - extract for reuse
 export interface ExpandButtonProps {

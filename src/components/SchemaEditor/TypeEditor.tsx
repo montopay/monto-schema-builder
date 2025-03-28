@@ -3,6 +3,7 @@ import type {
   ObjectJSONSchema,
   SchemaType,
 } from "@/types/jsonSchema";
+import { withObjectSchema } from "@/types/jsonSchema";
 import { Suspense, lazy } from "react";
 
 // Lazy load specific type editors to avoid circular dependencies
@@ -23,10 +24,11 @@ const TypeEditor: React.FC<TypeEditorProps> = ({
   onChange,
   depth = 0,
 }) => {
-  const type =
-    typeof schema === "boolean"
-      ? "string"
-      : ((schema.type || "object") as SchemaType);
+  const type = withObjectSchema(
+    schema,
+    (s) => (s.type || "object") as SchemaType,
+    "string" as SchemaType,
+  );
 
   return (
     <Suspense fallback={<div>Loading editor...</div>}>

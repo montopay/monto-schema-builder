@@ -2,6 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import type { JSONSchema, ObjectJSONSchema } from "@/types/jsonSchema";
+import { isBooleanSchema, withObjectSchema } from "@/types/jsonSchema";
 import { X } from "lucide-react";
 import { useState } from "react";
 import type { TypeEditorProps } from "../TypeEditor";
@@ -30,18 +31,24 @@ const NumberEditor: React.FC<NumberEditorProps> = ({
   const [enumValue, setEnumValue] = useState("");
 
   // Extract number-specific validations
-  const minimum = typeof schema === "boolean" ? undefined : schema.minimum;
-  const maximum = typeof schema === "boolean" ? undefined : schema.maximum;
-  const exclusiveMinimum =
-    typeof schema === "boolean" ? undefined : schema.exclusiveMinimum;
-  const exclusiveMaximum =
-    typeof schema === "boolean" ? undefined : schema.exclusiveMaximum;
-  const multipleOf =
-    typeof schema === "boolean" ? undefined : schema.multipleOf;
-  const enumValues =
-    typeof schema === "boolean" || !schema.enum
-      ? []
-      : (schema.enum as number[]);
+  const minimum = withObjectSchema(schema, (s) => s.minimum, undefined);
+  const maximum = withObjectSchema(schema, (s) => s.maximum, undefined);
+  const exclusiveMinimum = withObjectSchema(
+    schema,
+    (s) => s.exclusiveMinimum,
+    undefined,
+  );
+  const exclusiveMaximum = withObjectSchema(
+    schema,
+    (s) => s.exclusiveMaximum,
+    undefined,
+  );
+  const multipleOf = withObjectSchema(schema, (s) => s.multipleOf, undefined);
+  const enumValues = withObjectSchema(
+    schema,
+    (s) => (s.enum as number[]) || [],
+    [],
+  );
 
   // Handle validation change
   const handleValidationChange = (property: string, value: unknown) => {
@@ -51,7 +58,7 @@ const NumberEditor: React.FC<NumberEditorProps> = ({
     };
 
     // Copy existing validation properties (except type and description) if schema is an object
-    if (typeof schema !== "boolean") {
+    if (!isBooleanSchema(schema)) {
       if (schema.minimum !== undefined) baseProperties.minimum = schema.minimum;
       if (schema.maximum !== undefined) baseProperties.maximum = schema.maximum;
       if (schema.exclusiveMinimum !== undefined)
