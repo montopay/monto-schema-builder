@@ -124,10 +124,10 @@ const Index = () => {
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <span className="text-primary font-bold text-xl">1</span>
               </div>
-              <h3 className="text-lg font-medium mb-2">Add Fields</h3>
+              <h3 className="text-lg font-medium mb-2">Define Schema Structure</h3>
               <p className="text-muted-foreground text-sm">
-                Define your data structure by adding fields with just a few
-                clicks
+                Create a user profile schema with name, email, and age fields. Specify 
+                string formats for emails, min/max for ages, and required fields.
               </p>
             </div>
 
@@ -135,9 +135,10 @@ const Index = () => {
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <span className="text-primary font-bold text-xl">2</span>
               </div>
-              <h3 className="text-lg font-medium mb-2">Organize</h3>
+              <h3 className="text-lg font-medium mb-2">Create Complex Types</h3>
               <p className="text-muted-foreground text-sm">
-                Group related fields and create nested structures easily
+                Build product catalogs with nested objects for variants, arrays for tags, 
+                and enums for predefined categories or status values.
               </p>
             </div>
 
@@ -145,10 +146,52 @@ const Index = () => {
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <span className="text-primary font-bold text-xl">3</span>
               </div>
-              <h3 className="text-lg font-medium mb-2">Export</h3>
+              <h3 className="text-lg font-medium mb-2">Use Your Schema</h3>
               <p className="text-muted-foreground text-sm">
-                Get your JSON schema and use it in your application
+                Export for form validation in React Hook Form, API documentation with OpenAPI, 
+                or backend validation with libraries like Ajv.
               </p>
+            </div>
+          </div>
+
+          {/* Use Case Examples */}
+          <div className="mt-10 grid md:grid-cols-2 gap-6 animate-in">
+            <div className="glass-panel p-6">
+              <h3 className="text-lg font-medium mb-2">API Development</h3>
+              <p className="text-muted-foreground text-sm mb-3">
+                Define request/response schemas for endpoints like <code>/api/users</code> to ensure 
+                proper data validation and consistent API documentation.
+              </p>
+              <div className="text-xs bg-muted/50 p-2 rounded text-left overflow-x-auto">
+                {`{
+  "type": "object",
+  "properties": {
+    "username": { "type": "string", "minLength": 3 },
+    "email": { "type": "string", "format": "email" }
+  },
+  "required": ["username", "email"]
+}`}
+              </div>
+            </div>
+            
+            <div className="glass-panel p-6">
+              <h3 className="text-lg font-medium mb-2">Form Validation</h3>
+              <p className="text-muted-foreground text-sm mb-3">
+                Create schemas for checkout forms with shipping details, payment information, 
+                and order specifics - all with proper validation rules.
+              </p>
+              <div className="text-xs bg-muted/50 p-2 rounded text-left overflow-x-auto">
+                {`{
+  "type": "object",
+  "properties": {
+    "address": { "type": "object", "properties": {
+      "street": { "type": "string" },
+      "zipCode": { "type": "string", "pattern": "^\\d{5}$" }
+    }},
+    "paymentMethod": { "type": "string", "enum": ["credit", "paypal"] }
+  }
+}`}
+              </div>
             </div>
           </div>
 
@@ -158,6 +201,134 @@ const Index = () => {
               Built with simplicity in mind. Design beautiful data structures
               without technical knowledge.
             </p>
+          </div>
+
+          {/* Tools Section */}
+          <div className="mt-12 animate-in">
+            <h2 className="text-2xl font-bold text-center mb-6">Ecosystem & Tools</h2>
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {[
+                {
+                  title: "Form Generation",
+                  links: [
+                    {
+                      url: "https://github.com/rjsf-team/react-jsonschema-form?tab=readme-ov-file#react-jsonschema-form",
+                      name: "React JSON Schema Form",
+                      description: "Build forms from schemas"
+                    },
+                    {
+                      url: "https://jsonforms.io/",
+                      name: "JSON Forms",
+                      description: "Framework-agnostic form generation"
+                    }
+                  ]
+                },
+                {
+                  title: "Validation Libraries",
+                  links: [
+                    {
+                      url: "https://ajv.js.org/",
+                      name: "Ajv",
+                      description: "The fastest JSON Schema validator"
+                    },
+                    {
+                      url: "https://python-jsonschema.readthedocs.io/",
+                      name: "jsonschema",
+                      description: "Python validation library"
+                    }
+                  ]
+                },
+                {
+                  title: "Documentation",
+                  links: [
+                    {
+                      url: "https://www.openapis.org/",
+                      name: "OpenAPI",
+                      description: "API docs with JSON Schema"
+                    },
+                    {
+                      url: "https://redocly.com/",
+                      name: "Redoc",
+                      description: "Interactive API documentation"
+                    }
+                  ]
+                },
+                {
+                  title: "IDE Support",
+                  links: [
+                    {
+                      url: "https://code.visualstudio.com/docs/languages/json#_json-schemas-and-settings",
+                      name: "VS Code",
+                      description: "Built-in schema validation"
+                    },
+                    {
+                      url: "https://www.jetbrains.com/help/idea/json.html#ws_json_using_schemas",
+                      name: "JetBrains Idea",
+                      description: "Schema-aware completions"
+                    }
+                  ]
+                },
+                {
+                  title: "API Integration",
+                  links: [
+                    {
+                      url: "https://www.postman.com/",
+                      name: "Postman",
+                      description: "Test APIs with schema validation"
+                    },
+                    {
+                      url: "https://swagger.io/",
+                      name: "Swagger",
+                      description: "Design and document APIs"
+                    }
+                  ]
+                },
+                {
+                  title: "Data Processing",
+                  links: [
+                    {
+                      url: "https://github.com/json-schema-faker/json-schema-faker",
+                      name: "json-schema-faker",
+                      description: "Generate mock data"
+                    },
+                    {
+                      url: "https://quicktype.io/",
+                      name: "QuickType",
+                      description: "Generate code from schema"
+                    }
+                  ]
+                }
+              ].map((section) => (
+                <div key={section.title} className="glass-panel p-4">
+                  <h3 className="text-md font-medium mb-2">{section.title}</h3>
+                  <ul className="text-sm text-muted-foreground space-y-2">
+                    {section.links.map((link) => (
+                      <li key={link.url} className="flex items-start">
+                        <span className="text-primary mr-2">•</span>
+                        <span>
+                          <strong>
+                            <a href={link.url} target="_blank" rel="nofollow noopener noreferrer">
+                              {link.name}
+                            </a>
+                          </strong>
+                          {" - "}{link.description}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+            <div className="mt-6 text-center">
+              <a 
+                href="https://json-schema.org/implementations.html" 
+                target="_blank"
+                rel="nofollow noopener noreferrer"
+                className="text-sm text-primary hover:underline"
+              >
+                Explore more JSON Schema tools →
+              </a>
+            </div>
           </div>
         </div>
       </div>
