@@ -83,6 +83,7 @@ Validate any JSON document against your schema with:
 - **React Router**: Navigation
 - **TanStack Query**: Data fetching
 - **Lucide Icons**: Icon library
+- **Node.js Test Runner**: Simple built-in testing
 
 ## Development Scripts
 
