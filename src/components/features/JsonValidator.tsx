@@ -98,25 +98,24 @@ export function JsonValidator({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-5xl max-h-[90vh] flex flex-col">
+      <DialogContent className="sm:max-w-5xl max-h-[700px] flex flex-col">
         <DialogHeader>
           <DialogTitle>Validate JSON</DialogTitle>
           <DialogDescription>
             Paste your JSON document to validate against the current schema.
           </DialogDescription>
         </DialogHeader>
-        <div className="flex-1 flex flex-col md:flex-row gap-4 py-4 min-h-0">
-          <div className="flex-1 flex flex-col min-h-0">
+        <div className="flex-1 flex flex-col md:flex-row gap-4 py-4 overflow-hidden h-[600px]">
+          <div className="flex-1 flex flex-col h-full">
             <div className="text-sm font-medium mb-2">Your JSON:</div>
-            <div className="border rounded-md flex-1 overflow-hidden">
+            <div className="border rounded-md flex-1 h-full">
               <Editor
-                height="100%"
+                height="600px"
                 defaultLanguage="json"
                 value={jsonInput}
                 onChange={handleEditorChange}
                 beforeMount={handleBeforeMount}
                 onMount={handleEditorDidMount}
-                className="monaco-editor-container h-full"
                 loading={
                   <div className="flex items-center justify-center h-full w-full bg-secondary/30">
                     <Loader2 className="h-6 w-6 animate-spin" />
@@ -151,15 +150,14 @@ export function JsonValidator({
             </div>
           </div>
 
-          <div className="flex-1 flex flex-col min-h-0">
+          <div className="flex-1 flex flex-col h-full">
             <div className="text-sm font-medium mb-2">Current Schema:</div>
-            <div className="border rounded-md flex-1 overflow-hidden">
+            <div className="border rounded-md flex-1 h-full">
               <Editor
-                height="100%"
+                height="600px"
                 defaultLanguage="json"
                 value={JSON.stringify(schema, null, 2)}
                 beforeMount={handleBeforeMount}
-                className="monaco-editor-container h-full"
                 loading={
                   <div className="flex items-center justify-center h-full w-full bg-secondary/30">
                     <Loader2 className="h-6 w-6 animate-spin" />
