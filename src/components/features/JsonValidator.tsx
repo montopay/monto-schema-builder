@@ -8,9 +8,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import type { JSONSchema } from "@/types/jsonSchema";
+import {
+  type ValidationError,
+  type ValidationResult,
+  validateJson,
+} from "@/utils/jsonValidator";
 import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
-import Ajv from "ajv";
-import addFormats from "ajv-formats";
 import { AlertCircle, Check, Loader2 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -20,91 +23,16 @@ interface JsonValidatorProps {
   schema: JSONSchema;
 }
 
-// Initialize Ajv with all supported formats
-const ajv = new Ajv({
-  allErrors: true,
-  strict: false,
-});
-addFormats(ajv);
-
-interface ValidationError {
-  path: string;
-  message: string;
-  line?: number;
-  column?: number;
-}
-
 export function JsonValidator({
   open,
   onOpenChange,
   schema,
 }: JsonValidatorProps) {
   const [jsonInput, setJsonInput] = useState("");
-  const [validationResult, setValidationResult] = useState<{
-    valid: boolean;
-    errors?: ValidationError[];
-  } | null>(null);
+  const [validationResult, setValidationResult] =
+    useState<ValidationResult | null>(null);
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  const findLineNumberForPath = useCallback(
-    (
-      jsonStr: string,
-      path: string,
-    ): { line: number; column: number } | undefined => {
-      if (!editorRef.current) return undefined;
-
-      try {
-        // For root errors
-        if (path === "/" || path === "") {
-          return { line: 1, column: 1 };
-        }
-
-        const model = editorRef.current.getModel();
-        if (!model) return undefined;
-
-        // Convert the path to an array of segments
-        const pathSegments = path.split("/").filter(Boolean);
-        let currentObj = JSON.parse(jsonStr);
-        let currentPath = "";
-        const jsonStr2 = jsonStr;
-
-        // Navigate to the last valid object before the error
-        for (const segment of pathSegments) {
-          currentPath += `/${segment}`;
-          const searchStr =
-            typeof currentObj[segment] === "object"
-              ? `"${segment}": `
-              : `"${segment}"`;
-
-          const index = jsonStr2.indexOf(searchStr);
-          if (index > -1) {
-            const upToError = jsonStr2.substring(0, index + searchStr.length);
-            const lineCount = upToError.split("\n").length;
-            const lastNewLinePos = upToError.lastIndexOf("\n");
-            const columnPos =
-              lastNewLinePos === -1
-                ? upToError.length + 1
-                : upToError.length - lastNewLinePos;
-
-            return {
-              line: lineCount,
-              column: columnPos,
-            };
-          }
-
-          if (typeof currentObj[segment] === "undefined") break;
-          currentObj = currentObj[segment];
-        }
-
-        return undefined;
-      } catch (error) {
-        console.error("Error finding line number:", error);
-        return undefined;
-      }
-    },
-    [],
-  );
 
   const validateJsonAgainstSchema = useCallback(() => {
     if (!jsonInput.trim()) {
@@ -112,74 +40,9 @@ export function JsonValidator({
       return;
     }
 
-    try {
-      const jsonObject = JSON.parse(jsonInput);
-
-      // Use Ajv to validate the JSON against the schema
-      const validate = ajv.compile(schema);
-      const valid = validate(jsonObject);
-
-      if (!valid) {
-        const errors =
-          validate.errors?.map((error) => {
-            const path = error.instancePath || "/";
-            const position = findLineNumberForPath(jsonInput, path);
-            return {
-              path,
-              message: error.message || "Unknown error",
-              line: position?.line,
-              column: position?.column,
-            };
-          }) || [];
-
-        setValidationResult({
-          valid: false,
-          errors,
-        });
-      } else {
-        setValidationResult({
-          valid: true,
-          errors: [],
-        });
-      }
-    } catch (error) {
-      console.error("Invalid JSON input:", error);
-
-      // Try to extract line and column from SyntaxError message
-      let line = 1;
-      let column = 1;
-      const errorMessage = (error as Error).message;
-
-      // Try to match 'at line X column Y' pattern
-      const lineColMatch = errorMessage.match(/at line (\d+) column (\d+)/);
-      if (lineColMatch?.[1] && lineColMatch?.[2]) {
-        line = Number.parseInt(lineColMatch[1], 10);
-        column = Number.parseInt(lineColMatch[2], 10);
-      } else {
-        // Fall back to position-based extraction
-        const positionMatch = errorMessage.match(/position (\d+)/);
-        if (positionMatch?.[1]) {
-          const position = Number.parseInt(positionMatch[1], 10);
-          const jsonUpToError = jsonInput.substring(0, position);
-          const lines = jsonUpToError.split("\n");
-          line = lines.length;
-          column = lines[lines.length - 1].length + 1;
-        }
-      }
-
-      setValidationResult({
-        valid: false,
-        errors: [
-          {
-            path: "/",
-            message: errorMessage,
-            line,
-            column,
-          },
-        ],
-      });
-    }
-  }, [jsonInput, schema, findLineNumberForPath]);
+    const result = validateJson(jsonInput, schema);
+    setValidationResult(result);
+  }, [jsonInput, schema]);
 
   useEffect(() => {
     if (debounceTimerRef.current) {
@@ -389,13 +252,6 @@ export function JsonValidator({
               )}
           </div>
         )}
-
-        <DialogFooter className="mt-4">
-          <Button variant="outline" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button onClick={validateJsonAgainstSchema}>Validate Now</Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

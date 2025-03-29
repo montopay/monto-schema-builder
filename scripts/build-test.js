@@ -10,14 +10,14 @@ const root = resolve(__dirname, "..");
 async function buildForTest() {
   try {
     await build({
-      entryPoints: ["src/types/jsonSchema.ts"],
+      entryPoints: ["src/types/jsonSchema.ts", "src/utils/jsonValidator.ts"],
       outdir: "dist-test",
       bundle: true,
       platform: "neutral",
       format: "esm",
       sourcemap: true,
       target: "node18",
-      external: ["zod"],
+      external: ["zod", "ajv", "ajv-formats"],
     });
   } catch (e) {
     console.error("Build failed:", e);
