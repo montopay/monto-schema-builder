@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import type { JSONSchema } from "@/types/jsonSchema";
 import { Maximize2 } from "lucide-react";
 import type React from "react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import JsonSchemaVisualizer from "./JsonSchemaVisualizer";
 import SchemaVisualEditor from "./SchemaVisualEditor";
 
@@ -24,6 +24,10 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
   };
 
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [leftPanelWidth, setLeftPanelWidth] = useState(50); // percentage
+  const resizeRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isDraggingRef = useRef(false);
 
   const toggleFullscreen = () => {
     setIsFullscreen(!isFullscreen);
@@ -32,6 +36,32 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
   const fullscreenClass = isFullscreen
     ? "fixed inset-0 z-50 bg-background"
     : "";
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    isDraggingRef.current = true;
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isDraggingRef.current || !containerRef.current) return;
+
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const newWidth =
+      ((e.clientX - containerRect.left) / containerRect.width) * 100;
+
+    // Limit the minimum and maximum width
+    if (newWidth >= 20 && newWidth <= 80) {
+      setLeftPanelWidth(newWidth);
+    }
+  };
+
+  const handleMouseUp = () => {
+    isDraggingRef.current = false;
+    document.removeEventListener("mousemove", handleMouseMove);
+    document.removeEventListener("mouseup", handleMouseUp);
+  };
 
   return (
     <div
@@ -85,6 +115,7 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
 
       {/* For large screens - show side by side */}
       <div
+        ref={containerRef}
         className={cn(
           "hidden lg:flex lg:flex-col w-full",
           isFullscreen ? "h-screen" : "h-[600px]",
@@ -102,10 +133,21 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
           </button>
         </div>
         <div className="flex flex-row w-full flex-grow min-h-0">
-          <div className="w-1/2 border-r h-full min-h-0">
+          <div
+            className="h-full min-h-0"
+            style={{ width: `${leftPanelWidth}%` }}
+          >
             <SchemaVisualEditor schema={schema} onChange={handleSchemaChange} />
           </div>
-          <div className="w-1/2 h-full min-h-0">
+          <div
+            ref={resizeRef}
+            className="w-1 bg-border hover:bg-primary cursor-col-resize flex-shrink-0"
+            onMouseDown={handleMouseDown}
+          />
+          <div
+            className="h-full min-h-0"
+            style={{ width: `${100 - leftPanelWidth}%` }}
+          >
             <JsonSchemaVisualizer
               schema={schema}
               onChange={handleSchemaChange}
