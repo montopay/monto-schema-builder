@@ -15,6 +15,7 @@ import {
 } from "@/utils/jsonValidator";
 import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
 import { AlertCircle, Check, Loader2 } from "lucide-react";
+import type * as Monaco from "monaco-editor";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 interface JsonValidatorProps {
@@ -33,6 +34,7 @@ export function JsonValidator({
     useState<ValidationResult | null>(null);
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const monacoRef = useRef<typeof Monaco | null>(null);
 
   const validateJsonAgainstSchema = useCallback(() => {
     if (!jsonInput.trim()) {
@@ -60,11 +62,36 @@ export function JsonValidator({
     };
   }, [validateJsonAgainstSchema]);
 
-  const handleBeforeMount: BeforeMount = (monaco) => {
+  const handleJsonEditorBeforeMount: BeforeMount = (monaco) => {
+    monacoRef.current = monaco;
+
+    // Get schema ID from schema or generate a default one
+    const schemaId =
+      typeof schema === "object" && schema.$id
+        ? schema.$id
+        : "https://jsonjoy-builder/schema";
+
+    // Configure JSON language support with the provided schema
     monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
       validate: true,
       allowComments: false,
       schemaValidation: "error",
+      schemas: [
+        {
+          uri: schemaId,
+          fileMatch: ["*"], // Apply to all JSON documents in the editor
+          schema,
+        },
+      ],
+    });
+  };
+
+  const handleSchemaEditorBeforeMount: BeforeMount = (monaco) => {
+    // For the schema editor, we don't need validation
+    monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+      validate: false,
+      allowComments: false,
+      schemas: [],
     });
   };
 
@@ -110,7 +137,7 @@ export function JsonValidator({
                 defaultLanguage="json"
                 value={jsonInput}
                 onChange={handleEditorChange}
-                beforeMount={handleBeforeMount}
+                beforeMount={handleJsonEditorBeforeMount}
                 onMount={handleEditorDidMount}
                 loading={
                   <div className="flex items-center justify-center h-full w-full bg-secondary/30">
@@ -153,7 +180,7 @@ export function JsonValidator({
                 height="600px"
                 defaultLanguage="json"
                 value={JSON.stringify(schema, null, 2)}
-                beforeMount={handleBeforeMount}
+                beforeMount={handleSchemaEditorBeforeMount}
                 loading={
                   <div className="flex items-center justify-center h-full w-full bg-secondary/30">
                     <Loader2 className="h-6 w-6 animate-spin" />
