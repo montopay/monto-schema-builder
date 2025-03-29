@@ -164,7 +164,7 @@ export function JsonValidator({
         errors: [
           {
             path: "/",
-            message: "Invalid JSON format. Please check your syntax.",
+            message: `JSON syntax error: ${errorMessage}`,
             line,
             column,
           },
