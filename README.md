@@ -73,7 +73,7 @@ Validate any JSON document against your schema with:
 
 - **React**: UI framework
 - **TypeScript**: Type-safe development
-- **Vite**: Build tool and development server
+- **Rsbuild**: Build tool and development server
 - **ShadCN UI**: Component library
 - **Monaco Editor**: Code editor for JSON viewing/editing
 - **Ajv**: JSON Schema validation
