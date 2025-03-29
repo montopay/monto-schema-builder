@@ -12,7 +12,7 @@ import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
 import { Loader2 } from "lucide-react";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 
 interface JsonValidatorProps {
   open: boolean;
@@ -38,25 +38,14 @@ export function JsonValidator({
     errors?: string[];
   } | null>(null);
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleBeforeMount: BeforeMount = (monaco) => {
-    monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-      validate: true,
-      allowComments: false,
-      schemaValidation: "error",
-    });
-  };
-
-  const handleEditorDidMount: OnMount = (editor) => {
-    editorRef.current = editor;
-    editor.focus();
-  };
-
-  const handleEditorChange = (value: string | undefined) => {
-    setJsonInput(value || "");
-  };
-
-  const validateJsonAgainstSchema = () => {
+  const validateJsonAgainstSchema = useCallback(() => {
+    if (!jsonInput.trim()) {
+      setValidationResult(null);
+      return;
+    }
+    
     try {
       const jsonObject = JSON.parse(jsonInput);
 
@@ -88,6 +77,39 @@ export function JsonValidator({
         errors: ["Invalid JSON format. Please check your input."],
       });
     }
+  }, [jsonInput, schema]);
+
+  useEffect(() => {
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    debounceTimerRef.current = setTimeout(() => {
+      validateJsonAgainstSchema();
+    }, 500);
+
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, [validateJsonAgainstSchema]);
+
+  const handleBeforeMount: BeforeMount = (monaco) => {
+    monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+      validate: true,
+      allowComments: false,
+      schemaValidation: "error",
+    });
+  };
+
+  const handleEditorDidMount: OnMount = (editor) => {
+    editorRef.current = editor;
+    editor.focus();
+  };
+
+  const handleEditorChange = (value: string | undefined) => {
+    setJsonInput(value || "");
   };
 
   const handleClose = () => {
@@ -102,7 +124,7 @@ export function JsonValidator({
         <DialogHeader>
           <DialogTitle>Validate JSON</DialogTitle>
           <DialogDescription>
-            Paste your JSON document to validate against the current schema.
+            Paste your JSON document to validate against the current schema. Validation occurs automatically as you type.
           </DialogDescription>
         </DialogHeader>
         <div className="flex-1 flex flex-col md:flex-row gap-4 py-4 overflow-hidden h-[600px]">
@@ -198,7 +220,7 @@ export function JsonValidator({
           <Button variant="outline" onClick={handleClose}>
             Cancel
           </Button>
-          <Button onClick={validateJsonAgainstSchema}>Validate</Button>
+          <Button onClick={validateJsonAgainstSchema}>Validate Now</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
