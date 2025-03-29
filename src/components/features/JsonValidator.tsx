@@ -149,14 +149,22 @@ export function JsonValidator({
       let line = 1;
       let column = 1;
       const errorMessage = (error as Error).message;
-      const positionMatch = errorMessage.match(/position (\d+)/);
 
-      if (positionMatch?.[1]) {
-        const position = Number.parseInt(positionMatch[1], 10);
-        const jsonUpToError = jsonInput.substring(0, position);
-        const lines = jsonUpToError.split("\n");
-        line = lines.length;
-        column = lines[lines.length - 1].length + 1;
+      // Try to match 'at line X column Y' pattern
+      const lineColMatch = errorMessage.match(/at line (\d+) column (\d+)/);
+      if (lineColMatch?.[1] && lineColMatch?.[2]) {
+        line = Number.parseInt(lineColMatch[1], 10);
+        column = Number.parseInt(lineColMatch[2], 10);
+      } else {
+        // Fall back to position-based extraction
+        const positionMatch = errorMessage.match(/position (\d+)/);
+        if (positionMatch?.[1]) {
+          const position = Number.parseInt(positionMatch[1], 10);
+          const jsonUpToError = jsonInput.substring(0, position);
+          const lines = jsonUpToError.split("\n");
+          line = lines.length;
+          column = lines[lines.length - 1].length + 1;
+        }
       }
 
       setValidationResult({
@@ -329,6 +337,23 @@ export function JsonValidator({
               validationResult.errors &&
               validationResult.errors.length > 0 && (
                 <div className="mt-3 max-h-[200px] overflow-y-auto">
+                  {validationResult.errors[0] && (
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-red-700">
+                        {validationResult.errors[0].path === "/"
+                          ? "Root"
+                          : validationResult.errors[0].path}
+                      </span>
+                      {validationResult.errors[0].line && (
+                        <span className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">
+                          Line {validationResult.errors[0].line}
+                          {validationResult.errors[0].column
+                            ? `, Col ${validationResult.errors[0].column}`
+                            : ""}
+                        </span>
+                      )}
+                    </div>
+                  )}
                   <ul className="space-y-2">
                     {validationResult.errors.map((error, index) => (
                       <button
