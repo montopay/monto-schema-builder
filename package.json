@@ -3,6 +3,10 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lovasoa/jsonjoy-builder"
+  },
   "scripts": {
     "dev": "rsbuild dev",
     "build": "rsbuild build",

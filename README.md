@@ -19,7 +19,7 @@ A modern, React-based visual JSON Schema editor for creating and manipulating JS
 ### Installation
 
 ```bash
-git clone https://github.com/yourusername/jsonjoy-builder.git
+git clone https://github.com/lovasoa/jsonjoy-builder.git
 cd jsonjoy-builder
 npm install
 ```
