@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import type { JSONSchema } from "@/types/jsonSchema";
+import { useMonacoTheme } from "@/hooks/use-monaco-theme";
 import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
 import { Download, FileJson, Loader2 } from "lucide-react";
 import type React from "react";
@@ -17,24 +18,16 @@ const JsonSchemaVisualizer: React.FC<JsonSchemaVisualizerProps> = ({
   onChange,
 }) => {
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
+  const {
+    currentTheme,
+    defineMonacoThemes,
+    configureJsonDefaults,
+    defaultEditorOptions,
+  } = useMonacoTheme();
 
   const handleBeforeMount: BeforeMount = (monaco) => {
-    monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-      validate: true,
-      allowComments: false,
-      schemaValidation: "error",
-      schemas: [
-        {
-          uri: "http://json-schema.org/draft-07/schema",
-          fileMatch: ["*"],
-          schema: {
-            $schema: "http://json-schema.org/draft-07/schema",
-            type: "object",
-            additionalProperties: true,
-          },
-        },
-      ],
-    });
+    defineMonacoThemes(monaco);
+    configureJsonDefaults(monaco);
   };
 
   const handleEditorDidMount: OnMount = (editor) => {
@@ -100,31 +93,8 @@ const JsonSchemaVisualizer: React.FC<JsonSchemaVisualizerProps> = ({
               <Loader2 className="h-6 w-6 animate-spin" />
             </div>
           }
-          options={{
-            minimap: { enabled: false },
-            fontSize: 14,
-            lineNumbers: "on",
-            roundedSelection: false,
-            scrollBeyondLastLine: false,
-            readOnly: false,
-            automaticLayout: true,
-            formatOnPaste: true,
-            formatOnType: true,
-            tabSize: 2,
-            insertSpaces: true,
-            detectIndentation: true,
-            folding: true,
-            foldingStrategy: "indentation",
-            renderLineHighlight: "all",
-            matchBrackets: "always",
-            autoClosingBrackets: "always",
-            autoClosingQuotes: "always",
-            guides: {
-              bracketPairs: true,
-              indentation: true,
-            },
-          }}
-          theme="light"
+          options={defaultEditorOptions}
+          theme={currentTheme}
         />
       </div>
     </div>

@@ -13,6 +13,7 @@ import {
   type ValidationResult,
   validateJson,
 } from "@/utils/jsonValidator";
+import { useMonacoTheme } from "@/hooks/use-monaco-theme";
 import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
 import { AlertCircle, Check, Loader2 } from "lucide-react";
 import type * as Monaco from "monaco-editor";
@@ -35,6 +36,12 @@ export function JsonValidator({
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const monacoRef = useRef<typeof Monaco | null>(null);
+  const {
+    currentTheme,
+    defineMonacoThemes,
+    configureJsonDefaults,
+    defaultEditorOptions,
+  } = useMonacoTheme();
 
   const validateJsonAgainstSchema = useCallback(() => {
     if (!jsonInput.trim()) {
@@ -64,35 +71,13 @@ export function JsonValidator({
 
   const handleJsonEditorBeforeMount: BeforeMount = (monaco) => {
     monacoRef.current = monaco;
-
-    // Get schema ID from schema or generate a default one
-    const schemaId =
-      typeof schema === "object" && schema.$id
-        ? schema.$id
-        : "https://jsonjoy-builder/schema";
-
-    // Configure JSON language support with the provided schema
-    monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-      validate: true,
-      allowComments: false,
-      schemaValidation: "error",
-      schemas: [
-        {
-          uri: schemaId,
-          fileMatch: ["*"], // Apply to all JSON documents in the editor
-          schema,
-        },
-      ],
-    });
+    defineMonacoThemes(monaco);
+    configureJsonDefaults(monaco, schema);
   };
 
   const handleSchemaEditorBeforeMount: BeforeMount = (monaco) => {
-    // For the schema editor, we don't need validation
-    monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-      validate: false,
-      allowComments: false,
-      schemas: [],
-    });
+    defineMonacoThemes(monaco);
+    configureJsonDefaults(monaco);
   };
 
   const handleEditorDidMount: OnMount = (editor) => {
@@ -116,6 +101,18 @@ export function JsonValidator({
       editorRef.current.setPosition({ lineNumber: line, column: column });
       editorRef.current.focus();
     }
+  };
+
+  // Create a modified version of defaultEditorOptions for the editor
+  const editorOptions = {
+    ...defaultEditorOptions,
+    readOnly: false,
+  };
+
+  // Create read-only options for the schema viewer
+  const schemaViewerOptions = {
+    ...defaultEditorOptions,
+    readOnly: true,
   };
 
   return (
@@ -144,31 +141,8 @@ export function JsonValidator({
                     <Loader2 className="h-6 w-6 animate-spin" />
                   </div>
                 }
-                options={{
-                  minimap: { enabled: false },
-                  fontSize: 14,
-                  lineNumbers: "on",
-                  roundedSelection: false,
-                  scrollBeyondLastLine: false,
-                  readOnly: false,
-                  automaticLayout: true,
-                  formatOnPaste: true,
-                  formatOnType: true,
-                  tabSize: 2,
-                  insertSpaces: true,
-                  detectIndentation: true,
-                  folding: true,
-                  foldingStrategy: "indentation",
-                  renderLineHighlight: "all",
-                  matchBrackets: "always",
-                  autoClosingBrackets: "always",
-                  autoClosingQuotes: "always",
-                  guides: {
-                    bracketPairs: true,
-                    indentation: true,
-                  },
-                }}
-                theme="light"
+                options={editorOptions}
+                theme={currentTheme}
               />
             </div>
           </div>
@@ -186,16 +160,8 @@ export function JsonValidator({
                     <Loader2 className="h-6 w-6 animate-spin" />
                   </div>
                 }
-                options={{
-                  minimap: { enabled: false },
-                  fontSize: 14,
-                  lineNumbers: "on",
-                  readOnly: true,
-                  automaticLayout: true,
-                  folding: true,
-                  foldingStrategy: "indentation",
-                }}
-                theme="light"
+                options={schemaViewerOptions}
+                theme={currentTheme}
               />
             </div>
           </div>
