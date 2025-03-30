@@ -100,28 +100,29 @@ export function useMonacoTheme() {
       base: "vs",
       inherit: true,
       rules: [
-        // JSON syntax highlighting
-        { token: "string", foreground: "0F76C8" }, // strings in blue
-        { token: "number", foreground: "C23786" }, // numbers in pink
-        { token: "keyword", foreground: "0F76C8" }, // keywords in blue
-        { token: "delimiter", foreground: "000000" }, // delimiters in black
-        { token: "keyword.json", foreground: "C23786" }, // JSON specific keywords in pink
-        { token: "string.key.json", foreground: "064D7D" }, // JSON property names in darker blue
-        { token: "string.value.json", foreground: "0F76C8" }, // JSON string values in blue
-        { token: "boolean", foreground: "C23786" }, // booleans in pink
-        { token: "null", foreground: "C23786" }, // null in pink
+        // JSON syntax highlighting based on utils.ts type colors
+        { token: "string", foreground: "3B82F6" }, // text-blue-500
+        { token: "number", foreground: "A855F7" }, // text-purple-500
+        { token: "keyword", foreground: "3B82F6" }, // text-blue-500
+        { token: "delimiter", foreground: "0F172A" }, // text-slate-900
+        { token: "keyword.json", foreground: "A855F7" }, // text-purple-500
+        { token: "string.key.json", foreground: "2563EB" }, // text-blue-600
+        { token: "string.value.json", foreground: "3B82F6" }, // text-blue-500
+        { token: "boolean", foreground: "22C55E" }, // text-green-500
+        { token: "null", foreground: "64748B" }, // text-gray-500
       ],
       colors: {
-        "editor.background": "#f8fafc", // Light background matching app
-        "editor.foreground": "#0f172a", // Matching app text color
-        "editorCursor.foreground": "#0f172a",
-        "editor.lineHighlightBackground": "#f1f5f9",
-        "editorLineNumber.foreground": "#64748b",
-        "editor.selectionBackground": "#e2e8f0",
-        "editor.inactiveSelectionBackground": "#e2e8f0",
-        "editorIndentGuide.background": "#e2e8f0",
-        "editor.findMatchBackground": "#EAEAF2",
-        "editor.findMatchHighlightBackground": "#EAEAF240",
+        // Light theme colors (using hex values instead of CSS variables)
+        "editor.background": "#f8fafc", // --background
+        "editor.foreground": "#0f172a", // --foreground
+        "editorCursor.foreground": "#0f172a", // --foreground
+        "editor.lineHighlightBackground": "#f1f5f9", // --muted
+        "editorLineNumber.foreground": "#64748b", // --muted-foreground
+        "editor.selectionBackground": "#e2e8f0", // --accent
+        "editor.inactiveSelectionBackground": "#e2e8f0", // --accent
+        "editorIndentGuide.background": "#e2e8f0", // --border
+        "editor.findMatchBackground": "#cbd5e1", // --accent
+        "editor.findMatchHighlightBackground": "#cbd5e133", // --accent with opacity
       },
     });
 
@@ -130,28 +131,29 @@ export function useMonacoTheme() {
       base: "vs-dark",
       inherit: true,
       rules: [
-        // JSON syntax highlighting
-        { token: "string", foreground: "6DB0F5" }, // strings in light blue
-        { token: "number", foreground: "E886C4" }, // numbers in pink
-        { token: "keyword", foreground: "6DB0F5" }, // keywords in light blue
-        { token: "delimiter", foreground: "D4D4D4" }, // delimiters in light gray
-        { token: "keyword.json", foreground: "E886C4" }, // JSON specific keywords in pink
-        { token: "string.key.json", foreground: "89DDFF" }, // JSON property names in cyan
-        { token: "string.value.json", foreground: "6DB0F5" }, // JSON string values in light blue
-        { token: "boolean", foreground: "E886C4" }, // booleans in pink
-        { token: "null", foreground: "E886C4" }, // null in pink
+        // JSON syntax highlighting based on utils.ts type colors
+        { token: "string", foreground: "3B82F6" }, // text-blue-500
+        { token: "number", foreground: "A855F7" }, // text-purple-500
+        { token: "keyword", foreground: "3B82F6" }, // text-blue-500
+        { token: "delimiter", foreground: "F8FAFC" }, // text-slate-50
+        { token: "keyword.json", foreground: "A855F7" }, // text-purple-500
+        { token: "string.key.json", foreground: "60A5FA" }, // text-blue-400
+        { token: "string.value.json", foreground: "3B82F6" }, // text-blue-500
+        { token: "boolean", foreground: "22C55E" }, // text-green-500
+        { token: "null", foreground: "94A3B8" }, // text-gray-400
       ],
       colors: {
-        "editor.background": "#0f172a", // Dark background matching app
-        "editor.foreground": "#f8fafc", // Matching app text color
-        "editorCursor.foreground": "#f8fafc",
-        "editor.lineHighlightBackground": "#1e293b",
-        "editorLineNumber.foreground": "#64748b",
-        "editor.selectionBackground": "#334155",
-        "editor.inactiveSelectionBackground": "#334155",
-        "editorIndentGuide.background": "#1e293b",
-        "editor.findMatchBackground": "#515C70",
-        "editor.findMatchHighlightBackground": "#515C7044",
+        // Dark theme colors (using hex values instead of CSS variables)
+        "editor.background": "#0f172a", // --background
+        "editor.foreground": "#f8fafc", // --foreground
+        "editorCursor.foreground": "#f8fafc", // --foreground
+        "editor.lineHighlightBackground": "#1e293b", // --muted
+        "editorLineNumber.foreground": "#64748b", // --muted-foreground
+        "editor.selectionBackground": "#334155", // --accent
+        "editor.inactiveSelectionBackground": "#334155", // --accent
+        "editorIndentGuide.background": "#1e293b", // --border
+        "editor.findMatchBackground": "#475569", // --accent
+        "editor.findMatchHighlightBackground": "#47556933", // --accent with opacity
       },
     });
   };
