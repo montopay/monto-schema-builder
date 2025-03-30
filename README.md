@@ -81,9 +81,7 @@ Validate any JSON document against your schema with:
 - **ShadCN UI**: Component library
 - **Monaco Editor**: Code editor for JSON viewing/editing
 - **Ajv**: JSON Schema validation
-- **Zod**: Runtime schema validation
-- **React Router**: Navigation
-- **TanStack Query**: Data fetching
+- **Zod**: Type-safe json parsing in ts
 - **Lucide Icons**: Icon library
 - **Node.js Test Runner**: Simple built-in testing
 
