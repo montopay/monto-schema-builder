@@ -10,7 +10,11 @@ const root = resolve(__dirname, "..");
 async function buildForTest() {
   try {
     await build({
-      entryPoints: ["src/types/jsonSchema.ts", "src/utils/jsonValidator.ts"],
+      entryPoints: [
+        "src/types/jsonSchema.ts",
+        "src/utils/jsonValidator.ts",
+        "src/utils/schemaExample.ts",
+      ],
       outdir: "dist-test",
       bundle: true,
       platform: "neutral",

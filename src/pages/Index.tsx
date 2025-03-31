@@ -1,9 +1,9 @@
 import JsonSchemaEditor from "@/components/SchemaEditor/JsonSchemaEditor";
-import { exampleSchema } from "@/components/SchemaEditor/SchemaExample";
 import { JsonValidator } from "@/components/features/JsonValidator";
 import { SchemaInferencer } from "@/components/features/SchemaInferencer";
 import { Button } from "@/components/ui/button";
 import type { JSONSchema } from "@/types/jsonSchema";
+import { exampleSchema } from "@/utils/schemaExample";
 import {
   CheckCircle,
   CirclePlus,

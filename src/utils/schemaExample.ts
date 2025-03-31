@@ -1,5 +1,4 @@
 import type { JSONSchema } from "@/types/jsonSchema";
-import type React from "react";
 
 export const exampleSchema: JSONSchema = {
   $schema: "https://json-schema.org/draft-07/schema",
@@ -66,9 +65,3 @@ export const exampleSchema: JSONSchema = {
   },
   required: ["person"],
 };
-
-const SchemaExample: React.FC = () => {
-  return null; // This component just exports the example schema
-};
-
-export default SchemaExample;

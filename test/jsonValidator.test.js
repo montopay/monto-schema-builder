@@ -6,6 +6,7 @@ import {
   findLineNumberForPath,
   validateJson,
 } from "../dist-test/utils/jsonValidator.js";
+import { exampleSchema } from "../dist-test/utils/schemaExample.js";
 
 describe("JSON Validator", () => {
   test("should find correct line numbers for JSON paths witch decoy inputs", () => {
@@ -129,5 +130,127 @@ describe("JSON Validator", () => {
     assert.strictEqual(result.errors[0].path, "/");
     assert.ok(result.errors[0].line !== undefined);
     assert.ok(result.errors[0].column !== undefined);
+  });
+
+  test("should detect missing required person field", () => {
+    const invalidJson = `{
+  "address": {
+    "street": "123 Main St",
+    "city": "Anytown"
+  }
+}`;
+
+    const result = validateJson(invalidJson, exampleSchema);
+    assert.strictEqual(result.valid, false);
+    assert.strictEqual(result.errors[0].path, "/");
+    assert.ok(result.errors[0].message.includes("required"));
+  });
+});
+
+describe("Schema Example Validation", () => {
+  test("should validate valid complete input", () => {
+    const validJson = `{
+  "person": {
+    "firstName": "John",
+    "lastName": "Doe",
+    "age": 30,
+    "isEmployed": true
+  },
+  "address": {
+    "street": "123 Main St",
+    "city": "Anytown",
+    "zipCode": "12345"
+  },
+  "hobbies": [
+    {
+      "name": "Reading",
+      "yearsExperience": 20
+    },
+    {
+      "name": "Photography",
+      "yearsExperience": 5
+    }
+  ]
+}`;
+
+    const result = validateJson(validJson, exampleSchema);
+    assert.strictEqual(result.valid, true);
+    assert.deepStrictEqual(result.errors, []);
+  });
+
+  test("should validate minimal valid input", () => {
+    const minimalJson = `{
+  "person": {
+    "firstName": "John",
+    "lastName": "Doe"
+  }
+}`;
+
+    const result = validateJson(minimalJson, exampleSchema);
+    assert.strictEqual(result.valid, true);
+    assert.deepStrictEqual(result.errors, []);
+  });
+
+  test("should detect missing required person properties", () => {
+    const invalidJson = `{
+  "person": {
+    "firstName": "John"
+  }
+}`;
+
+    const result = validateJson(invalidJson, exampleSchema);
+    assert.strictEqual(result.valid, false);
+    assert.strictEqual(result.errors[0].path, "/person");
+    assert.ok(result.errors[0].message.includes("lastName"));
+  });
+
+  test("should validate type constraints", () => {
+    const invalidJson = `{
+  "person": {
+    "firstName": "John",
+    "lastName": "Doe",
+    "age": "thirty"
+  }
+}`;
+
+    const result = validateJson(invalidJson, exampleSchema);
+    assert.strictEqual(result.valid, false);
+    assert.strictEqual(result.errors[0].path, "/person/age");
+    assert.ok(result.errors[0].message.includes("number"));
+  });
+
+  test("should validate hobbies array structure", () => {
+    const invalidJson = `{
+  "person": {
+    "firstName": "John",
+    "lastName": "Doe"
+  },
+  "hobbies": [
+    {
+      "name": "Reading",
+      "yearsExperience": "lots"
+    }
+  ]
+}`;
+
+    const result = validateJson(invalidJson, exampleSchema);
+    assert.strictEqual(result.valid, false);
+    assert.strictEqual(result.errors[0].path, "/hobbies/0/yearsExperience");
+    assert.ok(result.errors[0].message.includes("number"));
+  });
+
+  test("should validate nested object structures", () => {
+    const invalidJson = `{
+  "person": {
+    "firstName": "John",
+    "lastName": "Doe"
+  },
+  "address": "123 Main St"
+}`;
+
+    const result = validateJson(invalidJson, exampleSchema);
+    assert.strictEqual(result.valid, false);
+    assert.strictEqual(result.errors[0].path, "/address");
+    assert.ok(result.errors[0].message.includes("object"));
   });
 });

@@ -9,10 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { useMonacoTheme } from "@/hooks/use-monaco-theme";
 import type { JSONSchema } from "@/types/jsonSchema";
-import {
-  type ValidationResult,
-  validateJson,
-} from "@/utils/jsonValidator";
+import { type ValidationResult, validateJson } from "@/utils/jsonValidator";
 import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
 import { AlertCircle, Check, Loader2 } from "lucide-react";
 import type * as Monaco from "monaco-editor";

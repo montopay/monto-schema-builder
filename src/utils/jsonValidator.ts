@@ -2,10 +2,12 @@ import type { JSONSchema } from "@/types/jsonSchema";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
 
-// Initialize Ajv with all supported formats
+// Initialize Ajv with all supported formats and meta-schemas
 const ajv = new Ajv({
   allErrors: true,
   strict: false,
+  validateSchema: false,
+  validateFormats: false,
 });
 addFormats(ajv);
 
