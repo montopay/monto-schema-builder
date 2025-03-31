@@ -154,7 +154,15 @@ export function validateJson(
   schema: JSONSchema,
 ): ValidationResult {
   if (!jsonInput.trim()) {
-    return { valid: false, errors: [] };
+    return {
+      valid: false,
+      errors: [
+        {
+          path: "/",
+          message: "Empty JSON input",
+        },
+      ],
+    };
   }
 
   try {
@@ -189,15 +197,26 @@ export function validateJson(
       errors: [],
     };
   } catch (error) {
-    // Handle JSON syntax errors
-    const { line, column } = extractErrorPosition(error as Error, jsonInput);
+    if (!(error instanceof Error)) {
+      return {
+        valid: false,
+        errors: [
+          {
+            path: "/",
+            message: `Unknown error: ${error}`,
+          },
+        ],
+      };
+    }
+
+    const { line, column } = extractErrorPosition(error, jsonInput);
 
     return {
       valid: false,
       errors: [
         {
           path: "/",
-          message: (error as Error).message,
+          message: error.message,
           line,
           column,
         },

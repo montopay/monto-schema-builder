@@ -10,7 +10,6 @@ import {
 import { useMonacoTheme } from "@/hooks/use-monaco-theme";
 import type { JSONSchema } from "@/types/jsonSchema";
 import {
-  type ValidationError,
   type ValidationResult,
   validateJson,
 } from "@/utils/jsonValidator";
@@ -36,6 +35,7 @@ export function JsonValidator({
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const monacoRef = useRef<typeof Monaco | null>(null);
+  const schemaMonacoRef = useRef<typeof Monaco | null>(null);
   const {
     currentTheme,
     defineMonacoThemes,
@@ -72,12 +72,12 @@ export function JsonValidator({
   const handleJsonEditorBeforeMount: BeforeMount = (monaco) => {
     monacoRef.current = monaco;
     defineMonacoThemes(monaco);
-    configureJsonDefaults(monaco);
+    configureJsonDefaults(monaco, schema);
   };
 
   const handleSchemaEditorBeforeMount: BeforeMount = (monaco) => {
+    schemaMonacoRef.current = monaco;
     defineMonacoThemes(monaco);
-    configureJsonDefaults(monaco, schema);
   };
 
   const handleEditorDidMount: OnMount = (editor) => {
@@ -87,12 +87,6 @@ export function JsonValidator({
 
   const handleEditorChange = (value: string | undefined) => {
     setJsonInput(value || "");
-  };
-
-  const handleClose = () => {
-    setJsonInput("");
-    setValidationResult(null);
-    onOpenChange(false);
   };
 
   const goToError = (line: number, column: number) => {
