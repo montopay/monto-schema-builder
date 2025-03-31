@@ -33,7 +33,7 @@ test("should infer schema for object types", () => {
   assert.strictEqual(schema.properties.person.type, "object");
   assert.strictEqual(schema.properties.person.properties.name.type, "string");
   assert.strictEqual(schema.properties.person.properties.age.type, "integer");
-  assert.deepStrictEqual(schema.properties.person.required, ["name", "age"]);
+  assert.deepStrictEqual(schema.properties.person.required, ["age", "name"]);
 });
 
 test("should infer schema for array types", () => {
@@ -129,7 +129,7 @@ test("should handle nested arrays and objects", () => {
     "string",
   );
   assert.deepStrictEqual(schema.properties.users.items.required, [
-    "name",
     "hobbies",
+    "name",
   ]);
 });
