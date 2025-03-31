@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import type * as Monaco from "monaco-editor";
 import type { JSONSchema } from "@/types/jsonSchema";
+import type * as Monaco from "monaco-editor";
+import { useEffect, useState } from "react";
 
 export interface MonacoEditorOptions {
   minimap?: { enabled: boolean };
@@ -168,6 +168,7 @@ export function useMonacoTheme() {
       validate: true,
       allowComments: false,
       schemaValidation: "error",
+      enableSchemaRequest: true,
       schemas: schema
         ? [
             {

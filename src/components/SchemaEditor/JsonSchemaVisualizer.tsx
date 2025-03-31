@@ -1,6 +1,6 @@
+import { useMonacoTheme } from "@/hooks/use-monaco-theme";
 import { cn } from "@/lib/utils";
 import type { JSONSchema } from "@/types/jsonSchema";
-import { useMonacoTheme } from "@/hooks/use-monaco-theme";
 import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
 import { Download, FileJson, Loader2 } from "lucide-react";
 import type React from "react";

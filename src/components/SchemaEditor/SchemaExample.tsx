@@ -2,6 +2,7 @@ import type { JSONSchema } from "@/types/jsonSchema";
 import type React from "react";
 
 export const exampleSchema: JSONSchema = {
+  $schema: "https://json-schema.org/draft-07/schema",
   type: "object",
   properties: {
     person: {

@@ -7,9 +7,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useMonacoTheme } from "@/hooks/use-monaco-theme";
 import { createSchemaFromJson } from "@/lib/schema-inference";
 import type { JSONSchema } from "@/types/jsonSchema";
-import { useMonacoTheme } from "@/hooks/use-monaco-theme";
 import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
 import { Loader2 } from "lucide-react";
 import { useRef, useState } from "react";

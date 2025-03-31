@@ -7,13 +7,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useMonacoTheme } from "@/hooks/use-monaco-theme";
 import type { JSONSchema } from "@/types/jsonSchema";
 import {
   type ValidationError,
   type ValidationResult,
   validateJson,
 } from "@/utils/jsonValidator";
-import { useMonacoTheme } from "@/hooks/use-monaco-theme";
 import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
 import { AlertCircle, Check, Loader2 } from "lucide-react";
 import type * as Monaco from "monaco-editor";
@@ -72,12 +72,12 @@ export function JsonValidator({
   const handleJsonEditorBeforeMount: BeforeMount = (monaco) => {
     monacoRef.current = monaco;
     defineMonacoThemes(monaco);
-    configureJsonDefaults(monaco, schema);
+    configureJsonDefaults(monaco);
   };
 
   const handleSchemaEditorBeforeMount: BeforeMount = (monaco) => {
     defineMonacoThemes(monaco);
-    configureJsonDefaults(monaco);
+    configureJsonDefaults(monaco, schema);
   };
 
   const handleEditorDidMount: OnMount = (editor) => {
