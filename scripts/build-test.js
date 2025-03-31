@@ -14,6 +14,7 @@ async function buildForTest() {
         "src/types/jsonSchema.ts",
         "src/utils/jsonValidator.ts",
         "src/utils/schemaExample.ts",
+        "src/lib/schema-inference.ts",
       ],
       outdir: "dist-test",
       bundle: true,
