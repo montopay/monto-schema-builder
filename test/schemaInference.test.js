@@ -81,6 +81,9 @@ test("should infer schema for array of objects with different properties", () =>
     schema.properties.users.items.properties.address.type,
     "string",
   );
+  // "name" is present in all objects, so it is required;
+  // "address" is present in some objects, so it is not required;
+  assert.deepStrictEqual(schema.properties.users.items.required, ["name"]);
 });
 
 test("should detect string formats", () => {

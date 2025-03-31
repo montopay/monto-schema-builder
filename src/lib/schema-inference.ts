@@ -43,7 +43,56 @@ export function inferSchema(obj: unknown): JSONSchema {
       );
 
       if (allSameType && itemSchemas.length > 0) {
-        // For consistent arrays, use the first item's schema
+        if (asObjectSchema(itemSchemas[0]).type === "object") {
+          // For arrays of objects, merge all properties
+          const properties: Record<string, JSONSchema> = {};
+          const requiredProps = new Set<string>();
+          const seenProps = new Set<string>();
+
+          for (const schema of itemSchemas) {
+            const objSchema = asObjectSchema(schema);
+            if (!objSchema.properties) continue;
+
+            // Track which properties we've seen
+            for (const [key, value] of Object.entries(objSchema.properties)) {
+              if (!seenProps.has(key)) {
+                properties[key] = value;
+                seenProps.add(key);
+              }
+            }
+
+            // Track which properties are in all objects
+            if (objSchema.required) {
+              if (requiredProps.size === 0) {
+                for (const prop of objSchema.required) {
+                  requiredProps.add(prop);
+                }
+              } else {
+                const newRequired = new Set<string>();
+                for (const prop of objSchema.required) {
+                  if (requiredProps.has(prop)) newRequired.add(prop);
+                }
+                requiredProps.clear();
+                for (const prop of newRequired) {
+                  requiredProps.add(prop);
+                }
+              }
+            }
+          }
+
+          return {
+            type: "array",
+            items: {
+              type: "object",
+              properties,
+              required:
+                requiredProps.size > 0 ? Array.from(requiredProps) : undefined,
+            },
+            minItems: 0,
+          };
+        }
+
+        // For other consistent arrays, use the first item's schema
         return {
           type: "array",
           items: itemSchemas[0],
@@ -53,15 +102,15 @@ export function inferSchema(obj: unknown): JSONSchema {
 
       // For mixed type arrays, create a oneOf schema
       if (itemSchemas.length > 0) {
+        const uniqueSchemas = [
+          ...new Map(itemSchemas.map((s) => [JSON.stringify(s), s])).values(),
+        ];
         return {
           type: "array",
-          items: {
-            oneOf: [
-              ...new Map(
-                itemSchemas.map((s) => [JSON.stringify(s), s]),
-              ).values(),
-            ],
-          },
+          items:
+            uniqueSchemas.length === 1
+              ? uniqueSchemas[0]
+              : { oneOf: uniqueSchemas },
           minItems: 0,
         };
       }
@@ -112,7 +161,7 @@ export function createSchemaFromJson(jsonObject: unknown): JSONSchema {
   const inferredSchema = inferSchema(jsonObject);
 
   return {
-    $schema: "http://json-schema.org/draft-07/schema#",
+    $schema: "https://json-schema.org/draft-07/schema",
     ...asObjectSchema(inferredSchema),
     title: "Generated Schema",
     description: "Generated from JSON data",
