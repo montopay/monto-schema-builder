@@ -183,7 +183,11 @@ export function JsonValidator({
                 <>
                   <AlertCircle className="h-5 w-5 text-red-500 mr-2" />
                   <p className="text-red-700 font-medium">
-                    Validation errors detected
+                    {validationResult.errors.length === 1
+                      ? validationResult.errors[0].path === "/"
+                        ? "Invalid JSON syntax"
+                        : "Schema validation error"
+                      : `${validationResult.errors.length} validation errors detected`}
                   </p>
                 </>
               )}
