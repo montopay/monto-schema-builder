@@ -21,7 +21,7 @@ export const baseSchema = z.object({
   $anchor: z.string().optional(),
   $dynamicRef: z.string().optional(),
   $dynamicAnchor: z.string().optional(),
-  $vocabulary: z.record(z.boolean()).optional(),
+  $vocabulary: z.record(z.string(), z.boolean()).optional(),
   $comment: z.string().optional(),
   title: z.string().optional(),
   description: z.string().optional(),
@@ -58,7 +58,7 @@ export const baseSchema = z.object({
   required: z.array(z.string()).optional(),
   minProperties: z.number().int().min(0).optional(),
   maxProperties: z.number().int().min(0).optional(),
-  dependentRequired: z.record(z.array(z.string())).optional(),
+  dependentRequired: z.record(z.string(), z.array(z.string())).optional(),
 
   // Value validations
   const: z.unknown().optional(),
@@ -96,17 +96,17 @@ export type JSONSchema =
 export const jsonSchemaType: z.ZodType<JSONSchema> = z.lazy(() =>
   z.union([
     baseSchema.extend({
-      $defs: z.record(jsonSchemaType).optional(),
+      $defs: z.record(z.string(), jsonSchemaType).optional(),
       contentSchema: jsonSchemaType.optional(),
       items: jsonSchemaType.optional(),
       prefixItems: z.array(jsonSchemaType).optional(),
       contains: jsonSchemaType.optional(),
       unevaluatedItems: jsonSchemaType.optional(),
-      properties: z.record(jsonSchemaType).optional(),
-      patternProperties: z.record(jsonSchemaType).optional(),
+      properties: z.record(z.string(), jsonSchemaType).optional(),
+      patternProperties: z.record(z.string(), jsonSchemaType).optional(),
       additionalProperties: z.union([jsonSchemaType, z.boolean()]).optional(),
       propertyNames: jsonSchemaType.optional(),
-      dependentSchemas: z.record(jsonSchemaType).optional(),
+      dependentSchemas: z.record(z.string(), jsonSchemaType).optional(),
       unevaluatedProperties: jsonSchemaType.optional(),
       allOf: z.array(jsonSchemaType).optional(),
       anyOf: z.array(jsonSchemaType).optional(),
