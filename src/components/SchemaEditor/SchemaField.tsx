@@ -3,14 +3,14 @@ import type {
   NewField,
   ObjectJSONSchema,
   SchemaType,
-} from "@/types/jsonSchema";
+} from "../../types/jsonSchema.ts";
 import {
   asObjectSchema,
   getSchemaDescription,
   withObjectSchema,
-} from "@/types/jsonSchema";
-import React, { Suspense, lazy } from "react";
-import SchemaPropertyEditor from "./SchemaPropertyEditor";
+} from "../../types/jsonSchema.ts";
+import React, { Suspense } from "react";
+import SchemaPropertyEditor from "./SchemaPropertyEditor.tsx";
 
 // This component is now just a simple wrapper around SchemaPropertyEditor
 // to maintain backward compatibility during migration
@@ -70,24 +70,6 @@ const SchemaField: React.FC<SchemaFieldProps> = (props) => {
       type: Array.isArray(type) ? type[0] : type,
       description,
       required: isRequired,
-      validation: asObjectSchema(schema),
-    });
-  };
-
-  // Handle description change
-  const handleDescriptionChange = (newDescription: string) => {
-    // Get type in a safe way
-    const type = withObjectSchema(
-      schema,
-      (s) => s.type || "object",
-      "object",
-    ) as SchemaType;
-
-    onEdit({
-      name,
-      type: Array.isArray(type) ? type[0] : type,
-      description: newDescription,
-      required,
       validation: asObjectSchema(schema),
     });
   };

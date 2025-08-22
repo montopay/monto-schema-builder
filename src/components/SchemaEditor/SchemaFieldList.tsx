@@ -1,12 +1,12 @@
-import { getSchemaProperties } from "@/lib/schemaEditor";
+import type { FC } from "react";
+import { getSchemaProperties } from "../../lib/schemaEditor.ts";
 import type {
   JSONSchema as JSONSchemaType,
   NewField,
   ObjectJSONSchema,
   SchemaType,
-} from "@/types/jsonSchema";
-import type React from "react";
-import SchemaPropertyEditor from "./SchemaPropertyEditor";
+} from "../../types/jsonSchema.ts";
+import SchemaPropertyEditor from "./SchemaPropertyEditor.tsx";
 
 interface SchemaFieldListProps {
   schema: JSONSchemaType;
@@ -15,7 +15,7 @@ interface SchemaFieldListProps {
   onDeleteField: (name: string) => void;
 }
 
-const SchemaFieldList: React.FC<SchemaFieldListProps> = ({
+const SchemaFieldList: FC<SchemaFieldListProps> = ({
   schema,
   onAddField,
   onEditField,
@@ -70,23 +70,6 @@ const SchemaFieldList: React.FC<SchemaFieldListProps> = ({
           ? ""
           : property.schema.description || "",
       required,
-      validation:
-        typeof property.schema === "boolean"
-          ? { type: "object" }
-          : property.schema,
-    });
-  };
-
-  // Handle description change
-  const handleDescriptionChange = (name: string, description: string) => {
-    const property = properties.find((prop) => prop.name === name);
-    if (!property) return;
-
-    onEditField(name, {
-      name,
-      type: getValidSchemaType(property.schema),
-      description,
-      required: property.required,
       validation:
         typeof property.schema === "boolean"
           ? { type: "object" }

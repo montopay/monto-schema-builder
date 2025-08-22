@@ -1,25 +1,46 @@
 {
   "name": "jsonjoy-builder",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
+  "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/lovasoa/jsonjoy-builder"
   },
+  "files": [
+    "dist",
+    "!tsconfig.tsbuildinfo",
+    "!tsconfig.js"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/jsonjoy-builder.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/jsonjoy-builder.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": {
+      "import": "./dist/index.css"
+    }
+  },
+  "engines": {
+    "node": ">=22.18.0",
+    "npm": ">=10.9.0"
+  },
   "scripts": {
     "dev": "rsbuild dev",
-    "build": "rsbuild build",
-    "build:dev": "rsbuild build --mode development",
+    "preview": "rsbuild preview",
+    "build": "rslib build",
+    "build:dev": "rslib build --mode development",
     "lint": "biome lint .",
     "format": "biome format . --write",
     "check": "biome check .",
     "fix": "biome check --fix --unsafe",
-    "typecheck": "tsc",
-    "preview": "rsbuild preview",
-    "build:test": "node scripts/build-test.js",
-    "pretest": "npm run build:test",
-    "test": "node --test test/*.test.js"
+    "typecheck": "tsc --build --force",
+    "test": "node --test test/*.test.js",
+    "prepack": "npm run build"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.6.0",
@@ -41,25 +62,29 @@
     "clsx": "^2.1.1",
     "lucide-react": "^0.462.0",
     "next-themes": "^0.3.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.26.2",
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8"
   },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@rsbuild/core": "^1.3.0",
-    "@rsbuild/plugin-react": "^1.1.1",
+    "@microsoft/api-extractor": "^7.52.11",
+    "@rsbuild/plugin-react": "^1.3.5",
+    "@rslib/core": "^0.12.2",
     "@types/node": "^22.5.5",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "autoprefixer": "^10.4.20",
     "esbuild": "^0.25.1",
     "postcss": "^8.4.47",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^6.26.2",
     "tailwindcss": "^3.4.11",
-    "typescript": "^5.5.3"
+    "typescript": "^5.9.2"
   }
 }

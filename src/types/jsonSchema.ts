@@ -12,6 +12,7 @@ const simpleTypes = [
 ] as const;
 
 // Define base schema first - Zod is the source of truth
+/** @public */
 export const baseSchema = z.object({
   // Base schema properties
   $id: z.string().optional(),
@@ -65,6 +66,7 @@ export const baseSchema = z.object({
 });
 
 // Define recursive schema type
+/** @public */
 export type JSONSchema =
   | boolean
   | (z.infer<typeof baseSchema> & {

@@ -1,4 +1,4 @@
-import type { JSONSchema } from "@/types/jsonSchema";
+import type { JSONSchema } from "../types/jsonSchema.ts";
 import type * as Monaco from "monaco-editor";
 import { useEffect, useState } from "react";
 

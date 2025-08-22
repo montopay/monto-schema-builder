@@ -2,8 +2,8 @@ import type {
   JSONSchema,
   ObjectJSONSchema,
   SchemaType,
-} from "@/types/jsonSchema";
-import { withObjectSchema } from "@/types/jsonSchema";
+} from "../../types/jsonSchema.ts";
+import { withObjectSchema } from "../../types/jsonSchema.ts";
 import { Suspense, lazy } from "react";
 
 // Lazy load specific type editors to avoid circular dependencies

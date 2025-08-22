@@ -1,18 +1,13 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { getArrayItemsSchema } from "@/lib/schemaEditor";
-import { cn, getTypeColor, getTypeLabel } from "@/lib/utils";
-import type {
-  JSONSchema,
-  ObjectJSONSchema,
-  SchemaType,
-} from "@/types/jsonSchema";
-import { isBooleanSchema, withObjectSchema } from "@/types/jsonSchema";
+import { Input } from "../../../components/ui/input.tsx";
+import { Label } from "../../../components/ui/label.tsx";
+import { Switch } from "../../../components/ui/switch.tsx";
+import { getArrayItemsSchema } from "../../../lib/schemaEditor.ts";
+import type { ObjectJSONSchema, SchemaType } from "../../../types/jsonSchema.ts";
+import { isBooleanSchema, withObjectSchema } from "../../../types/jsonSchema.ts";
 import { useState } from "react";
-import TypeDropdown from "../TypeDropdown";
-import type { TypeEditorProps } from "../TypeEditor";
-import TypeEditor from "../TypeEditor";
+import TypeDropdown from "../TypeDropdown.tsx";
+import type { TypeEditorProps } from "../TypeEditor.tsx";
+import TypeEditor from "../TypeEditor.tsx";
 
 const ArrayEditor: React.FC<TypeEditorProps> = ({
   schema,

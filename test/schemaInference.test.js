@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import { test } from "node:test";
-import { createSchemaFromJson } from "../dist-test/lib/schema-inference.js";
+import { createSchemaFromJson } from "../src/lib/schema-inference.ts";
 
 test("should infer schema for primitive types", () => {
   const json = {

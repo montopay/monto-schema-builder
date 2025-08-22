@@ -7,12 +7,19 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+.rslib
+
 node_modules
 dist
+dist-demo
+build
 dist-ssr
 *.local
 dist-tests
 dist-test
+*.tgz
+
+tsconfig.tsbuildinfo
 
 # Editor directories and files
 .vscode/*

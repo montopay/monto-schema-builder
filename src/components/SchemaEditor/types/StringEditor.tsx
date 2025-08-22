@@ -1,21 +1,17 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Input } from "../../../components/ui/input.tsx";
+import { Label } from "../../../components/ui/label.tsx";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import type { JSONSchema, ObjectJSONSchema } from "@/types/jsonSchema";
-import {
-  asObjectSchema,
-  isBooleanSchema,
-  withObjectSchema,
-} from "@/types/jsonSchema";
+} from "../../../components/ui/select.tsx";
+import type { ObjectJSONSchema } from "../../../types/jsonSchema.ts";
+import { isBooleanSchema, withObjectSchema } from "../../../types/jsonSchema.ts";
 import { X } from "lucide-react";
 import { useState } from "react";
-import type { TypeEditorProps } from "../TypeEditor";
+import type { TypeEditorProps } from "../TypeEditor.tsx";
 
 const StringEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
   const [enumValue, setEnumValue] = useState("");
@@ -37,14 +33,6 @@ const StringEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
     const baseSchema = isBooleanSchema(schema)
       ? { type: "string" as const }
       : { ...schema };
-
-    // Extract reusable properties while safely handling potential undefined description
-    const type = withObjectSchema(schema, (s) => s.type || "string", "string");
-    const description = withObjectSchema(
-      schema,
-      (s) => s.description,
-      undefined,
-    );
 
     // Get all validation props except type and description
     const { type: _, description: __, ...validationProps } = baseSchema;

@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "../../components/ui/button.tsx";
 import {
   Dialog,
   DialogContent,
@@ -6,20 +6,22 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { useMonacoTheme } from "@/hooks/use-monaco-theme";
-import { createSchemaFromJson } from "@/lib/schema-inference";
-import type { JSONSchema } from "@/types/jsonSchema";
+} from "../../components/ui/dialog.tsx";
+import { useMonacoTheme } from "../../hooks/use-monaco-theme.tsx";
+import { createSchemaFromJson } from "../../lib/schema-inference.ts";
+import type { JSONSchema } from "../../types/jsonSchema.ts";
 import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
 import { Loader2 } from "lucide-react";
 import { useRef, useState } from "react";
 
-interface SchemaInferencerProps {
+/** @public */
+export interface SchemaInferencerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSchemaInferred: (schema: JSONSchema) => void;
 }
 
+/** @public */
 export function SchemaInferencer({
   open,
   onOpenChange,

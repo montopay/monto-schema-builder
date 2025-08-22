@@ -1,15 +1,10 @@
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import type { ObjectJSONSchema } from "@/types/jsonSchema";
-import { isBooleanSchema, withObjectSchema } from "@/types/jsonSchema";
-import { X } from "lucide-react";
-import { useState } from "react";
-import type { TypeEditorProps } from "../TypeEditor";
+import { Label } from "../../../components/ui/label.tsx";
+import { Switch } from "../../../components/ui/switch.tsx";
+import type { ObjectJSONSchema } from "../../../types/jsonSchema.ts";
+import { withObjectSchema } from "../../../types/jsonSchema.ts";
+import type { TypeEditorProps } from "../TypeEditor.tsx";
 
 const BooleanEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
-  const [showTrue, setShowTrue] = useState(true);
-  const [showFalse, setShowFalse] = useState(true);
-
   // Extract boolean-specific validation
   const enumValues = withObjectSchema(
     schema,
@@ -55,11 +50,6 @@ const BooleanEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
       // Create a new enum with just the opposite value
       newEnum = [!value];
     }
-
-    // Update the schema
-    const baseSchema = isBooleanSchema(schema)
-      ? { type: "boolean" as const }
-      : { ...schema };
 
     // Create a new validation object with just the type and enum
     const updatedValidation: ObjectJSONSchema = {

@@ -1,5 +1,5 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from "../../components/ui/badge.tsx";
+import { Button } from "../../components/ui/button.tsx";
 import {
   Dialog,
   DialogContent,
@@ -7,26 +7,25 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+} from "../../components/ui/dialog.tsx";
+import { Input } from "../../components/ui/input.tsx";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import type { NewField, SchemaType } from "@/types/jsonSchema";
+} from "../../components/ui/tooltip.tsx";
+import type { NewField, SchemaType } from "../../types/jsonSchema.ts";
 import { CirclePlus, HelpCircle, Info } from "lucide-react";
-import type React from "react";
-import { useState } from "react";
-import SchemaTypeSelector from "./SchemaTypeSelector";
+import { useState, type FC, type FormEvent,  } from "react";
+import SchemaTypeSelector from "./SchemaTypeSelector.tsx";
 
 interface AddFieldButtonProps {
   onAddField: (field: NewField) => void;
   variant?: "primary" | "secondary";
 }
 
-const AddFieldButton: React.FC<AddFieldButtonProps> = ({
+const AddFieldButton: FC<AddFieldButtonProps> = ({
   onAddField,
   variant = "primary",
 }) => {
@@ -36,7 +35,7 @@ const AddFieldButton: React.FC<AddFieldButtonProps> = ({
   const [fieldDesc, setFieldDesc] = useState("");
   const [fieldRequired, setFieldRequired] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!fieldName.trim()) return;
 

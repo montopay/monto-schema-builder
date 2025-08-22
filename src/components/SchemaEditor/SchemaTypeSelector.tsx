@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
-import type { SchemaType } from "@/types/jsonSchema";
-import type React from "react";
+import type { FC } from "react";
+import { cn } from "../../lib/utils.ts";
+import type { SchemaType } from "../../types/jsonSchema.ts";
 
 interface SchemaTypeSelectorProps {
   id?: string;
@@ -14,7 +14,7 @@ interface TypeOption {
   description: string;
 }
 
-const typeOptions: { id: SchemaType; label: string; description: string }[] = [
+const typeOptions: TypeOption[] = [
   {
     id: "string",
     label: "Text",
@@ -42,7 +42,7 @@ const typeOptions: { id: SchemaType; label: string; description: string }[] = [
   },
 ];
 
-const SchemaTypeSelector: React.FC<SchemaTypeSelectorProps> = ({
+const SchemaTypeSelector: FC<SchemaTypeSelectorProps> = ({
   id,
   value,
   onChange,

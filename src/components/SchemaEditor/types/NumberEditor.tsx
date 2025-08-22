@@ -1,26 +1,13 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import type { JSONSchema, ObjectJSONSchema } from "@/types/jsonSchema";
-import { isBooleanSchema, withObjectSchema } from "@/types/jsonSchema";
+import { Input } from "../../../components/ui/input.tsx";
+import { Label } from "../../../components/ui/label.tsx";
+import type { ObjectJSONSchema } from "../../../types/jsonSchema.ts";
+import { isBooleanSchema, withObjectSchema } from "../../../types/jsonSchema.ts";
 import { X } from "lucide-react";
 import { useState } from "react";
-import type { TypeEditorProps } from "../TypeEditor";
+import type { TypeEditorProps } from "../TypeEditor.tsx";
 
 interface NumberEditorProps extends TypeEditorProps {
   integer?: boolean;
-}
-
-// Helper function to set properties without TypeScript errors
-function setSchemaProperty(
-  schema: ObjectJSONSchema,
-  key: string,
-  value: unknown,
-): ObjectJSONSchema {
-  return {
-    ...schema,
-    [key]: value,
-  };
 }
 
 const NumberEditor: React.FC<NumberEditorProps> = ({

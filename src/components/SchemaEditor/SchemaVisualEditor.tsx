@@ -1,20 +1,22 @@
+import type { FC } from "react";
 import {
   createFieldSchema,
   updateObjectProperty,
   updatePropertyRequired,
-} from "@/lib/schemaEditor";
-import type { JSONSchema, NewField } from "@/types/jsonSchema";
-import { asObjectSchema, isBooleanSchema } from "@/types/jsonSchema";
-import type React from "react";
-import AddFieldButton from "./AddFieldButton";
-import SchemaFieldList from "./SchemaFieldList";
+} from "../../lib/schemaEditor.ts";
+import type { JSONSchema, NewField } from "../../types/jsonSchema.ts";
+import { asObjectSchema, isBooleanSchema } from "../../types/jsonSchema.ts";
+import AddFieldButton from "./AddFieldButton.tsx";
+import SchemaFieldList from "./SchemaFieldList.tsx";
 
-interface SchemaVisualEditorProps {
+/** @public */
+export interface SchemaVisualEditorProps {
   schema: JSONSchema;
   onChange: (schema: JSONSchema) => void;
 }
 
-const SchemaVisualEditor: React.FC<SchemaVisualEditorProps> = ({
+/** @public */
+const SchemaVisualEditor: FC<SchemaVisualEditorProps> = ({
   schema,
   onChange,
 }) => {

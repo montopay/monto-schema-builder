@@ -10,13 +10,18 @@ export default defineConfig({
     host: "::",
     port: 8080,
   },
+  output: {
+    distPath: {
+        root: "dist-demo"
+    },
+  },
   source: {
     entry: {
-      index: "./src/main.tsx",
+      index: "./demo/main.tsx",
     },
     define: {
       ...publicVars,
-      "import.meta.env.SSR": JSON.stringify(false),
+      "import.meta.env.SSR": "false",
     },
   },
   html: {

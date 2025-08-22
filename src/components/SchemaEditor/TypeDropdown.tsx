@@ -1,5 +1,5 @@
-import { cn, getTypeColor, getTypeLabel } from "@/lib/utils";
-import type { SchemaType } from "@/types/jsonSchema";
+import { cn, getTypeColor, getTypeLabel } from "../../lib/utils.ts";
+import type { SchemaType } from "../../types/jsonSchema.ts";
 import { Check, ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 

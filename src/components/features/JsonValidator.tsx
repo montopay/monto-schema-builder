@@ -1,26 +1,26 @@
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { useMonacoTheme } from "@/hooks/use-monaco-theme";
-import type { JSONSchema } from "@/types/jsonSchema";
-import { type ValidationResult, validateJson } from "@/utils/jsonValidator";
+} from "../../components/ui/dialog.tsx";
+import { useMonacoTheme } from "../../hooks/use-monaco-theme.tsx";
+import type { JSONSchema } from "../../types/jsonSchema.ts";
+import { type ValidationResult, validateJson } from "../../utils/jsonValidator.ts";
 import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
 import { AlertCircle, Check, Loader2 } from "lucide-react";
 import type * as Monaco from "monaco-editor";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-interface JsonValidatorProps {
+/** @public */
+export interface JsonValidatorProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   schema: JSONSchema;
 }
 
+/** @public */
 export function JsonValidator({
   open,
   onOpenChange,
@@ -30,7 +30,7 @@ export function JsonValidator({
   const [validationResult, setValidationResult] =
     useState<ValidationResult | null>(null);
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const debounceTimerRef = useRef<number | null>(null);
   const monacoRef = useRef<typeof Monaco | null>(null);
   const schemaMonacoRef = useRef<typeof Monaco | null>(null);
   const {

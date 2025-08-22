@@ -1,9 +1,9 @@
-import JsonSchemaEditor from "@/components/SchemaEditor/JsonSchemaEditor";
-import { JsonValidator } from "@/components/features/JsonValidator";
-import { SchemaInferencer } from "@/components/features/SchemaInferencer";
-import { Button } from "@/components/ui/button";
-import type { JSONSchema } from "@/types/jsonSchema";
-import { exampleSchema } from "@/utils/schemaExample";
+import JsonSchemaEditor from "../../src/components/SchemaEditor/JsonSchemaEditor.tsx";
+import { JsonValidator } from "../../src/components/features/JsonValidator.tsx";
+import { SchemaInferencer } from "../../src/components/features/SchemaInferencer.tsx";
+import { Button } from "../../src/components/ui/button.tsx";
+import type { JSONSchema } from "../../src/types/jsonSchema.ts";
+import { exampleSchema } from "../../demo/utils/schemaExample.ts";
 import {
   CheckCircle,
   CirclePlus,

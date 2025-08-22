@@ -1,19 +1,20 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { cn } from "@/lib/utils";
-import type { JSONSchema } from "@/types/jsonSchema";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs.tsx";
+import { cn } from "../../lib/utils.ts";
+import type { JSONSchema } from "../../types/jsonSchema.ts";
 import { Maximize2 } from "lucide-react";
-import type React from "react";
-import { useRef, useState } from "react";
-import JsonSchemaVisualizer from "./JsonSchemaVisualizer";
-import SchemaVisualEditor from "./SchemaVisualEditor";
+import { useRef, useState, type FC, type MouseEvent as ReactMouseEvent } from "react";
+import JsonSchemaVisualizer from "./JsonSchemaVisualizer.tsx";
+import SchemaVisualEditor from "./SchemaVisualEditor.tsx";
 
-interface JsonSchemaEditorProps {
+/** @public */
+export interface JsonSchemaEditorProps {
   schema?: JSONSchema;
   setSchema?: (schema: JSONSchema) => void;
   className?: string;
 }
 
-const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
+/** @public */
+const JsonSchemaEditor: FC<JsonSchemaEditorProps> = ({
   schema = { type: "object" },
   setSchema,
   className,
@@ -37,7 +38,7 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
     ? "fixed inset-0 z-50 bg-background"
     : "";
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleMouseDown = (e: ReactMouseEvent) => {
     e.preventDefault();
     isDraggingRef.current = true;
     document.addEventListener("mousemove", handleMouseMove);

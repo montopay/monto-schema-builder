@@ -1,4 +1,4 @@
-import type { JSONSchema } from "@/types/jsonSchema";
+import type { JSONSchema } from "../types/jsonSchema.ts";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
 

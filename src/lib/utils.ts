@@ -1,4 +1,4 @@
-import type { SchemaType } from "@/types/jsonSchema";
+import type { SchemaType } from "../types/jsonSchema.ts";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 

@@ -1,22 +1,19 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { cn, getTypeColor, getTypeLabel } from "@/lib/utils";
+import { Input } from "../../components/ui/input.tsx";
+import { cn } from "../../lib/utils.ts";
 import type {
   JSONSchema,
-  NewField,
   ObjectJSONSchema,
   SchemaType,
-} from "@/types/jsonSchema";
+} from "../../types/jsonSchema.ts";
 import {
   asObjectSchema,
   getSchemaDescription,
-  isBooleanSchema,
   withObjectSchema,
-} from "@/types/jsonSchema";
+} from "../../types/jsonSchema.ts";
 import { ChevronDown, ChevronRight, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import TypeDropdown from "./TypeDropdown";
-import TypeEditor from "./TypeEditor";
+import { useEffect, useState } from "react";
+import TypeDropdown from "./TypeDropdown.tsx";
+import TypeEditor from "./TypeEditor.tsx";
 
 export interface SchemaPropertyEditorProps {
   name: string;

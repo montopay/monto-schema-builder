@@ -16,15 +16,39 @@ A modern, React-based visual JSON Schema editor for creating and manipulating JS
 
 ## Getting Started
 
-### Installation
+### Installing
+
+```bash
+npm install jsonjoy-builder
+```
+
+Also install react if you haven't done so yet.
+
+Then use like this:
+
+```ts
+import "jsonjoy-builder/styles.css";
+import { type JSONSchema, SchemaVisualEditor } from "jsonjoy-builder";
+import { useState } from "react";
+
+export function App() {
+    const [schema, setSchema] = useState<JSONSchema>({});
+	return (
+		<div>
+			<h1>JSONJoy Builder</h1>
+            <SchemaVisualEditor schema={schema} onChange={setSchema}/>
+		</div>
+	);
+}
+```
+
+### Development
 
 ```bash
 git clone https://github.com/lovasoa/jsonjoy-builder.git
 cd jsonjoy-builder
 npm install
 ```
-
-### Development
 
 Start the development server:
 

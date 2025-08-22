@@ -1,12 +1,11 @@
 import assert from "node:assert";
-import { createRequire } from "node:module";
 import { describe, test } from "node:test";
 import {
   extractErrorPosition,
   findLineNumberForPath,
   validateJson,
-} from "../dist-test/utils/jsonValidator.js";
-import { exampleSchema } from "../dist-test/utils/schemaExample.js";
+} from "../src/utils/jsonValidator.ts";
+import { exampleSchema } from "../demo/utils/schemaExample.ts";
 
 describe("JSON Validator", () => {
   test("should find correct line numbers for JSON paths witch decoy inputs", () => {
