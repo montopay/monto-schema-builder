@@ -1,5 +1,5 @@
 import { CirclePlus, HelpCircle, Info } from "lucide-react";
-import { type FC, type FormEvent, useState } from "react";
+import { type FC, type FormEvent, useId, useState } from "react";
 import { Badge } from "../../components/ui/badge.tsx";
 import { Button } from "../../components/ui/button.tsx";
 import {
@@ -34,6 +34,10 @@ const AddFieldButton: FC<AddFieldButtonProps> = ({
   const [fieldType, setFieldType] = useState<SchemaType>("string");
   const [fieldDesc, setFieldDesc] = useState("");
   const [fieldRequired, setFieldRequired] = useState(false);
+  const fieldNameId = useId();
+  const fieldDescId = useId();
+  const fieldRequiredId = useId();
+  const fieldTypeId = useId();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -87,7 +91,10 @@ const AddFieldButton: FC<AddFieldButtonProps> = ({
               <div className="space-y-4 min-w-[280px]">
                 <div>
                   <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                    <label htmlFor="fieldName" className="text-sm font-medium">
+                    <label
+                      htmlFor={fieldNameId}
+                      className="text-sm font-medium"
+                    >
                       Field Name
                     </label>
                     <TooltipProvider>
@@ -105,7 +112,7 @@ const AddFieldButton: FC<AddFieldButtonProps> = ({
                     </TooltipProvider>
                   </div>
                   <Input
-                    id="fieldName"
+                    id={fieldNameId}
                     value={fieldName}
                     onChange={(e) => setFieldName(e.target.value)}
                     placeholder="e.g. firstName, age, isActive"
@@ -116,7 +123,10 @@ const AddFieldButton: FC<AddFieldButtonProps> = ({
 
                 <div>
                   <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                    <label htmlFor="fieldDesc" className="text-sm font-medium">
+                    <label
+                      htmlFor={fieldDescId}
+                      className="text-sm font-medium"
+                    >
                       Description
                     </label>
                     <TooltipProvider>
@@ -131,7 +141,7 @@ const AddFieldButton: FC<AddFieldButtonProps> = ({
                     </TooltipProvider>
                   </div>
                   <Input
-                    id="fieldDesc"
+                    id={fieldDescId}
                     value={fieldDesc}
                     onChange={(e) => setFieldDesc(e.target.value)}
                     placeholder="Describe the purpose of this field"
@@ -142,12 +152,12 @@ const AddFieldButton: FC<AddFieldButtonProps> = ({
                 <div className="flex items-center gap-3 p-3 rounded-lg border bg-muted/50">
                   <input
                     type="checkbox"
-                    id="fieldRequired"
+                    id={fieldRequiredId}
                     checked={fieldRequired}
                     onChange={(e) => setFieldRequired(e.target.checked)}
                     className="rounded border-gray-300 shrink-0"
                   />
-                  <label htmlFor="fieldRequired" className="text-sm">
+                  <label htmlFor={fieldRequiredId} className="text-sm">
                     Required Field
                   </label>
                 </div>
@@ -156,7 +166,10 @@ const AddFieldButton: FC<AddFieldButtonProps> = ({
               <div className="space-y-4 min-w-[280px]">
                 <div>
                   <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                    <label htmlFor="fieldType" className="text-sm font-medium">
+                    <label
+                      htmlFor={fieldTypeId}
+                      className="text-sm font-medium"
+                    >
                       Field Type
                     </label>
                     <TooltipProvider>
@@ -182,7 +195,7 @@ const AddFieldButton: FC<AddFieldButtonProps> = ({
                     </TooltipProvider>
                   </div>
                   <SchemaTypeSelector
-                    id="fieldType"
+                    id={fieldTypeId}
                     value={fieldType}
                     onChange={setFieldType}
                   />

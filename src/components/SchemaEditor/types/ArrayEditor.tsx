@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Input } from "../../../components/ui/input.tsx";
 import { Label } from "../../../components/ui/label.tsx";
 import { Switch } from "../../../components/ui/switch.tsx";
@@ -29,6 +29,10 @@ const ArrayEditor: React.FC<TypeEditorProps> = ({
   const [uniqueItems, setUniqueItems] = useState<boolean>(
     withObjectSchema(schema, (s) => s.uniqueItems || false, false),
   );
+
+  const minItemsId = useId();
+  const maxItemsId = useId();
+  const uniqueItemsId = useId();
 
   // Get the array's item schema
   const itemsSchema = getArrayItemsSchema(schema) || { type: "string" };
@@ -82,9 +86,9 @@ const ArrayEditor: React.FC<TypeEditorProps> = ({
       {/* Array validation settings */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="minItems">Minimum Items</Label>
+          <Label htmlFor={minItemsId}>Minimum Items</Label>
           <Input
-            id="minItems"
+            id={minItemsId}
             type="number"
             min={0}
             value={minItems ?? ""}
@@ -100,9 +104,9 @@ const ArrayEditor: React.FC<TypeEditorProps> = ({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="maxItems">Maximum Items</Label>
+          <Label htmlFor={maxItemsId}>Maximum Items</Label>
           <Input
-            id="maxItems"
+            id={maxItemsId}
             type="number"
             min={0}
             value={maxItems ?? ""}
@@ -120,14 +124,14 @@ const ArrayEditor: React.FC<TypeEditorProps> = ({
 
       <div className="flex items-center space-x-2">
         <Switch
-          id="uniqueItems"
+          id={uniqueItemsId}
           checked={uniqueItems}
           onCheckedChange={(checked) => {
             setUniqueItems(checked);
             setTimeout(handleValidationChange, 0);
           }}
         />
-        <Label htmlFor="uniqueItems" className="cursor-pointer">
+        <Label htmlFor={uniqueItemsId} className="cursor-pointer">
           Force unique items
         </Label>
       </div>

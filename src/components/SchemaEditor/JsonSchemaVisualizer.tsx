@@ -44,7 +44,7 @@ const JsonSchemaVisualizer: FC<JsonSchemaVisualizerProps> = ({
       if (onChange) {
         onChange(parsedJson);
       }
-    } catch (error) {
+    } catch (_error) {
       // Monaco will show the error inline, no need for additional error handling
     }
   };

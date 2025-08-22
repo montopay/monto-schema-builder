@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
   "formatter": {
     "enabled": true,
     "formatWithErrors": false,
@@ -15,9 +15,7 @@
       "semicolons": "always"
     }
   },
-  "organizeImports": {
-    "enabled": true
-  },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "linter": {
     "enabled": true,
     "rules": {
@@ -26,13 +24,21 @@
         "useImportExtensions": "error"
       },
       "suspicious": {
-        "all": true,
         "noConsole": "off",
-        "noReactSpecificProps": "off"
+        "noReactSpecificProps": "off",
+        "noUnknownAtRules": "off",
+        "noPrototypeBuiltins": "off"
       }
     }
   },
   "files": {
-    "ignore": ["node_modules", "dist", "build"]
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/.rslib",
+      "!**/dist",
+      "!**/dist-demo",
+      "!**/build"
+    ]
   }
 }

@@ -17,7 +17,6 @@ interface SchemaFieldListProps {
 
 const SchemaFieldList: FC<SchemaFieldListProps> = ({
   schema,
-  onAddField,
   onEditField,
   onDeleteField,
 }) => {

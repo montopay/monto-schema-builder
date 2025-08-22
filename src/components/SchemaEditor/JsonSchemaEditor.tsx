@@ -150,6 +150,7 @@ const JsonSchemaEditor: FC<JsonSchemaEditorProps> = ({
           >
             <SchemaVisualEditor schema={schema} onChange={handleSchemaChange} />
           </div>
+          {/** biome-ignore lint/a11y/noStaticElementInteractions: What exactly does this div do? */}
           <div
             ref={resizeRef}
             className="w-1 bg-border hover:bg-primary cursor-col-resize flex-shrink-0"

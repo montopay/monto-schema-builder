@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Input } from "../../../components/ui/input.tsx";
 import { Label } from "../../../components/ui/label.tsx";
 import type { ObjectJSONSchema } from "../../../types/jsonSchema.ts";
@@ -13,12 +13,26 @@ interface NumberEditorProps extends TypeEditorProps {
   integer?: boolean;
 }
 
+type Property =
+  | "minimum"
+  | "maximum"
+  | "exclusiveMinimum"
+  | "exclusiveMaximum"
+  | "multipleOf"
+  | "enum";
+
 const NumberEditor: React.FC<NumberEditorProps> = ({
   schema,
   onChange,
   integer = false,
 }) => {
   const [enumValue, setEnumValue] = useState("");
+
+  const maximumId = useId();
+  const minimumId = useId();
+  const exclusiveMinimumId = useId();
+  const exclusiveMaximumId = useId();
+  const multipleOfId = useId();
 
   // Extract number-specific validations
   const minimum = withObjectSchema(schema, (s) => s.minimum, undefined);
@@ -41,7 +55,7 @@ const NumberEditor: React.FC<NumberEditorProps> = ({
   );
 
   // Handle validation change
-  const handleValidationChange = (property: string, value: unknown) => {
+  const handleValidationChange = (property: Property, value: unknown) => {
     // Create a safe base schema with necessary properties
     const baseProperties: Partial<ObjectJSONSchema> = {
       type: integer ? "integer" : "number",
@@ -157,9 +171,9 @@ const NumberEditor: React.FC<NumberEditorProps> = ({
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="minimum">Minimum Value</Label>
+          <Label htmlFor={minimumId}>Minimum Value</Label>
           <Input
-            id="minimum"
+            id={minimumId}
             type="number"
             value={minimum ?? ""}
             onChange={(e) => {
@@ -173,9 +187,9 @@ const NumberEditor: React.FC<NumberEditorProps> = ({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="maximum">Maximum Value</Label>
+          <Label htmlFor={maximumId}>Maximum Value</Label>
           <Input
-            id="maximum"
+            id={maximumId}
             type="number"
             value={maximum ?? ""}
             onChange={(e) => {
@@ -191,9 +205,9 @@ const NumberEditor: React.FC<NumberEditorProps> = ({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="exclusiveMinimum">Exclusive Minimum</Label>
+          <Label htmlFor={exclusiveMinimumId}>Exclusive Minimum</Label>
           <Input
-            id="exclusiveMinimum"
+            id={exclusiveMinimumId}
             type="number"
             value={exclusiveMinimum ?? ""}
             onChange={(e) => {
@@ -207,9 +221,9 @@ const NumberEditor: React.FC<NumberEditorProps> = ({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="exclusiveMaximum">Exclusive Maximum</Label>
+          <Label htmlFor={exclusiveMaximumId}>Exclusive Maximum</Label>
           <Input
-            id="exclusiveMaximum"
+            id={exclusiveMaximumId}
             type="number"
             value={exclusiveMaximum ?? ""}
             onChange={(e) => {
@@ -224,9 +238,9 @@ const NumberEditor: React.FC<NumberEditorProps> = ({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="multipleOf">Multiple Of</Label>
+        <Label htmlFor={multipleOfId}>Multiple Of</Label>
         <Input
-          id="multipleOf"
+          id={multipleOfId}
           type="number"
           value={multipleOf ?? ""}
           onChange={(e) => {

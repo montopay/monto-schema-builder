@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { Label } from "../../../components/ui/label.tsx";
 import { Switch } from "../../../components/ui/switch.tsx";
 import type { ObjectJSONSchema } from "../../../types/jsonSchema.ts";
@@ -5,6 +6,9 @@ import { withObjectSchema } from "../../../types/jsonSchema.ts";
 import type { TypeEditorProps } from "../TypeEditor.tsx";
 
 const BooleanEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
+  const allowTrueId = useId();
+  const allowFalseId = useId();
+
   // Extract boolean-specific validation
   const enumValues = withObjectSchema(
     schema,
@@ -75,22 +79,22 @@ const BooleanEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
         <div className="space-y-3">
           <div className="flex items-center space-x-2">
             <Switch
-              id="allow-true"
+              id={allowTrueId}
               checked={allowsTrue}
               onCheckedChange={(checked) => handleAllowedChange(true, checked)}
             />
-            <Label htmlFor="allow-true" className="cursor-pointer">
+            <Label htmlFor={allowTrueId} className="cursor-pointer">
               Allow true value
             </Label>
           </div>
 
           <div className="flex items-center space-x-2">
             <Switch
-              id="allow-false"
+              id={allowFalseId}
               checked={allowsFalse}
               onCheckedChange={(checked) => handleAllowedChange(false, checked)}
             />
-            <Label htmlFor="allow-false" className="cursor-pointer">
+            <Label htmlFor={allowFalseId} className="cursor-pointer">
               Allow false value
             </Label>
           </div>

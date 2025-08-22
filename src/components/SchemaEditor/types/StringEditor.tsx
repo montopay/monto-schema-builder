@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Input } from "../../../components/ui/input.tsx";
 import { Label } from "../../../components/ui/label.tsx";
 import {
@@ -16,8 +16,15 @@ import {
 } from "../../../types/jsonSchema.ts";
 import type { TypeEditorProps } from "../TypeEditor.tsx";
 
+type Property = "enum" | "minLength" | "maxLength" | "pattern" | "format";
+
 const StringEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
   const [enumValue, setEnumValue] = useState("");
+
+  const minLengthId = useId();
+  const maxLengthId = useId();
+  const patternId = useId();
+  const formatId = useId();
 
   // Extract string-specific validations
   const minLength = withObjectSchema(schema, (s) => s.minLength, undefined);
@@ -31,7 +38,7 @@ const StringEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
   );
 
   // Handle validation change
-  const handleValidationChange = (property: string, value: unknown) => {
+  const handleValidationChange = (property: Property, value: unknown) => {
     // Create a safe base schema
     const baseSchema = isBooleanSchema(schema)
       ? { type: "string" as const }
@@ -88,9 +95,9 @@ const StringEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="minLength">Minimum Length</Label>
+          <Label htmlFor={minLengthId}>Minimum Length</Label>
           <Input
-            id="minLength"
+            id={minLengthId}
             type="number"
             min={0}
             value={minLength ?? ""}
@@ -104,9 +111,9 @@ const StringEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="maxLength">Maximum Length</Label>
+          <Label htmlFor={maxLengthId}>Maximum Length</Label>
           <Input
-            id="maxLength"
+            id={maxLengthId}
             type="number"
             min={0}
             value={maxLength ?? ""}
@@ -121,9 +128,9 @@ const StringEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="pattern">Pattern (regex)</Label>
+        <Label htmlFor={patternId}>Pattern (regex)</Label>
         <Input
-          id="pattern"
+          id={patternId}
           type="text"
           value={pattern ?? ""}
           onChange={(e) => {
@@ -136,7 +143,7 @@ const StringEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="format">Format</Label>
+        <Label htmlFor={formatId}>Format</Label>
         <Select
           value={format || "none"}
           onValueChange={(value) => {
@@ -146,7 +153,7 @@ const StringEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
             );
           }}
         >
-          <SelectTrigger id="format" className="h-8">
+          <SelectTrigger id={formatId} className="h-8">
             <SelectValue placeholder="Select format" />
           </SelectTrigger>
           <SelectContent>
