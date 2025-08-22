@@ -14,12 +14,14 @@ import {
 import TypeDropdown from "../TypeDropdown.tsx";
 import type { TypeEditorProps } from "../TypeEditor.tsx";
 import TypeEditor from "../TypeEditor.tsx";
+import { useTranslation } from "../../../hooks/use-translation.ts";
 
 const ArrayEditor: React.FC<TypeEditorProps> = ({
   schema,
   onChange,
   depth = 0,
 }) => {
+  const t = useTranslation();
   const [minItems, setMinItems] = useState<number | undefined>(
     withObjectSchema(schema, (s) => s.minItems, undefined),
   );
@@ -86,7 +88,7 @@ const ArrayEditor: React.FC<TypeEditorProps> = ({
       {/* Array validation settings */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor={minItemsId}>Minimum Items</Label>
+          <Label htmlFor={minItemsId}>{t.arrayMinimumLabel}</Label>
           <Input
             id={minItemsId}
             type="number"
@@ -98,13 +100,13 @@ const ArrayEditor: React.FC<TypeEditorProps> = ({
               // Don't update immediately to avoid too many rerenders
             }}
             onBlur={handleValidationChange}
-            placeholder="No minimum"
+            placeholder={t.arrayMinimumPlaceholder}
             className="h-8"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor={maxItemsId}>Maximum Items</Label>
+          <Label htmlFor={maxItemsId}>{t.arrayMaximumLabel}</Label>
           <Input
             id={maxItemsId}
             type="number"
@@ -116,7 +118,7 @@ const ArrayEditor: React.FC<TypeEditorProps> = ({
               // Don't update immediately to avoid too many rerenders
             }}
             onBlur={handleValidationChange}
-            placeholder="No maximum"
+            placeholder={t.arrayMaximumPlaceholder}
             className="h-8"
           />
         </div>
@@ -132,14 +134,14 @@ const ArrayEditor: React.FC<TypeEditorProps> = ({
           }}
         />
         <Label htmlFor={uniqueItemsId} className="cursor-pointer">
-          Force unique items
+          {t.arrayForceUniqueItemsLabel}
         </Label>
       </div>
 
       {/* Array item type editor */}
       <div className="space-y-2 pt-4 border-t border-border/40">
         <div className="flex items-center justify-between mb-4">
-          <Label>Item Type</Label>
+          <Label>{t.arrayItemTypeLabel}</Label>
           <TypeDropdown
             value={itemType}
             onChange={(newType) => {

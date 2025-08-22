@@ -11,6 +11,7 @@ import {
   withObjectSchema,
 } from "../../types/jsonSchema.ts";
 import SchemaPropertyEditor from "./SchemaPropertyEditor.tsx";
+import { useTranslation } from "../../hooks/use-translation.ts";
 
 // This component is now just a simple wrapper around SchemaPropertyEditor
 // to maintain backward compatibility during migration
@@ -117,6 +118,7 @@ export const ExpandButton: React.FC<ExpandButtonProps> = ({
   expanded,
   onClick,
 }) => {
+  const t = useTranslation();
   const ChevronDown = React.lazy(() =>
     import("lucide-react").then((mod) => ({ default: mod.ChevronDown })),
   );
@@ -129,7 +131,7 @@ export const ExpandButton: React.FC<ExpandButtonProps> = ({
       type="button"
       className="text-muted-foreground hover:text-foreground transition-colors"
       onClick={onClick}
-      aria-label={expanded ? "Collapse" : "Expand"}
+      aria-label={expanded ? t.collapse : t.expand}
     >
       <Suspense fallback={<div className="w-[18px] h-[18px]" />}>
         {expanded ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
@@ -144,6 +146,7 @@ export interface FieldActionsProps {
 }
 
 export const FieldActions: React.FC<FieldActionsProps> = ({ onDelete }) => {
+  const t = useTranslation();
   const X = React.lazy(() =>
     import("lucide-react").then((mod) => ({ default: mod.X })),
   );
@@ -154,7 +157,7 @@ export const FieldActions: React.FC<FieldActionsProps> = ({ onDelete }) => {
         type="button"
         onClick={onDelete}
         className="p-1 rounded-md hover:bg-secondary hover:text-destructive transition-colors opacity-0 group-hover:opacity-100"
-        aria-label="Delete field"
+        aria-label={t.fieldDelete}
       >
         <Suspense fallback={<div className="w-[16px] h-[16px]" />}>
           <X size={16} />

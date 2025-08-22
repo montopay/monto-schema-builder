@@ -8,6 +8,7 @@ import type { JSONSchema, NewField } from "../../types/jsonSchema.ts";
 import { asObjectSchema, isBooleanSchema } from "../../types/jsonSchema.ts";
 import AddFieldButton from "./AddFieldButton.tsx";
 import SchemaFieldList from "./SchemaFieldList.tsx";
+import { useTranslation } from "../../hooks/use-translation.ts";
 
 /** @public */
 export interface SchemaVisualEditorProps {
@@ -20,6 +21,7 @@ const SchemaVisualEditor: FC<SchemaVisualEditorProps> = ({
   schema,
   onChange,
 }) => {
+  const t = useTranslation();
   // Handle adding a top-level field
   const handleAddField = (newField: NewField) => {
     // Create a field schema based on the new field data
@@ -125,8 +127,8 @@ const SchemaVisualEditor: FC<SchemaVisualEditorProps> = ({
       <div className="grow overflow-auto">
         {!hasFields ? (
           <div className="text-center py-10 text-muted-foreground">
-            <p className="mb-3">No fields defined yet</p>
-            <p className="text-sm">Add your first field to get started</p>
+            <p className="mb-3">{t.visualEditorNoFieldsHint1}</p>
+            <p className="text-sm">{t.visualEditorNoFieldsHint2}</p>
           </div>
         ) : (
           <SchemaFieldList

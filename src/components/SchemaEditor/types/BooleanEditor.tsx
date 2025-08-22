@@ -4,8 +4,10 @@ import { Switch } from "../../../components/ui/switch.tsx";
 import type { ObjectJSONSchema } from "../../../types/jsonSchema.ts";
 import { withObjectSchema } from "../../../types/jsonSchema.ts";
 import type { TypeEditorProps } from "../TypeEditor.tsx";
+import { useTranslation } from "../../../hooks/use-translation.ts";
 
 const BooleanEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
+  const t = useTranslation();
   const allowTrueId = useId();
   const allowFalseId = useId();
 
@@ -84,7 +86,7 @@ const BooleanEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
               onCheckedChange={(checked) => handleAllowedChange(true, checked)}
             />
             <Label htmlFor={allowTrueId} className="cursor-pointer">
-              Allow true value
+              {t.booleanAllowTrueLabel}
             </Label>
           </div>
 
@@ -95,14 +97,14 @@ const BooleanEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
               onCheckedChange={(checked) => handleAllowedChange(false, checked)}
             />
             <Label htmlFor={allowFalseId} className="cursor-pointer">
-              Allow false value
+              {t.booleanAllowFalseLabel}
             </Label>
           </div>
         </div>
 
         {!allowsTrue && !allowsFalse && (
           <p className="text-xs text-amber-600 mt-2">
-            Warning: You must allow at least one value.
+            {t.booleanNeitherWarning}
           </p>
         )}
       </div>

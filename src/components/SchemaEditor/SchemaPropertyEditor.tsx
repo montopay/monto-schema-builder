@@ -14,6 +14,7 @@ import {
 } from "../../types/jsonSchema.ts";
 import TypeDropdown from "./TypeDropdown.tsx";
 import TypeEditor from "./TypeEditor.tsx";
+import { useTranslation } from "../../hooks/use-translation.ts";
 
 export interface SchemaPropertyEditorProps {
   name: string;
@@ -36,6 +37,7 @@ export const SchemaPropertyEditor: React.FC<SchemaPropertyEditorProps> = ({
   onSchemaChange,
   depth = 0,
 }) => {
+  const t = useTranslation();
   const [expanded, setExpanded] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingDesc, setIsEditingDesc] = useState(false);
@@ -99,7 +101,7 @@ export const SchemaPropertyEditor: React.FC<SchemaPropertyEditorProps> = ({
             type="button"
             className="text-muted-foreground hover:text-foreground transition-colors"
             onClick={() => setExpanded(!expanded)}
-            aria-label={expanded ? "Collapse" : "Expand"}
+            aria-label={expanded ? t.collapse : t.expand}
           >
             {expanded ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
           </button>
@@ -135,7 +137,7 @@ export const SchemaPropertyEditor: React.FC<SchemaPropertyEditorProps> = ({
                   onChange={(e) => setTempDesc(e.target.value)}
                   onBlur={handleDescSubmit}
                   onKeyDown={(e) => e.key === "Enter" && handleDescSubmit()}
-                  placeholder="Add description..."
+                  placeholder={t.propertyDescriptionPlaceholder}
                   className="h-8 text-xs text-muted-foreground italic flex-1 min-w-[150px] z-10"
                   autoFocus
                   onFocus={(e) => e.target.select()}
@@ -156,7 +158,7 @@ export const SchemaPropertyEditor: React.FC<SchemaPropertyEditorProps> = ({
                   onKeyDown={(e) => e.key === "Enter" && setIsEditingDesc(true)}
                   className="text-xs text-muted-foreground/50 italic cursor-text px-2 py-0.5 -mx-0.5 rounded-sm hover:bg-secondary/30 hover:shadow-xs hover:ring-1 hover:ring-ring/20 transition-all opacity-0 group-hover:opacity-100 text-left truncate flex-1 max-w-[40%] mr-2"
                 >
-                  Add description...
+                  {t.propertyDescriptionButton}
                 </button>
               )}
             </div>
@@ -184,7 +186,7 @@ export const SchemaPropertyEditor: React.FC<SchemaPropertyEditorProps> = ({
                     : "bg-secondary text-muted-foreground",
                 )}
               >
-                {required ? "Required" : "Optional"}
+                {required ? t.propertyRequired : t.propertyOptional}
               </button>
             </div>
           </div>
@@ -196,7 +198,7 @@ export const SchemaPropertyEditor: React.FC<SchemaPropertyEditorProps> = ({
             type="button"
             onClick={onDelete}
             className="p-1 rounded-md hover:bg-secondary hover:text-destructive transition-colors opacity-0 group-hover:opacity-100"
-            aria-label="Delete field"
+            aria-label={t.propertyDelete}
           >
             <X size={16} />
           </button>

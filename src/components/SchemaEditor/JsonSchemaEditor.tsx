@@ -15,6 +15,7 @@ import { cn } from "../../lib/utils.ts";
 import type { JSONSchema } from "../../types/jsonSchema.ts";
 import JsonSchemaVisualizer from "./JsonSchemaVisualizer.tsx";
 import SchemaVisualEditor from "./SchemaVisualEditor.tsx";
+import { useTranslation } from "../../hooks/use-translation.ts";
 
 /** @public */
 export interface JsonSchemaEditorProps {
@@ -33,6 +34,8 @@ const JsonSchemaEditor: FC<JsonSchemaEditorProps> = ({
   const handleSchemaChange = (newSchema: JSONSchema) => {
     setSchema(newSchema);
   };
+
+  const t = useTranslation();
 
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [leftPanelWidth, setLeftPanelWidth] = useState(50); // percentage
@@ -82,7 +85,7 @@ const JsonSchemaEditor: FC<JsonSchemaEditorProps> = ({
       <div className="block lg:hidden w-full">
         <Tabs defaultValue="visual" className="w-full">
           <div className="flex items-center justify-between px-4 py-3 border-b w-full">
-            <h3 className="font-medium">JSON Schema Editor</h3>
+            <h3 className="font-medium">{t.schemaEditorTitle}</h3>
             <div className="flex items-center gap-2">
               <button
                 type="button"
@@ -93,8 +96,8 @@ const JsonSchemaEditor: FC<JsonSchemaEditorProps> = ({
                 <Maximize2 size={16} />
               </button>
               <TabsList className="grid grid-cols-2 w-[200px]">
-                <TabsTrigger value="visual">Visual</TabsTrigger>
-                <TabsTrigger value="json">JSON</TabsTrigger>
+                <TabsTrigger value="visual">{t.schemaEditorEditModeVisual}</TabsTrigger>
+                <TabsTrigger value="json">{t.schemaEditorEditModeJson}</TabsTrigger>
               </TabsList>
             </div>
           </div>
@@ -133,12 +136,12 @@ const JsonSchemaEditor: FC<JsonSchemaEditorProps> = ({
         )}
       >
         <div className="flex items-center justify-between px-4 py-3 border-b w-full shrink-0">
-          <h3 className="font-medium">JSON Schema Editor</h3>
+          <h3 className="font-medium">{t.schemaEditorTitle}</h3>
           <button
             type="button"
             onClick={toggleFullscreen}
             className="p-1.5 rounded-md hover:bg-secondary transition-colors"
-            aria-label="Toggle fullscreen"
+            aria-label={t.schemaEditorToggleFullscreen}
           >
             <Maximize2 size={16} />
           </button>

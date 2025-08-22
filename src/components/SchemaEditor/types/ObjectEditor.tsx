@@ -1,3 +1,4 @@
+import { useTranslation } from "../../../hooks/use-translation.ts";
 import {
   getSchemaProperties,
   removeObjectProperty,
@@ -15,6 +16,8 @@ const ObjectEditor: React.FC<TypeEditorProps> = ({
   onChange,
   depth = 0,
 }) => {
+  const t = useTranslation();
+
   // Get object properties
   const properties = getSchemaProperties(schema);
 
@@ -130,7 +133,7 @@ const ObjectEditor: React.FC<TypeEditorProps> = ({
         </div>
       ) : (
         <div className="text-sm text-muted-foreground italic p-2 text-center border rounded-md">
-          No properties defined
+          {t.objectPropertiesNone}
         </div>
       )}
 

@@ -19,6 +19,7 @@ import {
 } from "../../components/ui/tooltip.tsx";
 import type { NewField, SchemaType } from "../../types/jsonSchema.ts";
 import SchemaTypeSelector from "./SchemaTypeSelector.tsx";
+import { useTranslation } from "../../hooks/use-translation.ts";
 
 interface AddFieldButtonProps {
   onAddField: (field: NewField) => void;
@@ -38,6 +39,8 @@ const AddFieldButton: FC<AddFieldButtonProps> = ({
   const fieldDescId = useId();
   const fieldRequiredId = useId();
   const fieldTypeId = useId();
+
+  const t = useTranslation();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -69,20 +72,20 @@ const AddFieldButton: FC<AddFieldButtonProps> = ({
           size={16}
           className="group-hover:scale-110 transition-transform"
         />
-        <span>Add Field</span>
+        <span>{t.fieldAddNewButton}</span>
       </Button>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="md:max-w-[1200px] max-h-[85vh] w-[95vw] p-4 sm:p-6">
           <DialogHeader className="mb-4">
             <DialogTitle className="text-xl flex flex-wrap items-center gap-2">
-              Add New Field
+              {t.fieldAddNewLabel}
               <Badge variant="secondary" className="text-xs">
-                Schema Builder
+                {t.fieldAddNewBadge}
               </Badge>
             </DialogTitle>
             <DialogDescription className="text-sm">
-              Create a new field for your JSON schema
+              {t.fieldAddNewDescription}
             </DialogDescription>
           </DialogHeader>
 
@@ -95,7 +98,7 @@ const AddFieldButton: FC<AddFieldButtonProps> = ({
                       htmlFor={fieldNameId}
                       className="text-sm font-medium"
                     >
-                      Field Name
+                      {t.fieldNameLabel}
                     </label>
                     <TooltipProvider>
                       <Tooltip>
@@ -103,10 +106,7 @@ const AddFieldButton: FC<AddFieldButtonProps> = ({
                           <Info className="h-4 w-4 text-muted-foreground shrink-0" />
                         </TooltipTrigger>
                         <TooltipContent className="max-w-[90vw]">
-                          <p>
-                            Use camelCase for better readability (e.g.,
-                            firstName)
-                          </p>
+                          <p>{t.fieldNameTooltip}</p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -115,7 +115,7 @@ const AddFieldButton: FC<AddFieldButtonProps> = ({
                     id={fieldNameId}
                     value={fieldName}
                     onChange={(e) => setFieldName(e.target.value)}
-                    placeholder="e.g. firstName, age, isActive"
+                    placeholder={t.fieldNamePlaceholder}
                     className="font-mono text-sm w-full"
                     required
                   />
@@ -127,7 +127,7 @@ const AddFieldButton: FC<AddFieldButtonProps> = ({
                       htmlFor={fieldDescId}
                       className="text-sm font-medium"
                     >
-                      Description
+                      {t.fieldDescription}
                     </label>
                     <TooltipProvider>
                       <Tooltip>
@@ -135,7 +135,7 @@ const AddFieldButton: FC<AddFieldButtonProps> = ({
                           <Info className="h-4 w-4 text-muted-foreground shrink-0" />
                         </TooltipTrigger>
                         <TooltipContent className="max-w-[90vw]">
-                          <p>Add context about what this field represents</p>
+                          <p>{t.fieldDescriptionTooltip}</p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -144,7 +144,7 @@ const AddFieldButton: FC<AddFieldButtonProps> = ({
                     id={fieldDescId}
                     value={fieldDesc}
                     onChange={(e) => setFieldDesc(e.target.value)}
-                    placeholder="Describe the purpose of this field"
+                    placeholder={t.fieldDescriptionPlaceholder}
                     className="text-sm w-full"
                   />
                 </div>
@@ -158,7 +158,7 @@ const AddFieldButton: FC<AddFieldButtonProps> = ({
                     className="rounded border-gray-300 shrink-0"
                   />
                   <label htmlFor={fieldRequiredId} className="text-sm">
-                    Required Field
+                    {t.fieldRequiredLabel}
                   </label>
                 </div>
               </div>
@@ -170,7 +170,7 @@ const AddFieldButton: FC<AddFieldButtonProps> = ({
                       htmlFor={fieldTypeId}
                       className="text-sm font-medium"
                     >
-                      Field Type
+                      {t.fieldType}
                     </label>
                     <TooltipProvider>
                       <Tooltip>
@@ -182,12 +182,12 @@ const AddFieldButton: FC<AddFieldButtonProps> = ({
                           className="w-72 max-w-[90vw]"
                         >
                           <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-                            <div>• string: Text</div>
-                            <div>• number: Numeric</div>
-                            <div>• boolean: True/false</div>
-                            <div>• object: Nested JSON</div>
+                            <div>• {t.fieldTypeTooltipString}</div>
+                            <div>• {t.fieldTypeTooltipNumber}</div>
+                            <div>• {t.fieldTypeTooltipBoolean}</div>
+                            <div>• {t.fieldTypeTooltipObject}</div>
                             <div className="col-span-2">
-                              • array: Lists of values
+                              • {t.fieldTypeTooltipArray}
                             </div>
                           </div>
                         </TooltipContent>
@@ -202,7 +202,7 @@ const AddFieldButton: FC<AddFieldButtonProps> = ({
                 </div>
 
                 <div className="rounded-lg border bg-muted/50 p-3 hidden md:block">
-                  <p className="text-xs font-medium mb-2">Example:</p>
+                  <p className="text-xs font-medium mb-2">{t.fieldTypeExample}</p>
                   <code className="text-sm bg-background/80 p-2 rounded block overflow-x-auto">
                     {fieldType === "string" && '"example"'}
                     {fieldType === "number" && "42"}
@@ -221,10 +221,10 @@ const AddFieldButton: FC<AddFieldButtonProps> = ({
                 size="sm"
                 onClick={() => setDialogOpen(false)}
               >
-                Cancel
+                {t.fieldAddNewCancel}
               </Button>
               <Button type="submit" size="sm">
-                Add Field
+                {t.fieldAddNewConfirm}
               </Button>
             </DialogFooter>
           </form>

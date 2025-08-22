@@ -8,6 +8,7 @@ import {
   withObjectSchema,
 } from "../../../types/jsonSchema.ts";
 import type { TypeEditorProps } from "../TypeEditor.tsx";
+import { useTranslation } from "../../../hooks/use-translation.ts";
 
 interface NumberEditorProps extends TypeEditorProps {
   integer?: boolean;
@@ -27,6 +28,7 @@ const NumberEditor: React.FC<NumberEditorProps> = ({
   integer = false,
 }) => {
   const [enumValue, setEnumValue] = useState("");
+  const t = useTranslation();
 
   const maximumId = useId();
   const minimumId = useId();
@@ -171,7 +173,7 @@ const NumberEditor: React.FC<NumberEditorProps> = ({
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor={minimumId}>Minimum Value</Label>
+          <Label htmlFor={minimumId}>{t.numberMinimumLabel}</Label>
           <Input
             id={minimumId}
             type="number"
@@ -180,14 +182,14 @@ const NumberEditor: React.FC<NumberEditorProps> = ({
               const value = e.target.value ? Number(e.target.value) : undefined;
               handleValidationChange("minimum", value);
             }}
-            placeholder="No minimum"
+            placeholder={t.numberMinimumPlaceholder}
             className="h-8"
             step={integer ? 1 : "any"}
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor={maximumId}>Maximum Value</Label>
+          <Label htmlFor={maximumId}>{t.numberMaximumLabel}</Label>
           <Input
             id={maximumId}
             type="number"
@@ -196,7 +198,7 @@ const NumberEditor: React.FC<NumberEditorProps> = ({
               const value = e.target.value ? Number(e.target.value) : undefined;
               handleValidationChange("maximum", value);
             }}
-            placeholder="No maximum"
+            placeholder={t.numberMaximumPlaceholder}
             className="h-8"
             step={integer ? 1 : "any"}
           />
@@ -205,7 +207,7 @@ const NumberEditor: React.FC<NumberEditorProps> = ({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor={exclusiveMinimumId}>Exclusive Minimum</Label>
+          <Label htmlFor={exclusiveMinimumId}>{t.numberExclusiveMinimumLabel}</Label>
           <Input
             id={exclusiveMinimumId}
             type="number"
@@ -214,14 +216,14 @@ const NumberEditor: React.FC<NumberEditorProps> = ({
               const value = e.target.value ? Number(e.target.value) : undefined;
               handleValidationChange("exclusiveMinimum", value);
             }}
-            placeholder="No exclusive min"
+            placeholder={t.numberExclusiveMinimumPlaceholder}
             className="h-8"
             step={integer ? 1 : "any"}
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor={exclusiveMaximumId}>Exclusive Maximum</Label>
+          <Label htmlFor={exclusiveMaximumId}>{t.numberExclusiveMaximumLabel}</Label>
           <Input
             id={exclusiveMaximumId}
             type="number"
@@ -230,7 +232,7 @@ const NumberEditor: React.FC<NumberEditorProps> = ({
               const value = e.target.value ? Number(e.target.value) : undefined;
               handleValidationChange("exclusiveMaximum", value);
             }}
-            placeholder="No exclusive max"
+            placeholder={t.numberExclusiveMaximumPlaceholder}
             className="h-8"
             step={integer ? 1 : "any"}
           />
@@ -238,7 +240,7 @@ const NumberEditor: React.FC<NumberEditorProps> = ({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor={multipleOfId}>Multiple Of</Label>
+        <Label htmlFor={multipleOfId}>{t.numberMultipleOfLabel}</Label>
         <Input
           id={multipleOfId}
           type="number"
@@ -247,7 +249,7 @@ const NumberEditor: React.FC<NumberEditorProps> = ({
             const value = e.target.value ? Number(e.target.value) : undefined;
             handleValidationChange("multipleOf", value);
           }}
-          placeholder="Any"
+          placeholder={t.numberMultipleOfPlaceholder}
           className="h-8"
           min={0}
           step={integer ? 1 : "any"}
@@ -255,7 +257,7 @@ const NumberEditor: React.FC<NumberEditorProps> = ({
       </div>
 
       <div className="space-y-2 pt-2 border-t border-border/40">
-        <Label>Allowed Values (enum)</Label>
+        <Label>{t.numberAllowedValuesEnumLabel}</Label>
 
         <div className="flex flex-wrap gap-2 mb-4">
           {enumValues.length > 0 ? (
@@ -276,7 +278,7 @@ const NumberEditor: React.FC<NumberEditorProps> = ({
             ))
           ) : (
             <p className="text-xs text-muted-foreground italic">
-              No restricted values set
+              {t.numberAllowedValuesEnumNone}
             </p>
           )}
         </div>
@@ -286,7 +288,7 @@ const NumberEditor: React.FC<NumberEditorProps> = ({
             type="number"
             value={enumValue}
             onChange={(e) => setEnumValue(e.target.value)}
-            placeholder="Add allowed value..."
+            placeholder={t.numberAllowedValuesEnumAddPlaceholder}
             className="h-8 text-xs flex-1"
             onKeyDown={(e) => e.key === "Enter" && handleAddEnumValue()}
             step={integer ? 1 : "any"}
@@ -296,7 +298,7 @@ const NumberEditor: React.FC<NumberEditorProps> = ({
             onClick={handleAddEnumValue}
             className="px-3 py-1 h-8 rounded-md bg-secondary text-xs font-medium hover:bg-secondary/80"
           >
-            Add
+            {t.numberAllowedValuesEnumAddLabel}
           </button>
         </div>
       </div>

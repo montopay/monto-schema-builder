@@ -18,6 +18,5 @@
     "verbatimModuleSyntax": true,
     "jsx": "react-jsx",
     "strict": false,
-    "baseUrl": "."
   }
 }

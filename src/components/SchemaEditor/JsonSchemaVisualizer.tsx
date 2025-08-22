@@ -1,9 +1,10 @@
 import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
 import { Download, FileJson, Loader2 } from "lucide-react";
 import { type FC, useRef } from "react";
-import { useMonacoTheme } from "../../hooks/use-monaco-theme.tsx";
+import { useMonacoTheme } from "../../hooks/use-monaco-theme.ts";
 import { cn } from "../../lib/utils.ts";
 import type { JSONSchema } from "../../types/jsonSchema.ts";
+import { useTranslation } from "../../hooks/use-translation.ts";
 
 /** @public */
 export interface JsonSchemaVisualizerProps {
@@ -25,6 +26,8 @@ const JsonSchemaVisualizer: FC<JsonSchemaVisualizerProps> = ({
     configureJsonDefaults,
     defaultEditorOptions,
   } = useMonacoTheme();
+
+  const t = useTranslation();
 
   const handleBeforeMount: BeforeMount = (monaco) => {
     defineMonacoThemes(monaco);
@@ -55,7 +58,7 @@ const JsonSchemaVisualizer: FC<JsonSchemaVisualizerProps> = ({
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "schema.json";
+    a.download = t.visualizerDownloadFileName;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -69,13 +72,13 @@ const JsonSchemaVisualizer: FC<JsonSchemaVisualizerProps> = ({
       <div className="flex items-center justify-between bg-secondary/80 backdrop-blur-xs px-4 py-2 border-b shrink-0">
         <div className="flex items-center gap-2">
           <FileJson size={18} />
-          <span className="font-medium text-sm">JSON Schema Source</span>
+          <span className="font-medium text-sm">{t.visualizerSource}</span>
         </div>
         <button
           type="button"
           onClick={handleDownload}
           className="p-1.5 hover:bg-secondary rounded-md transition-colors"
-          title="Download Schema"
+          title={t.visualizerDownloadTitle}
         >
           <Download size={16} />
         </button>
