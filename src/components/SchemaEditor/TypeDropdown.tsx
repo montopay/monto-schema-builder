@@ -24,7 +24,7 @@ export const TypeDropdown: React.FC<TypeDropdownProps> = ({
   onChange,
   className,
 }) => {
-  const t= useTranslation();
+  const t = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 

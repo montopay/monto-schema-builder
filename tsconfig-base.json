@@ -17,6 +17,6 @@
     "isolatedDeclarations": false,
     "verbatimModuleSyntax": true,
     "jsx": "react-jsx",
-    "strict": false,
+    "strict": false
   }
 }

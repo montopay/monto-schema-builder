@@ -125,9 +125,8 @@ const Index = () => {
             </div>
           </div>
 
-            {/* Language Selector */}
-            <div className="flex justify-center mb-6">
-            </div>
+          {/* Language Selector */}
+          <div className="flex justify-center mb-6"></div>
 
           {/* Schema Editor - full width on large screens */}
           <div className="max-w-4xl mx-auto lg:max-w-none">

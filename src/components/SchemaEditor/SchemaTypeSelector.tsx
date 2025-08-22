@@ -49,7 +49,7 @@ const SchemaTypeSelector: FC<SchemaTypeSelectorProps> = ({
   value,
   onChange,
 }) => {
-  const t= useTranslation();
+  const t = useTranslation();
   return (
     <div
       id={id}

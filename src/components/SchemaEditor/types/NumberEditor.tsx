@@ -207,7 +207,9 @@ const NumberEditor: React.FC<NumberEditorProps> = ({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor={exclusiveMinimumId}>{t.numberExclusiveMinimumLabel}</Label>
+          <Label htmlFor={exclusiveMinimumId}>
+            {t.numberExclusiveMinimumLabel}
+          </Label>
           <Input
             id={exclusiveMinimumId}
             type="number"
@@ -223,7 +225,9 @@ const NumberEditor: React.FC<NumberEditorProps> = ({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor={exclusiveMaximumId}>{t.numberExclusiveMaximumLabel}</Label>
+          <Label htmlFor={exclusiveMaximumId}>
+            {t.numberExclusiveMaximumLabel}
+          </Label>
           <Input
             id={exclusiveMaximumId}
             type="number"

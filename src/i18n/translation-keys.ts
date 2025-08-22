@@ -20,7 +20,7 @@ export interface Translation {
   readonly fieldDelete: string;
   /**
    * The translation for the key `fieldDescriptionPlaceholder`. English default is:
-   * 
+   *
    * > Describe the purpose of this field
    */
   /**

@@ -96,8 +96,12 @@ const JsonSchemaEditor: FC<JsonSchemaEditorProps> = ({
                 <Maximize2 size={16} />
               </button>
               <TabsList className="grid grid-cols-2 w-[200px]">
-                <TabsTrigger value="visual">{t.schemaEditorEditModeVisual}</TabsTrigger>
-                <TabsTrigger value="json">{t.schemaEditorEditModeJson}</TabsTrigger>
+                <TabsTrigger value="visual">
+                  {t.schemaEditorEditModeVisual}
+                </TabsTrigger>
+                <TabsTrigger value="json">
+                  {t.schemaEditorEditModeJson}
+                </TabsTrigger>
               </TabsList>
             </div>
           </div>

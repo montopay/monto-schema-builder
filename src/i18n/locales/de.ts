@@ -10,7 +10,8 @@ export const de: Translation = {
   fieldDescriptionTooltip: "Kontext zur Bedeutung dieses Felds hinzufügen",
   fieldNameLabel: "Feldname",
   fieldNamePlaceholder: "z.B. firstName, age, isActive",
-  fieldNameTooltip: "CamelCase für bessere Lesbarkeit verwenden (z.B. firstName)",
+  fieldNameTooltip:
+    "CamelCase für bessere Lesbarkeit verwenden (z.B. firstName)",
   fieldRequiredLabel: "Pflichtfeld",
   fieldType: "Feldart",
   fieldTypeExample: "Beispiel:",
@@ -57,7 +58,8 @@ export const de: Translation = {
 
   booleanAllowFalseLabel: "Falsch-Werte erlauben",
   booleanAllowTrueLabel: "Wahr-Werte erlauben",
-  booleanNeitherWarning: "Achtung: Mindestens einer von beiden Werten muss erlaubt sein.",
+  booleanNeitherWarning:
+    "Achtung: Mindestens einer von beiden Werten muss erlaubt sein.",
 
   numberMinimumLabel: "Minimalwert",
   numberMinimumPlaceholder: "Kein Minimum",

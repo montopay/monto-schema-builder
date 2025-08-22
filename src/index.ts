@@ -27,5 +27,4 @@ export {
   type SchemaVisualEditorProps,
 };
 
-
 export type { baseSchema, JSONSchema } from "./types/jsonSchema.ts";

@@ -202,7 +202,9 @@ const AddFieldButton: FC<AddFieldButtonProps> = ({
                 </div>
 
                 <div className="rounded-lg border bg-muted/50 p-3 hidden md:block">
-                  <p className="text-xs font-medium mb-2">{t.fieldTypeExample}</p>
+                  <p className="text-xs font-medium mb-2">
+                    {t.fieldTypeExample}
+                  </p>
                   <code className="text-sm bg-background/80 p-2 rounded block overflow-x-auto">
                     {fieldType === "string" && '"example"'}
                     {fieldType === "number" && "42"}
