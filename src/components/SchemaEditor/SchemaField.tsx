@@ -1,3 +1,4 @@
+import React, { Suspense } from "react";
 import type {
   JSONSchema as JSONSchemaType,
   NewField,
@@ -9,7 +10,6 @@ import {
   getSchemaDescription,
   withObjectSchema,
 } from "../../types/jsonSchema.ts";
-import React, { Suspense } from "react";
 import SchemaPropertyEditor from "./SchemaPropertyEditor.tsx";
 
 // This component is now just a simple wrapper around SchemaPropertyEditor

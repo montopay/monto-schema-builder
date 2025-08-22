@@ -12,7 +12,7 @@ export default defineConfig({
   },
   output: {
     distPath: {
-        root: "dist-demo"
+      root: "dist-demo",
     },
   },
   source: {

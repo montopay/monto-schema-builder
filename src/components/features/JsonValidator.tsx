@@ -1,3 +1,7 @@
+import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
+import { AlertCircle, Check, Loader2 } from "lucide-react";
+import type * as Monaco from "monaco-editor";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -7,11 +11,10 @@ import {
 } from "../../components/ui/dialog.tsx";
 import { useMonacoTheme } from "../../hooks/use-monaco-theme.tsx";
 import type { JSONSchema } from "../../types/jsonSchema.ts";
-import { type ValidationResult, validateJson } from "../../utils/jsonValidator.ts";
-import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
-import { AlertCircle, Check, Loader2 } from "lucide-react";
-import type * as Monaco from "monaco-editor";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  type ValidationResult,
+  validateJson,
+} from "../../utils/jsonValidator.ts";
 
 /** @public */
 export interface JsonValidatorProps {

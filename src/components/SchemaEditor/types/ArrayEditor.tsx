@@ -1,10 +1,16 @@
+import { useState } from "react";
 import { Input } from "../../../components/ui/input.tsx";
 import { Label } from "../../../components/ui/label.tsx";
 import { Switch } from "../../../components/ui/switch.tsx";
 import { getArrayItemsSchema } from "../../../lib/schemaEditor.ts";
-import type { ObjectJSONSchema, SchemaType } from "../../../types/jsonSchema.ts";
-import { isBooleanSchema, withObjectSchema } from "../../../types/jsonSchema.ts";
-import { useState } from "react";
+import type {
+  ObjectJSONSchema,
+  SchemaType,
+} from "../../../types/jsonSchema.ts";
+import {
+  isBooleanSchema,
+  withObjectSchema,
+} from "../../../types/jsonSchema.ts";
 import TypeDropdown from "../TypeDropdown.tsx";
 import type { TypeEditorProps } from "../TypeEditor.tsx";
 import TypeEditor from "../TypeEditor.tsx";

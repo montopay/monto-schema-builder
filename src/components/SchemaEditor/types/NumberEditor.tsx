@@ -1,9 +1,12 @@
+import { X } from "lucide-react";
+import { useState } from "react";
 import { Input } from "../../../components/ui/input.tsx";
 import { Label } from "../../../components/ui/label.tsx";
 import type { ObjectJSONSchema } from "../../../types/jsonSchema.ts";
-import { isBooleanSchema, withObjectSchema } from "../../../types/jsonSchema.ts";
-import { X } from "lucide-react";
-import { useState } from "react";
+import {
+  isBooleanSchema,
+  withObjectSchema,
+} from "../../../types/jsonSchema.ts";
 import type { TypeEditorProps } from "../TypeEditor.tsx";
 
 interface NumberEditorProps extends TypeEditorProps {

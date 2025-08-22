@@ -1,11 +1,11 @@
 import assert from "node:assert";
 import { describe, test } from "node:test";
+import metaschema from "../metaschema.schema.json" with { type: "json" };
 import {
   isBooleanSchema,
   isObjectSchema,
   jsonSchemaType,
 } from "../src/types/jsonSchema.ts";
-import metaschema from "../metaschema.schema.json" with { type: "json" };
 
 describe("JSON Schema", () => {
   test("should successfully parse the JSON Schema metaschema", () => {

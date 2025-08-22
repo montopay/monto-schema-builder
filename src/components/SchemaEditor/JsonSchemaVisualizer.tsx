@@ -1,9 +1,9 @@
+import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
+import { Download, FileJson, Loader2 } from "lucide-react";
+import { type FC, useRef } from "react";
 import { useMonacoTheme } from "../../hooks/use-monaco-theme.tsx";
 import { cn } from "../../lib/utils.ts";
 import type { JSONSchema } from "../../types/jsonSchema.ts";
-import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
-import { Download, FileJson, Loader2 } from "lucide-react";
-import { useRef, type FC } from "react";
 
 /** @public */
 export interface JsonSchemaVisualizerProps {

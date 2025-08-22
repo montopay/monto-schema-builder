@@ -1,3 +1,5 @@
+import { ChevronDown, ChevronRight, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Input } from "../../components/ui/input.tsx";
 import { cn } from "../../lib/utils.ts";
 import type {
@@ -10,8 +12,6 @@ import {
   getSchemaDescription,
   withObjectSchema,
 } from "../../types/jsonSchema.ts";
-import { ChevronDown, ChevronRight, X } from "lucide-react";
-import { useEffect, useState } from "react";
 import TypeDropdown from "./TypeDropdown.tsx";
 import TypeEditor from "./TypeEditor.tsx";
 

@@ -8,11 +8,7 @@
     "type": "git",
     "url": "https://github.com/lovasoa/jsonjoy-builder"
   },
-  "files": [
-    "dist",
-    "!tsconfig.tsbuildinfo",
-    "!tsconfig.js"
-  ],
+  "files": ["dist", "!tsconfig.tsbuildinfo", "!tsconfig.js"],
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/jsonjoy-builder.d.ts",
@@ -24,10 +20,6 @@
     "./styles.css": {
       "import": "./dist/index.css"
     }
-  },
-  "engines": {
-    "node": ">=22.18.0",
-    "npm": ">=10.9.0"
   },
   "scripts": {
     "dev": "rsbuild dev",

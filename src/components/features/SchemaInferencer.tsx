@@ -1,3 +1,6 @@
+import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
+import { Loader2 } from "lucide-react";
+import { useRef, useState } from "react";
 import { Button } from "../../components/ui/button.tsx";
 import {
   Dialog,
@@ -10,9 +13,6 @@ import {
 import { useMonacoTheme } from "../../hooks/use-monaco-theme.tsx";
 import { createSchemaFromJson } from "../../lib/schema-inference.ts";
 import type { JSONSchema } from "../../types/jsonSchema.ts";
-import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
-import { Loader2 } from "lucide-react";
-import { useRef, useState } from "react";
 
 /** @public */
 export interface SchemaInferencerProps {

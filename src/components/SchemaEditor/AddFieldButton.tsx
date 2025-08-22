@@ -1,3 +1,5 @@
+import { CirclePlus, HelpCircle, Info } from "lucide-react";
+import { type FC, type FormEvent, useState } from "react";
 import { Badge } from "../../components/ui/badge.tsx";
 import { Button } from "../../components/ui/button.tsx";
 import {
@@ -16,8 +18,6 @@ import {
   TooltipTrigger,
 } from "../../components/ui/tooltip.tsx";
 import type { NewField, SchemaType } from "../../types/jsonSchema.ts";
-import { CirclePlus, HelpCircle, Info } from "lucide-react";
-import { useState, type FC, type FormEvent,  } from "react";
 import SchemaTypeSelector from "./SchemaTypeSelector.tsx";
 
 interface AddFieldButtonProps {

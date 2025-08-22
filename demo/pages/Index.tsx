@@ -1,9 +1,3 @@
-import JsonSchemaEditor from "../../src/components/SchemaEditor/JsonSchemaEditor.tsx";
-import { JsonValidator } from "../../src/components/features/JsonValidator.tsx";
-import { SchemaInferencer } from "../../src/components/features/SchemaInferencer.tsx";
-import { Button } from "../../src/components/ui/button.tsx";
-import type { JSONSchema } from "../../src/types/jsonSchema.ts";
-import { exampleSchema } from "../../demo/utils/schemaExample.ts";
 import {
   CheckCircle,
   CirclePlus,
@@ -12,6 +6,12 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { useState } from "react";
+import { exampleSchema } from "../../demo/utils/schemaExample.ts";
+import JsonSchemaEditor from "../../src/components/SchemaEditor/JsonSchemaEditor.tsx";
+import { JsonValidator } from "../../src/components/features/JsonValidator.tsx";
+import { SchemaInferencer } from "../../src/components/features/SchemaInferencer.tsx";
+import { Button } from "../../src/components/ui/button.tsx";
+import type { JSONSchema } from "../../src/types/jsonSchema.ts";
 
 const Index = () => {
   const [schema, setSchema] = useState<JSONSchema>(exampleSchema);

@@ -1,10 +1,10 @@
+import { Suspense, lazy } from "react";
 import type {
   JSONSchema,
   ObjectJSONSchema,
   SchemaType,
 } from "../../types/jsonSchema.ts";
 import { withObjectSchema } from "../../types/jsonSchema.ts";
-import { Suspense, lazy } from "react";
 
 // Lazy load specific type editors to avoid circular dependencies
 const StringEditor = lazy(() => import("./types/StringEditor.tsx"));

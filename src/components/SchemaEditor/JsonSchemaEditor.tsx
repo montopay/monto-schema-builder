@@ -1,8 +1,18 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs.tsx";
+import { Maximize2 } from "lucide-react";
+import {
+  type FC,
+  type MouseEvent as ReactMouseEvent,
+  useRef,
+  useState,
+} from "react";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../../components/ui/tabs.tsx";
 import { cn } from "../../lib/utils.ts";
 import type { JSONSchema } from "../../types/jsonSchema.ts";
-import { Maximize2 } from "lucide-react";
-import { useRef, useState, type FC, type MouseEvent as ReactMouseEvent } from "react";
 import JsonSchemaVisualizer from "./JsonSchemaVisualizer.tsx";
 import SchemaVisualEditor from "./SchemaVisualEditor.tsx";
 
