@@ -66,7 +66,7 @@ const JsonSchemaVisualizer: FC<JsonSchemaVisualizerProps> = ({
     <div
       className={cn("relative overflow-hidden h-full flex flex-col", className)}
     >
-      <div className="flex items-center justify-between bg-secondary/80 backdrop-blur-sm px-4 py-2 border-b flex-shrink-0">
+      <div className="flex items-center justify-between bg-secondary/80 backdrop-blur-xs px-4 py-2 border-b shrink-0">
         <div className="flex items-center gap-2">
           <FileJson size={18} />
           <span className="font-medium text-sm">JSON Schema Source</span>
@@ -80,7 +80,7 @@ const JsonSchemaVisualizer: FC<JsonSchemaVisualizerProps> = ({
           <Download size={16} />
         </button>
       </div>
-      <div className="flex-grow flex min-h-0">
+      <div className="grow flex min-h-0">
         <Editor
           height="100%"
           defaultLanguage="json"

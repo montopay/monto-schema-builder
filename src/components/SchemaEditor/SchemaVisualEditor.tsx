@@ -118,11 +118,11 @@ const SchemaVisualEditor: FC<SchemaVisualEditorProps> = ({
 
   return (
     <div className="p-4 h-full flex flex-col overflow-auto">
-      <div className="mb-6 flex-shrink-0">
+      <div className="mb-6 shrink-0">
         <AddFieldButton onAddField={handleAddField} />
       </div>
 
-      <div className="flex-grow overflow-auto">
+      <div className="grow overflow-auto">
         {!hasFields ? (
           <div className="text-center py-10 text-muted-foreground">
             <p className="mb-3">No fields defined yet</p>

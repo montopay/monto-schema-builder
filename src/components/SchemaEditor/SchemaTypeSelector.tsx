@@ -60,7 +60,7 @@ const SchemaTypeSelector: FC<SchemaTypeSelectorProps> = ({
           className={cn(
             "p-2.5 rounded-lg border-2 text-left transition-all duration-200",
             value === type.id
-              ? "border-primary bg-primary/5 shadow-sm"
+              ? "border-primary bg-primary/5 shadow-xs"
               : "border-border hover:border-primary/30 hover:bg-secondary",
           )}
           onClick={() => onChange(type.id)}

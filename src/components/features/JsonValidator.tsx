@@ -213,7 +213,7 @@ export function JsonValidator({
                       <button
                         key={`error-${error.path}-${index}`}
                         type="button"
-                        className="w-full text-left bg-white border border-red-100 rounded-md p-3 shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer"
+                        className="w-full text-left bg-white border border-red-100 rounded-md p-3 shadow-xs hover:shadow-md transition-shadow duration-200 cursor-pointer"
                         onClick={() =>
                           error.line &&
                           error.column &&

@@ -36,7 +36,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-background/95 relative overflow-hidden">
+    <div className="min-h-screen bg-linear-to-b from-background to-background/95 relative overflow-hidden">
       {/* Background accent */}
       <div
         className="absolute -top-24 -right-24 w-96 h-96 bg-primary/10 rounded-full blur-3xl opacity-50 animate-float"
@@ -99,7 +99,7 @@ const Index = () => {
           <JsonSchemaEditor
             schema={schema}
             setSchema={setSchema}
-            className="shadow-lg animate-in border-border/50 backdrop-blur-sm"
+            className="shadow-lg animate-in border-border/50 backdrop-blur-xs"
           />
         </div>
 
@@ -348,7 +348,7 @@ const Index = () => {
           </div>
 
           {/* Author Footer */}
-          <div className="mt-16 py-4 border-t border-border/30 backdrop-blur-sm">
+          <div className="mt-16 py-4 border-t border-border/30 backdrop-blur-xs">
             <div className="flex items-center justify-center gap-2 text-sm">
               <span className="text-muted-foreground">Built by</span>
               <a

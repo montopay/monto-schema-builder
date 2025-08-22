@@ -102,7 +102,7 @@ const JsonSchemaEditor: FC<JsonSchemaEditorProps> = ({
           <TabsContent
             value="visual"
             className={cn(
-              "focus:outline-none w-full",
+              "focus:outline-hidden w-full",
               isFullscreen ? "h-screen" : "h-[500px]",
             )}
           >
@@ -112,7 +112,7 @@ const JsonSchemaEditor: FC<JsonSchemaEditorProps> = ({
           <TabsContent
             value="json"
             className={cn(
-              "focus:outline-none w-full",
+              "focus:outline-hidden w-full",
               isFullscreen ? "h-screen" : "h-[500px]",
             )}
           >
@@ -132,7 +132,7 @@ const JsonSchemaEditor: FC<JsonSchemaEditorProps> = ({
           isFullscreen ? "h-screen" : "h-[600px]",
         )}
       >
-        <div className="flex items-center justify-between px-4 py-3 border-b w-full flex-shrink-0">
+        <div className="flex items-center justify-between px-4 py-3 border-b w-full shrink-0">
           <h3 className="font-medium">JSON Schema Editor</h3>
           <button
             type="button"
@@ -143,7 +143,7 @@ const JsonSchemaEditor: FC<JsonSchemaEditorProps> = ({
             <Maximize2 size={16} />
           </button>
         </div>
-        <div className="flex flex-row w-full flex-grow min-h-0">
+        <div className="flex flex-row w-full grow min-h-0">
           <div
             className="h-full min-h-0"
             style={{ width: `${leftPanelWidth}%` }}
@@ -153,7 +153,7 @@ const JsonSchemaEditor: FC<JsonSchemaEditorProps> = ({
           {/** biome-ignore lint/a11y/noStaticElementInteractions: What exactly does this div do? */}
           <div
             ref={resizeRef}
-            className="w-1 bg-border hover:bg-primary cursor-col-resize flex-shrink-0"
+            className="w-1 bg-border hover:bg-primary cursor-col-resize shrink-0"
             onMouseDown={handleMouseDown}
           />
           <div

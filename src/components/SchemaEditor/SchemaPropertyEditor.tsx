@@ -93,7 +93,7 @@ export const SchemaPropertyEditor: React.FC<SchemaPropertyEditorProps> = ({
       )}
     >
       <div className="relative json-field-row justify-between group">
-        <div className="flex items-center gap-2 flex-grow min-w-0">
+        <div className="flex items-center gap-2 grow min-w-0">
           {/* Expand/collapse button */}
           <button
             type="button"
@@ -105,8 +105,8 @@ export const SchemaPropertyEditor: React.FC<SchemaPropertyEditorProps> = ({
           </button>
 
           {/* Property name */}
-          <div className="flex items-center gap-2 flex-grow min-w-0 overflow-visible">
-            <div className="flex items-center gap-2 min-w-0 flex-grow overflow-visible">
+          <div className="flex items-center gap-2 grow min-w-0 overflow-visible">
+            <div className="flex items-center gap-2 min-w-0 grow overflow-visible">
               {isEditingName ? (
                 <Input
                   value={tempName}
@@ -122,7 +122,7 @@ export const SchemaPropertyEditor: React.FC<SchemaPropertyEditorProps> = ({
                   type="button"
                   onClick={() => setIsEditingName(true)}
                   onKeyDown={(e) => e.key === "Enter" && setIsEditingName(true)}
-                  className="json-field-label font-medium cursor-text px-2 py-0.5 -mx-0.5 rounded-sm hover:bg-secondary/30 hover:shadow-sm hover:ring-1 hover:ring-ring/20 transition-all text-left truncate min-w-[80px] max-w-[50%]"
+                  className="json-field-label font-medium cursor-text px-2 py-0.5 -mx-0.5 rounded-sm hover:bg-secondary/30 hover:shadow-xs hover:ring-1 hover:ring-ring/20 transition-all text-left truncate min-w-[80px] max-w-[50%]"
                 >
                   {name}
                 </button>
@@ -145,7 +145,7 @@ export const SchemaPropertyEditor: React.FC<SchemaPropertyEditorProps> = ({
                   type="button"
                   onClick={() => setIsEditingDesc(true)}
                   onKeyDown={(e) => e.key === "Enter" && setIsEditingDesc(true)}
-                  className="text-xs text-muted-foreground italic cursor-text px-2 py-0.5 -mx-0.5 rounded-sm hover:bg-secondary/30 hover:shadow-sm hover:ring-1 hover:ring-ring/20 transition-all text-left truncate flex-1 max-w-[40%] mr-2"
+                  className="text-xs text-muted-foreground italic cursor-text px-2 py-0.5 -mx-0.5 rounded-sm hover:bg-secondary/30 hover:shadow-xs hover:ring-1 hover:ring-ring/20 transition-all text-left truncate flex-1 max-w-[40%] mr-2"
                 >
                   {tempDesc}
                 </button>
@@ -154,7 +154,7 @@ export const SchemaPropertyEditor: React.FC<SchemaPropertyEditorProps> = ({
                   type="button"
                   onClick={() => setIsEditingDesc(true)}
                   onKeyDown={(e) => e.key === "Enter" && setIsEditingDesc(true)}
-                  className="text-xs text-muted-foreground/50 italic cursor-text px-2 py-0.5 -mx-0.5 rounded-sm hover:bg-secondary/30 hover:shadow-sm hover:ring-1 hover:ring-ring/20 transition-all opacity-0 group-hover:opacity-100 text-left truncate flex-1 max-w-[40%] mr-2"
+                  className="text-xs text-muted-foreground/50 italic cursor-text px-2 py-0.5 -mx-0.5 rounded-sm hover:bg-secondary/30 hover:shadow-xs hover:ring-1 hover:ring-ring/20 transition-all opacity-0 group-hover:opacity-100 text-left truncate flex-1 max-w-[40%] mr-2"
                 >
                   Add description...
                 </button>
@@ -162,7 +162,7 @@ export const SchemaPropertyEditor: React.FC<SchemaPropertyEditorProps> = ({
             </div>
 
             {/* Type display */}
-            <div className="flex items-center gap-2 justify-end flex-shrink-0">
+            <div className="flex items-center gap-2 justify-end shrink-0">
               <TypeDropdown
                 value={type}
                 onChange={(newType) => {
@@ -178,7 +178,7 @@ export const SchemaPropertyEditor: React.FC<SchemaPropertyEditorProps> = ({
                 type="button"
                 onClick={() => onRequiredChange(!required)}
                 className={cn(
-                  "text-xs px-2 py-1 rounded-md font-medium min-w-[80px] text-center cursor-pointer hover:shadow-sm hover:ring-2 hover:ring-ring/30 active:scale-95 transition-all whitespace-nowrap",
+                  "text-xs px-2 py-1 rounded-md font-medium min-w-[80px] text-center cursor-pointer hover:shadow-xs hover:ring-2 hover:ring-ring/30 active:scale-95 transition-all whitespace-nowrap",
                   required
                     ? "bg-red-50 text-red-500"
                     : "bg-secondary text-muted-foreground",
