@@ -61,7 +61,7 @@ export const fr: Translation = {
 
   numberMinimumLabel: "Valeur minimale",
   numberMinimumPlaceholder: "Pas de minimum",
-  numberMaximumLabel: "Valealeur maximale",
+  numberMaximumLabel: "Valeur maximale",
   numberMaximumPlaceholder: "Pas de maximum",
   numberExclusiveMinimumLabel: "Minimum exclusif",
   numberExclusiveMinimumPlaceholder: "Pas de min exclusif",
@@ -120,7 +120,7 @@ export const fr: Translation = {
   validatorErrorInvalidSyntax: "Syntaxe JSON invalide",
   validatorErrorSchemaValidation: "Erreur de validation du schéma",
   validatorErrorCount: "{count} erreurs de validation détectées",
-  validatorErrorPathRoot: "Racine",
+  validatorErrorPathRoot: "Élément racine",
   validatorErrorLocationLineAndColumn: "Ligne {line}, Col {column}",
   validatorErrorLocationLineOnly: "Ligne {line}",
 
