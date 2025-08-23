@@ -64,13 +64,13 @@ export function App() {
 }
 ```
 
-Currently we only have localizations for English and German. You can define your own translation like this.
+Currently we have localizations for English, German, French and Russian. You can define your own translation like this.
 If you do, consider opening a PR with the translations!
 
 ```ts
 import { type Translation } from "jsonjoy-builder";
 
-const fr: Translation = {
+const es: Translation = {
 	// add translations here (see type Translation for the available keys and default values)
 };
 ```
