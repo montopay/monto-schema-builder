@@ -48,7 +48,7 @@
     "check": "biome check .",
     "fix": "biome check --fix --unsafe",
     "typecheck": "tsc --build --force",
-    "test": "node --test test/*.test.js",
+    "test": "node --test test/*.test.{js,ts}",
     "prepack": "npm run build"
   },
   "dependencies": {
