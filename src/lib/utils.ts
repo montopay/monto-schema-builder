@@ -1,6 +1,7 @@
-import type { SchemaType } from "@/types/jsonSchema";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import type { SchemaType } from "../types/jsonSchema.ts";
+import type { Translation } from "../i18n/translation-keys.ts";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -26,20 +27,20 @@ export const getTypeColor = (type: SchemaType): string => {
 };
 
 // Get type display label
-export const getTypeLabel = (type: SchemaType): string => {
+export const getTypeLabel = (t: Translation, type: SchemaType): string => {
   switch (type) {
     case "string":
-      return "Text";
+      return t.schemaTypeString;
     case "number":
     case "integer":
-      return "Number";
+      return t.schemaTypeNumber;
     case "boolean":
-      return "Yes/No";
+      return t.schemaTypeBoolean;
     case "object":
-      return "Object";
+      return t.schemaTypeObject;
     case "array":
-      return "List";
+      return t.schemaTypeArray;
     case "null":
-      return "Empty";
+      return t.schemaTypeNull;
   }
 };

@@ -16,15 +16,72 @@ A modern, React-based visual JSON Schema editor for creating and manipulating JS
 
 ## Getting Started
 
-### Installation
+### Installing
+
+```bash
+npm install jsonjoy-builder
+```
+
+Also install react if you haven't done so yet.
+
+Then use like this:
+
+```jsx
+import "jsonjoy-builder/styles.css";
+import { type JSONSchema, SchemaVisualEditor } from "jsonjoy-builder";
+import { useState } from "react";
+
+export function App() {
+    const [schema, setSchema] = useState<JSONSchema>({});
+	return (
+		<div>
+			<h1>JSONJoy Builder</h1>
+            <SchemaVisualEditor schema={schema} onChange={setSchema}/>
+		</div>
+	);
+}
+```
+
+### Localization
+
+By default, the editor uses English. To localize, you need to set a language via the `TranslationContext`:
+
+```jsx
+import "jsonjoy-builder/styles.css";
+import { type JSONSchema, SchemaVisualEditor, TranslationContext, de } from "jsonjoy-builder";
+import { useState } from "react";
+
+export function App() {
+    const [schema, setSchema] = useState<JSONSchema>({});
+	return (
+		<div>
+			<h1>JSONJoy Builder</h1>
+			<TranslationContext value={de}>
+            	<SchemaVisualEditor schema={schema} onChange={setSchema}/>
+			</TranslationContext>
+		</div>
+	);
+}
+```
+
+Currently we only have localizations for English and German. You can define your own translation like this.
+If you do, consider opening a PR with the translations!
+
+```ts
+import { type Translation } from "jsonjoy-builder";
+
+const fr: Translation = {
+	// add translations here (see type Translation for the available keys and default values)
+};
+```
+
+### Development
 
 ```bash
 git clone https://github.com/lovasoa/jsonjoy-builder.git
 cd jsonjoy-builder
 npm install
 ```
-
-### Development
 
 Start the development server:
 
@@ -77,7 +134,7 @@ Validate any JSON document against your schema with:
 
 - **React**: UI framework
 - **TypeScript**: Type-safe development
-- **Rsbuild**: Build tool and development server
+- **Rsbuild** / **Rslib**: Build tool and development server
 - **ShadCN UI**: Component library
 - **Monaco Editor**: Code editor for JSON viewing/editing
 - **Ajv**: JSON Schema validation

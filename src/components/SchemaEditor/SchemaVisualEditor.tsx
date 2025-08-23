@@ -1,23 +1,27 @@
+import type { FC } from "react";
 import {
   createFieldSchema,
   updateObjectProperty,
   updatePropertyRequired,
-} from "@/lib/schemaEditor";
-import type { JSONSchema, NewField } from "@/types/jsonSchema";
-import { asObjectSchema, isBooleanSchema } from "@/types/jsonSchema";
-import type React from "react";
-import AddFieldButton from "./AddFieldButton";
-import SchemaFieldList from "./SchemaFieldList";
+} from "../../lib/schemaEditor.ts";
+import type { JSONSchema, NewField } from "../../types/jsonSchema.ts";
+import { asObjectSchema, isBooleanSchema } from "../../types/jsonSchema.ts";
+import AddFieldButton from "./AddFieldButton.tsx";
+import SchemaFieldList from "./SchemaFieldList.tsx";
+import { useTranslation } from "../../hooks/use-translation.ts";
 
-interface SchemaVisualEditorProps {
+/** @public */
+export interface SchemaVisualEditorProps {
   schema: JSONSchema;
   onChange: (schema: JSONSchema) => void;
 }
 
-const SchemaVisualEditor: React.FC<SchemaVisualEditorProps> = ({
+/** @public */
+const SchemaVisualEditor: FC<SchemaVisualEditorProps> = ({
   schema,
   onChange,
 }) => {
+  const t = useTranslation();
   // Handle adding a top-level field
   const handleAddField = (newField: NewField) => {
     // Create a field schema based on the new field data
@@ -116,15 +120,15 @@ const SchemaVisualEditor: React.FC<SchemaVisualEditorProps> = ({
 
   return (
     <div className="p-4 h-full flex flex-col overflow-auto">
-      <div className="mb-6 flex-shrink-0">
+      <div className="mb-6 shrink-0">
         <AddFieldButton onAddField={handleAddField} />
       </div>
 
-      <div className="flex-grow overflow-auto">
+      <div className="grow overflow-auto">
         {!hasFields ? (
           <div className="text-center py-10 text-muted-foreground">
-            <p className="mb-3">No fields defined yet</p>
-            <p className="text-sm">Add your first field to get started</p>
+            <p className="mb-3">{t.visualEditorNoFieldsHint1}</p>
+            <p className="text-sm">{t.visualEditorNoFieldsHint2}</p>
           </div>
         ) : (
           <SchemaFieldList

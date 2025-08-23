@@ -1,14 +1,15 @@
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import type { ObjectJSONSchema } from "@/types/jsonSchema";
-import { isBooleanSchema, withObjectSchema } from "@/types/jsonSchema";
-import { X } from "lucide-react";
-import { useState } from "react";
-import type { TypeEditorProps } from "../TypeEditor";
+import { useId } from "react";
+import { Label } from "../../../components/ui/label.tsx";
+import { Switch } from "../../../components/ui/switch.tsx";
+import type { ObjectJSONSchema } from "../../../types/jsonSchema.ts";
+import { withObjectSchema } from "../../../types/jsonSchema.ts";
+import type { TypeEditorProps } from "../TypeEditor.tsx";
+import { useTranslation } from "../../../hooks/use-translation.ts";
 
 const BooleanEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
-  const [showTrue, setShowTrue] = useState(true);
-  const [showFalse, setShowFalse] = useState(true);
+  const t = useTranslation();
+  const allowTrueId = useId();
+  const allowFalseId = useId();
 
   // Extract boolean-specific validation
   const enumValues = withObjectSchema(
@@ -56,11 +57,6 @@ const BooleanEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
       newEnum = [!value];
     }
 
-    // Update the schema
-    const baseSchema = isBooleanSchema(schema)
-      ? { type: "boolean" as const }
-      : { ...schema };
-
     // Create a new validation object with just the type and enum
     const updatedValidation: ObjectJSONSchema = {
       type: "boolean",
@@ -85,30 +81,30 @@ const BooleanEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
         <div className="space-y-3">
           <div className="flex items-center space-x-2">
             <Switch
-              id="allow-true"
+              id={allowTrueId}
               checked={allowsTrue}
               onCheckedChange={(checked) => handleAllowedChange(true, checked)}
             />
-            <Label htmlFor="allow-true" className="cursor-pointer">
-              Allow true value
+            <Label htmlFor={allowTrueId} className="cursor-pointer">
+              {t.booleanAllowTrueLabel}
             </Label>
           </div>
 
           <div className="flex items-center space-x-2">
             <Switch
-              id="allow-false"
+              id={allowFalseId}
               checked={allowsFalse}
               onCheckedChange={(checked) => handleAllowedChange(false, checked)}
             />
-            <Label htmlFor="allow-false" className="cursor-pointer">
-              Allow false value
+            <Label htmlFor={allowFalseId} className="cursor-pointer">
+              {t.booleanAllowFalseLabel}
             </Label>
           </div>
         </div>
 
         {!allowsTrue && !allowsFalse && (
           <p className="text-xs text-amber-600 mt-2">
-            Warning: You must allow at least one value.
+            {t.booleanNeitherWarning}
           </p>
         )}
       </div>

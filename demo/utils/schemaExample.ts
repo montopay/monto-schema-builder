@@ -1,4 +1,4 @@
-import type { JSONSchema } from "@/types/jsonSchema";
+import type { JSONSchema } from "../../src/types/jsonSchema.ts";
 
 export const exampleSchema: JSONSchema = {
   $schema: "https://json-schema.org/draft-07/schema",

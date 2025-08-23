@@ -1,19 +1,31 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { cn } from "@/lib/utils";
-import type { JSONSchema } from "@/types/jsonSchema";
 import { Maximize2 } from "lucide-react";
-import type React from "react";
-import { useRef, useState } from "react";
-import JsonSchemaVisualizer from "./JsonSchemaVisualizer";
-import SchemaVisualEditor from "./SchemaVisualEditor";
+import {
+  type FC,
+  type MouseEvent as ReactMouseEvent,
+  useRef,
+  useState,
+} from "react";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../../components/ui/tabs.tsx";
+import { cn } from "../../lib/utils.ts";
+import type { JSONSchema } from "../../types/jsonSchema.ts";
+import JsonSchemaVisualizer from "./JsonSchemaVisualizer.tsx";
+import SchemaVisualEditor from "./SchemaVisualEditor.tsx";
+import { useTranslation } from "../../hooks/use-translation.ts";
 
-interface JsonSchemaEditorProps {
+/** @public */
+export interface JsonSchemaEditorProps {
   schema?: JSONSchema;
   setSchema?: (schema: JSONSchema) => void;
   className?: string;
 }
 
-const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
+/** @public */
+const JsonSchemaEditor: FC<JsonSchemaEditorProps> = ({
   schema = { type: "object" },
   setSchema,
   className,
@@ -22,6 +34,8 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
   const handleSchemaChange = (newSchema: JSONSchema) => {
     setSchema(newSchema);
   };
+
+  const t = useTranslation();
 
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [leftPanelWidth, setLeftPanelWidth] = useState(50); // percentage
@@ -37,7 +51,7 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
     ? "fixed inset-0 z-50 bg-background"
     : "";
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleMouseDown = (e: ReactMouseEvent) => {
     e.preventDefault();
     isDraggingRef.current = true;
     document.addEventListener("mousemove", handleMouseMove);
@@ -71,7 +85,7 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
       <div className="block lg:hidden w-full">
         <Tabs defaultValue="visual" className="w-full">
           <div className="flex items-center justify-between px-4 py-3 border-b w-full">
-            <h3 className="font-medium">JSON Schema Editor</h3>
+            <h3 className="font-medium">{t.schemaEditorTitle}</h3>
             <div className="flex items-center gap-2">
               <button
                 type="button"
@@ -82,8 +96,12 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
                 <Maximize2 size={16} />
               </button>
               <TabsList className="grid grid-cols-2 w-[200px]">
-                <TabsTrigger value="visual">Visual</TabsTrigger>
-                <TabsTrigger value="json">JSON</TabsTrigger>
+                <TabsTrigger value="visual">
+                  {t.schemaEditorEditModeVisual}
+                </TabsTrigger>
+                <TabsTrigger value="json">
+                  {t.schemaEditorEditModeJson}
+                </TabsTrigger>
               </TabsList>
             </div>
           </div>
@@ -91,7 +109,7 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
           <TabsContent
             value="visual"
             className={cn(
-              "focus:outline-none w-full",
+              "focus:outline-hidden w-full",
               isFullscreen ? "h-screen" : "h-[500px]",
             )}
           >
@@ -101,7 +119,7 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
           <TabsContent
             value="json"
             className={cn(
-              "focus:outline-none w-full",
+              "focus:outline-hidden w-full",
               isFullscreen ? "h-screen" : "h-[500px]",
             )}
           >
@@ -121,27 +139,28 @@ const JsonSchemaEditor: React.FC<JsonSchemaEditorProps> = ({
           isFullscreen ? "h-screen" : "h-[600px]",
         )}
       >
-        <div className="flex items-center justify-between px-4 py-3 border-b w-full flex-shrink-0">
-          <h3 className="font-medium">JSON Schema Editor</h3>
+        <div className="flex items-center justify-between px-4 py-3 border-b w-full shrink-0">
+          <h3 className="font-medium">{t.schemaEditorTitle}</h3>
           <button
             type="button"
             onClick={toggleFullscreen}
             className="p-1.5 rounded-md hover:bg-secondary transition-colors"
-            aria-label="Toggle fullscreen"
+            aria-label={t.schemaEditorToggleFullscreen}
           >
             <Maximize2 size={16} />
           </button>
         </div>
-        <div className="flex flex-row w-full flex-grow min-h-0">
+        <div className="flex flex-row w-full grow min-h-0">
           <div
             className="h-full min-h-0"
             style={{ width: `${leftPanelWidth}%` }}
           >
             <SchemaVisualEditor schema={schema} onChange={handleSchemaChange} />
           </div>
+          {/** biome-ignore lint/a11y/noStaticElementInteractions: What exactly does this div do? */}
           <div
             ref={resizeRef}
-            className="w-1 bg-border hover:bg-primary cursor-col-resize flex-shrink-0"
+            className="w-1 bg-border hover:bg-primary cursor-col-resize shrink-0"
             onMouseDown={handleMouseDown}
           />
           <div

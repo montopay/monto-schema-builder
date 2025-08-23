@@ -1,36 +1,44 @@
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { useMonacoTheme } from "@/hooks/use-monaco-theme";
-import type { JSONSchema } from "@/types/jsonSchema";
-import { type ValidationResult, validateJson } from "@/utils/jsonValidator";
 import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
 import { AlertCircle, Check, Loader2 } from "lucide-react";
 import type * as Monaco from "monaco-editor";
 import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "../../components/ui/dialog.tsx";
+import { useMonacoTheme } from "../../hooks/use-monaco-theme.ts";
+import type { JSONSchema } from "../../types/jsonSchema.ts";
+import {
+  type ValidationResult,
+  validateJson,
+} from "../../utils/jsonValidator.ts";
+import {
+  formatTranslation,
+  useTranslation,
+} from "../../hooks/use-translation.ts";
 
-interface JsonValidatorProps {
+/** @public */
+export interface JsonValidatorProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   schema: JSONSchema;
 }
 
+/** @public */
 export function JsonValidator({
   open,
   onOpenChange,
   schema,
 }: JsonValidatorProps) {
+  const t = useTranslation();
   const [jsonInput, setJsonInput] = useState("");
   const [validationResult, setValidationResult] =
     useState<ValidationResult | null>(null);
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const debounceTimerRef = useRef<number | null>(null);
   const monacoRef = useRef<typeof Monaco | null>(null);
   const schemaMonacoRef = useRef<typeof Monaco | null>(null);
   const {
@@ -110,15 +118,12 @@ export function JsonValidator({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-5xl max-h-[700px] flex flex-col">
         <DialogHeader>
-          <DialogTitle>Validate JSON</DialogTitle>
-          <DialogDescription>
-            Paste your JSON document to validate against the current schema.
-            Validation occurs automatically as you type.
-          </DialogDescription>
+          <DialogTitle>{t.validatorTitle}</DialogTitle>
+          <DialogDescription>{t.validatorDescription}</DialogDescription>
         </DialogHeader>
         <div className="flex-1 flex flex-col md:flex-row gap-4 py-4 overflow-hidden h-[600px]">
           <div className="flex-1 flex flex-col h-full">
-            <div className="text-sm font-medium mb-2">Your JSON:</div>
+            <div className="text-sm font-medium mb-2">{t.validatorContent}</div>
             <div className="border rounded-md flex-1 h-full">
               <Editor
                 height="600px"
@@ -139,7 +144,9 @@ export function JsonValidator({
           </div>
 
           <div className="flex-1 flex flex-col h-full">
-            <div className="text-sm font-medium mb-2">Current Schema:</div>
+            <div className="text-sm font-medium mb-2">
+              {t.validatorCurrentSchema}
+            </div>
             <div className="border rounded-md flex-1 h-full">
               <Editor
                 height="600px"
@@ -167,7 +174,7 @@ export function JsonValidator({
                 <>
                   <Check className="h-5 w-5 text-green-500 mr-2" />
                   <p className="text-green-700 font-medium">
-                    JSON is valid according to the schema!
+                    {t.validatorValid}
                   </p>
                 </>
               ) : (
@@ -176,9 +183,11 @@ export function JsonValidator({
                   <p className="text-red-700 font-medium">
                     {validationResult.errors.length === 1
                       ? validationResult.errors[0].path === "/"
-                        ? "Invalid JSON syntax"
-                        : "Schema validation error"
-                      : `${validationResult.errors.length} validation errors detected`}
+                        ? t.validatorErrorInvalidSyntax
+                        : t.validatorErrorSchemaValidation
+                      : formatTranslation(t.validatorErrorCount, {
+                          count: validationResult.errors.length,
+                        })}
                   </p>
                 </>
               )}
@@ -192,15 +201,23 @@ export function JsonValidator({
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm font-medium text-red-700">
                         {validationResult.errors[0].path === "/"
-                          ? "Root"
+                          ? t.validatorErrorPathRoot
                           : validationResult.errors[0].path}
                       </span>
                       {validationResult.errors[0].line && (
                         <span className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">
-                          Line {validationResult.errors[0].line}
                           {validationResult.errors[0].column
-                            ? `, Col ${validationResult.errors[0].column}`
-                            : ""}
+                            ? formatTranslation(
+                                t.validatorErrorLocationLineAndColumn,
+                                {
+                                  line: validationResult.errors[0].line,
+                                  column: validationResult.errors[0].column,
+                                },
+                              )
+                            : formatTranslation(
+                                t.validatorErrorLocationLineOnly,
+                                { line: validationResult.errors[0].line },
+                              )}
                         </span>
                       )}
                     </div>
@@ -210,7 +227,7 @@ export function JsonValidator({
                       <button
                         key={`error-${error.path}-${index}`}
                         type="button"
-                        className="w-full text-left bg-white border border-red-100 rounded-md p-3 shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer"
+                        className="w-full text-left bg-white border border-red-100 rounded-md p-3 shadow-xs hover:shadow-md transition-shadow duration-200 cursor-pointer"
                         onClick={() =>
                           error.line &&
                           error.column &&
@@ -220,7 +237,9 @@ export function JsonValidator({
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
                             <p className="text-sm font-medium text-red-700">
-                              {error.path === "/" ? "Root" : error.path}
+                              {error.path === "/"
+                                ? t.validatorErrorPathRoot
+                                : error.path}
                             </p>
                             <p className="text-sm text-gray-600 mt-1">
                               {error.message}
@@ -228,8 +247,15 @@ export function JsonValidator({
                           </div>
                           {error.line && (
                             <div className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">
-                              Line {error.line}
-                              {error.column ? `, Col ${error.column}` : ""}
+                              {error.column
+                                ? formatTranslation(
+                                    t.validatorErrorLocationLineAndColumn,
+                                    { line: error.line, column: error.column },
+                                  )
+                                : formatTranslation(
+                                    t.validatorErrorLocationLineOnly,
+                                    { line: error.line },
+                                  )}
                             </div>
                           )}
                         </div>

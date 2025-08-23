@@ -1,24 +1,32 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { X } from "lucide-react";
+import { useId, useState } from "react";
+import { Input } from "../../../components/ui/input.tsx";
+import { Label } from "../../../components/ui/label.tsx";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import type { JSONSchema, ObjectJSONSchema } from "@/types/jsonSchema";
+} from "../../../components/ui/select.tsx";
+import type { ObjectJSONSchema } from "../../../types/jsonSchema.ts";
 import {
-  asObjectSchema,
   isBooleanSchema,
   withObjectSchema,
-} from "@/types/jsonSchema";
-import { X } from "lucide-react";
-import { useState } from "react";
-import type { TypeEditorProps } from "../TypeEditor";
+} from "../../../types/jsonSchema.ts";
+import type { TypeEditorProps } from "../TypeEditor.tsx";
+import { useTranslation } from "../../../hooks/use-translation.ts";
+
+type Property = "enum" | "minLength" | "maxLength" | "pattern" | "format";
 
 const StringEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
+  const t = useTranslation();
   const [enumValue, setEnumValue] = useState("");
+
+  const minLengthId = useId();
+  const maxLengthId = useId();
+  const patternId = useId();
+  const formatId = useId();
 
   // Extract string-specific validations
   const minLength = withObjectSchema(schema, (s) => s.minLength, undefined);
@@ -32,19 +40,11 @@ const StringEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
   );
 
   // Handle validation change
-  const handleValidationChange = (property: string, value: unknown) => {
+  const handleValidationChange = (property: Property, value: unknown) => {
     // Create a safe base schema
     const baseSchema = isBooleanSchema(schema)
       ? { type: "string" as const }
       : { ...schema };
-
-    // Extract reusable properties while safely handling potential undefined description
-    const type = withObjectSchema(schema, (s) => s.type || "string", "string");
-    const description = withObjectSchema(
-      schema,
-      (s) => s.description,
-      undefined,
-    );
 
     // Get all validation props except type and description
     const { type: _, description: __, ...validationProps } = baseSchema;
@@ -97,9 +97,9 @@ const StringEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="minLength">Minimum Length</Label>
+          <Label htmlFor={minLengthId}>{t.stringMinimumLengthLabel}</Label>
           <Input
-            id="minLength"
+            id={minLengthId}
             type="number"
             min={0}
             value={minLength ?? ""}
@@ -107,15 +107,15 @@ const StringEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
               const value = e.target.value ? Number(e.target.value) : undefined;
               handleValidationChange("minLength", value);
             }}
-            placeholder="No minimum"
+            placeholder={t.stringMinimumLengthPlaceholder}
             className="h-8"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="maxLength">Maximum Length</Label>
+          <Label htmlFor={maxLengthId}>{t.stringMaximumLengthLabel}</Label>
           <Input
-            id="maxLength"
+            id={maxLengthId}
             type="number"
             min={0}
             value={maxLength ?? ""}
@@ -123,29 +123,29 @@ const StringEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
               const value = e.target.value ? Number(e.target.value) : undefined;
               handleValidationChange("maxLength", value);
             }}
-            placeholder="No maximum"
+            placeholder={t.stringMaximumLengthPlaceholder}
             className="h-8"
           />
         </div>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="pattern">Pattern (regex)</Label>
+        <Label htmlFor={patternId}>{t.stringPatternLabel}</Label>
         <Input
-          id="pattern"
+          id={patternId}
           type="text"
           value={pattern ?? ""}
           onChange={(e) => {
             const value = e.target.value || undefined;
             handleValidationChange("pattern", value);
           }}
-          placeholder="^[a-zA-Z]+$"
+          placeholder={t.stringPatternPlaceholder}
           className="h-8"
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="format">Format</Label>
+        <Label htmlFor={formatId}>{t.stringFormatLabel}</Label>
         <Select
           value={format || "none"}
           onValueChange={(value) => {
@@ -155,26 +155,26 @@ const StringEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
             );
           }}
         >
-          <SelectTrigger id="format" className="h-8">
+          <SelectTrigger id={formatId} className="h-8">
             <SelectValue placeholder="Select format" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="none">None</SelectItem>
-            <SelectItem value="date-time">Date-Time</SelectItem>
-            <SelectItem value="date">Date</SelectItem>
-            <SelectItem value="time">Time</SelectItem>
-            <SelectItem value="email">Email</SelectItem>
-            <SelectItem value="uri">URI</SelectItem>
-            <SelectItem value="uuid">UUID</SelectItem>
-            <SelectItem value="hostname">Hostname</SelectItem>
-            <SelectItem value="ipv4">IPv4</SelectItem>
-            <SelectItem value="ipv6">IPv6</SelectItem>
+            <SelectItem value="none">{t.stringFormatNone}</SelectItem>
+            <SelectItem value="date-time">{t.stringFormatDateTime}</SelectItem>
+            <SelectItem value="date">{t.stringFormatDate}</SelectItem>
+            <SelectItem value="time">{t.stringFormatTime}</SelectItem>
+            <SelectItem value="email">{t.stringFormatEmail}</SelectItem>
+            <SelectItem value="uri">{t.stringFormatUri}</SelectItem>
+            <SelectItem value="uuid">{t.stringFormatUuid}</SelectItem>
+            <SelectItem value="hostname">{t.stringFormatHostname}</SelectItem>
+            <SelectItem value="ipv4">{t.stringFormatIpv4}</SelectItem>
+            <SelectItem value="ipv6">{t.stringFormatIpv6}</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       <div className="space-y-2 pt-2 border-t border-border/40">
-        <Label>Allowed Values (enum)</Label>
+        <Label>{t.stringAllowedValuesEnumLabel}</Label>
 
         <div className="flex flex-wrap gap-2 mb-4">
           {enumValues.length > 0 ? (
@@ -197,7 +197,7 @@ const StringEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
             ))
           ) : (
             <p className="text-xs text-muted-foreground italic">
-              No restricted values set
+              {t.stringAllowedValuesEnumNone}
             </p>
           )}
         </div>
@@ -207,7 +207,7 @@ const StringEditor: React.FC<TypeEditorProps> = ({ schema, onChange }) => {
             type="text"
             value={enumValue}
             onChange={(e) => setEnumValue(e.target.value)}
-            placeholder="Add allowed value..."
+            placeholder={t.stringAllowedValuesEnumAddPlaceholder}
             className="h-8 text-xs flex-1"
             onKeyDown={(e) => e.key === "Enter" && handleAddEnumValue()}
           />

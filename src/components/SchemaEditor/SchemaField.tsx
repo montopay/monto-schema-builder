@@ -1,16 +1,17 @@
+import React, { Suspense } from "react";
 import type {
   JSONSchema as JSONSchemaType,
   NewField,
   ObjectJSONSchema,
   SchemaType,
-} from "@/types/jsonSchema";
+} from "../../types/jsonSchema.ts";
 import {
   asObjectSchema,
   getSchemaDescription,
   withObjectSchema,
-} from "@/types/jsonSchema";
-import React, { Suspense, lazy } from "react";
-import SchemaPropertyEditor from "./SchemaPropertyEditor";
+} from "../../types/jsonSchema.ts";
+import SchemaPropertyEditor from "./SchemaPropertyEditor.tsx";
+import { useTranslation } from "../../hooks/use-translation.ts";
 
 // This component is now just a simple wrapper around SchemaPropertyEditor
 // to maintain backward compatibility during migration
@@ -74,24 +75,6 @@ const SchemaField: React.FC<SchemaFieldProps> = (props) => {
     });
   };
 
-  // Handle description change
-  const handleDescriptionChange = (newDescription: string) => {
-    // Get type in a safe way
-    const type = withObjectSchema(
-      schema,
-      (s) => s.type || "object",
-      "object",
-    ) as SchemaType;
-
-    onEdit({
-      name,
-      type: Array.isArray(type) ? type[0] : type,
-      description: newDescription,
-      required,
-      validation: asObjectSchema(schema),
-    });
-  };
-
   // Handle schema change
   const handleSchemaChange = (newSchema: ObjectJSONSchema) => {
     // Type will be defined in the schema
@@ -135,6 +118,7 @@ export const ExpandButton: React.FC<ExpandButtonProps> = ({
   expanded,
   onClick,
 }) => {
+  const t = useTranslation();
   const ChevronDown = React.lazy(() =>
     import("lucide-react").then((mod) => ({ default: mod.ChevronDown })),
   );
@@ -147,7 +131,7 @@ export const ExpandButton: React.FC<ExpandButtonProps> = ({
       type="button"
       className="text-muted-foreground hover:text-foreground transition-colors"
       onClick={onClick}
-      aria-label={expanded ? "Collapse" : "Expand"}
+      aria-label={expanded ? t.collapse : t.expand}
     >
       <Suspense fallback={<div className="w-[18px] h-[18px]" />}>
         {expanded ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
@@ -162,6 +146,7 @@ export interface FieldActionsProps {
 }
 
 export const FieldActions: React.FC<FieldActionsProps> = ({ onDelete }) => {
+  const t = useTranslation();
   const X = React.lazy(() =>
     import("lucide-react").then((mod) => ({ default: mod.X })),
   );
@@ -172,7 +157,7 @@ export const FieldActions: React.FC<FieldActionsProps> = ({ onDelete }) => {
         type="button"
         onClick={onDelete}
         className="p-1 rounded-md hover:bg-secondary hover:text-destructive transition-colors opacity-0 group-hover:opacity-100"
-        aria-label="Delete field"
+        aria-label={t.fieldDelete}
       >
         <Suspense fallback={<div className="w-[16px] h-[16px]" />}>
           <X size={16} />

@@ -1,21 +1,23 @@
+import { useTranslation } from "../../../hooks/use-translation.ts";
 import {
   getSchemaProperties,
   removeObjectProperty,
   updateObjectProperty,
   updatePropertyRequired,
-} from "@/lib/schemaEditor";
-import type { NewField, ObjectJSONSchema } from "@/types/jsonSchema";
-import { asObjectSchema, isBooleanSchema } from "@/types/jsonSchema";
-import { useState } from "react";
-import AddFieldButton from "../AddFieldButton";
-import SchemaPropertyEditor from "../SchemaPropertyEditor";
-import type { TypeEditorProps } from "../TypeEditor";
+} from "../../../lib/schemaEditor.ts";
+import type { NewField, ObjectJSONSchema } from "../../../types/jsonSchema.ts";
+import { asObjectSchema, isBooleanSchema } from "../../../types/jsonSchema.ts";
+import AddFieldButton from "../AddFieldButton.tsx";
+import SchemaPropertyEditor from "../SchemaPropertyEditor.tsx";
+import type { TypeEditorProps } from "../TypeEditor.tsx";
 
 const ObjectEditor: React.FC<TypeEditorProps> = ({
   schema,
   onChange,
   depth = 0,
 }) => {
+  const t = useTranslation();
+
   // Get object properties
   const properties = getSchemaProperties(schema);
 
@@ -131,7 +133,7 @@ const ObjectEditor: React.FC<TypeEditorProps> = ({
         </div>
       ) : (
         <div className="text-sm text-muted-foreground italic p-2 text-center border rounded-md">
-          No properties defined
+          {t.objectPropertiesNone}
         </div>
       )}
 

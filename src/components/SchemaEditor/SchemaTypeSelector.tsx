@@ -1,6 +1,8 @@
-import { cn } from "@/lib/utils";
-import type { SchemaType } from "@/types/jsonSchema";
-import type React from "react";
+import type { FC } from "react";
+import { cn } from "../../lib/utils.ts";
+import type { SchemaType } from "../../types/jsonSchema.ts";
+import { useTranslation } from "../../hooks/use-translation.ts";
+import type { Translation } from "../../i18n/translation-keys.ts";
 
 interface SchemaTypeSelectorProps {
   id?: string;
@@ -10,43 +12,44 @@ interface SchemaTypeSelectorProps {
 
 interface TypeOption {
   id: SchemaType;
-  label: string;
-  description: string;
+  label: keyof Translation;
+  description: keyof Translation;
 }
 
-const typeOptions: { id: SchemaType; label: string; description: string }[] = [
+const typeOptions: TypeOption[] = [
   {
     id: "string",
-    label: "Text",
-    description: "For text values like names, descriptions, etc.",
+    label: "fieldTypeTextLabel",
+    description: "fieldTypeTextDescription",
   },
   {
     id: "number",
-    label: "Number",
-    description: "For decimal or whole numbers",
+    label: "fieldTypeNumberLabel",
+    description: "fieldTypeNumberDescription",
   },
   {
     id: "boolean",
-    label: "Yes/No",
-    description: "For true/false values",
+    label: "fieldTypeBooleanLabel",
+    description: "fieldTypeBooleanDescription",
   },
   {
     id: "object",
-    label: "Group",
-    description: "For grouping related fields together",
+    label: "fieldTypeObjectLabel",
+    description: "fieldTypeObjectDescription",
   },
   {
     id: "array",
-    label: "List",
-    description: "For collections of items",
+    label: "fieldTypeArrayLabel",
+    description: "fieldTypeArrayDescription",
   },
 ];
 
-const SchemaTypeSelector: React.FC<SchemaTypeSelectorProps> = ({
+const SchemaTypeSelector: FC<SchemaTypeSelectorProps> = ({
   id,
   value,
   onChange,
 }) => {
+  const t = useTranslation();
   return (
     <div
       id={id}
@@ -56,18 +59,18 @@ const SchemaTypeSelector: React.FC<SchemaTypeSelectorProps> = ({
         <button
           type="button"
           key={type.id}
-          title={type.description}
+          title={t[type.description]}
           className={cn(
             "p-2.5 rounded-lg border-2 text-left transition-all duration-200",
             value === type.id
-              ? "border-primary bg-primary/5 shadow-sm"
+              ? "border-primary bg-primary/5 shadow-xs"
               : "border-border hover:border-primary/30 hover:bg-secondary",
           )}
           onClick={() => onChange(type.id)}
         >
-          <div className="font-medium text-sm">{type.label}</div>
+          <div className="font-medium text-sm">{t[type.label]}</div>
           <div className="text-xs text-muted-foreground line-clamp-1">
-            {type.description}
+            {t[type.description]}
           </div>
         </button>
       ))}

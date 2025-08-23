@@ -1,5 +1,7 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { CirclePlus, HelpCircle, Info } from "lucide-react";
+import { type FC, type FormEvent, useId, useState } from "react";
+import { Badge } from "../../components/ui/badge.tsx";
+import { Button } from "../../components/ui/button.tsx";
 import {
   Dialog,
   DialogContent,
@@ -7,26 +9,24 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+} from "../../components/ui/dialog.tsx";
+import { Input } from "../../components/ui/input.tsx";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import type { NewField, SchemaType } from "@/types/jsonSchema";
-import { CirclePlus, HelpCircle, Info } from "lucide-react";
-import type React from "react";
-import { useState } from "react";
-import SchemaTypeSelector from "./SchemaTypeSelector";
+} from "../../components/ui/tooltip.tsx";
+import type { NewField, SchemaType } from "../../types/jsonSchema.ts";
+import SchemaTypeSelector from "./SchemaTypeSelector.tsx";
+import { useTranslation } from "../../hooks/use-translation.ts";
 
 interface AddFieldButtonProps {
   onAddField: (field: NewField) => void;
   variant?: "primary" | "secondary";
 }
 
-const AddFieldButton: React.FC<AddFieldButtonProps> = ({
+const AddFieldButton: FC<AddFieldButtonProps> = ({
   onAddField,
   variant = "primary",
 }) => {
@@ -35,8 +35,14 @@ const AddFieldButton: React.FC<AddFieldButtonProps> = ({
   const [fieldType, setFieldType] = useState<SchemaType>("string");
   const [fieldDesc, setFieldDesc] = useState("");
   const [fieldRequired, setFieldRequired] = useState(false);
+  const fieldNameId = useId();
+  const fieldDescId = useId();
+  const fieldRequiredId = useId();
+  const fieldTypeId = useId();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const t = useTranslation();
+
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!fieldName.trim()) return;
 
@@ -66,20 +72,20 @@ const AddFieldButton: React.FC<AddFieldButtonProps> = ({
           size={16}
           className="group-hover:scale-110 transition-transform"
         />
-        <span>Add Field</span>
+        <span>{t.fieldAddNewButton}</span>
       </Button>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="md:max-w-[1200px] max-h-[85vh] w-[95vw] p-4 sm:p-6">
           <DialogHeader className="mb-4">
             <DialogTitle className="text-xl flex flex-wrap items-center gap-2">
-              Add New Field
+              {t.fieldAddNewLabel}
               <Badge variant="secondary" className="text-xs">
-                Schema Builder
+                {t.fieldAddNewBadge}
               </Badge>
             </DialogTitle>
             <DialogDescription className="text-sm">
-              Create a new field for your JSON schema
+              {t.fieldAddNewDescription}
             </DialogDescription>
           </DialogHeader>
 
@@ -88,8 +94,11 @@ const AddFieldButton: React.FC<AddFieldButtonProps> = ({
               <div className="space-y-4 min-w-[280px]">
                 <div>
                   <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                    <label htmlFor="fieldName" className="text-sm font-medium">
-                      Field Name
+                    <label
+                      htmlFor={fieldNameId}
+                      className="text-sm font-medium"
+                    >
+                      {t.fieldNameLabel}
                     </label>
                     <TooltipProvider>
                       <Tooltip>
@@ -97,19 +106,16 @@ const AddFieldButton: React.FC<AddFieldButtonProps> = ({
                           <Info className="h-4 w-4 text-muted-foreground shrink-0" />
                         </TooltipTrigger>
                         <TooltipContent className="max-w-[90vw]">
-                          <p>
-                            Use camelCase for better readability (e.g.,
-                            firstName)
-                          </p>
+                          <p>{t.fieldNameTooltip}</p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
                   </div>
                   <Input
-                    id="fieldName"
+                    id={fieldNameId}
                     value={fieldName}
                     onChange={(e) => setFieldName(e.target.value)}
-                    placeholder="e.g. firstName, age, isActive"
+                    placeholder={t.fieldNamePlaceholder}
                     className="font-mono text-sm w-full"
                     required
                   />
@@ -117,8 +123,11 @@ const AddFieldButton: React.FC<AddFieldButtonProps> = ({
 
                 <div>
                   <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                    <label htmlFor="fieldDesc" className="text-sm font-medium">
-                      Description
+                    <label
+                      htmlFor={fieldDescId}
+                      className="text-sm font-medium"
+                    >
+                      {t.fieldDescription}
                     </label>
                     <TooltipProvider>
                       <Tooltip>
@@ -126,16 +135,16 @@ const AddFieldButton: React.FC<AddFieldButtonProps> = ({
                           <Info className="h-4 w-4 text-muted-foreground shrink-0" />
                         </TooltipTrigger>
                         <TooltipContent className="max-w-[90vw]">
-                          <p>Add context about what this field represents</p>
+                          <p>{t.fieldDescriptionTooltip}</p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
                   </div>
                   <Input
-                    id="fieldDesc"
+                    id={fieldDescId}
                     value={fieldDesc}
                     onChange={(e) => setFieldDesc(e.target.value)}
-                    placeholder="Describe the purpose of this field"
+                    placeholder={t.fieldDescriptionPlaceholder}
                     className="text-sm w-full"
                   />
                 </div>
@@ -143,13 +152,13 @@ const AddFieldButton: React.FC<AddFieldButtonProps> = ({
                 <div className="flex items-center gap-3 p-3 rounded-lg border bg-muted/50">
                   <input
                     type="checkbox"
-                    id="fieldRequired"
+                    id={fieldRequiredId}
                     checked={fieldRequired}
                     onChange={(e) => setFieldRequired(e.target.checked)}
                     className="rounded border-gray-300 shrink-0"
                   />
-                  <label htmlFor="fieldRequired" className="text-sm">
-                    Required Field
+                  <label htmlFor={fieldRequiredId} className="text-sm">
+                    {t.fieldRequiredLabel}
                   </label>
                 </div>
               </div>
@@ -157,8 +166,11 @@ const AddFieldButton: React.FC<AddFieldButtonProps> = ({
               <div className="space-y-4 min-w-[280px]">
                 <div>
                   <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                    <label htmlFor="fieldType" className="text-sm font-medium">
-                      Field Type
+                    <label
+                      htmlFor={fieldTypeId}
+                      className="text-sm font-medium"
+                    >
+                      {t.fieldType}
                     </label>
                     <TooltipProvider>
                       <Tooltip>
@@ -170,12 +182,12 @@ const AddFieldButton: React.FC<AddFieldButtonProps> = ({
                           className="w-72 max-w-[90vw]"
                         >
                           <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-                            <div>• string: Text</div>
-                            <div>• number: Numeric</div>
-                            <div>• boolean: True/false</div>
-                            <div>• object: Nested JSON</div>
+                            <div>• {t.fieldTypeTooltipString}</div>
+                            <div>• {t.fieldTypeTooltipNumber}</div>
+                            <div>• {t.fieldTypeTooltipBoolean}</div>
+                            <div>• {t.fieldTypeTooltipObject}</div>
                             <div className="col-span-2">
-                              • array: Lists of values
+                              • {t.fieldTypeTooltipArray}
                             </div>
                           </div>
                         </TooltipContent>
@@ -183,14 +195,16 @@ const AddFieldButton: React.FC<AddFieldButtonProps> = ({
                     </TooltipProvider>
                   </div>
                   <SchemaTypeSelector
-                    id="fieldType"
+                    id={fieldTypeId}
                     value={fieldType}
                     onChange={setFieldType}
                   />
                 </div>
 
                 <div className="rounded-lg border bg-muted/50 p-3 hidden md:block">
-                  <p className="text-xs font-medium mb-2">Example:</p>
+                  <p className="text-xs font-medium mb-2">
+                    {t.fieldTypeExample}
+                  </p>
                   <code className="text-sm bg-background/80 p-2 rounded block overflow-x-auto">
                     {fieldType === "string" && '"example"'}
                     {fieldType === "number" && "42"}
@@ -209,10 +223,10 @@ const AddFieldButton: React.FC<AddFieldButtonProps> = ({
                 size="sm"
                 onClick={() => setDialogOpen(false)}
               >
-                Cancel
+                {t.fieldAddNewCancel}
               </Button>
               <Button type="submit" size="sm">
-                Add Field
+                {t.fieldAddNewConfirm}
               </Button>
             </DialogFooter>
           </form>

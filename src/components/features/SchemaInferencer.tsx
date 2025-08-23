@@ -1,4 +1,7 @@
-import { Button } from "@/components/ui/button";
+import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
+import { Loader2 } from "lucide-react";
+import { useRef, useState } from "react";
+import { Button } from "../../components/ui/button.tsx";
 import {
   Dialog,
   DialogContent,
@@ -6,25 +9,26 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { useMonacoTheme } from "@/hooks/use-monaco-theme";
-import { createSchemaFromJson } from "@/lib/schema-inference";
-import type { JSONSchema } from "@/types/jsonSchema";
-import Editor, { type BeforeMount, type OnMount } from "@monaco-editor/react";
-import { Loader2 } from "lucide-react";
-import { useRef, useState } from "react";
+} from "../../components/ui/dialog.tsx";
+import { useMonacoTheme } from "../../hooks/use-monaco-theme.ts";
+import { createSchemaFromJson } from "../../lib/schema-inference.ts";
+import type { JSONSchema } from "../../types/jsonSchema.ts";
+import { useTranslation } from "../../hooks/use-translation.ts";
 
-interface SchemaInferencerProps {
+/** @public */
+export interface SchemaInferencerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSchemaInferred: (schema: JSONSchema) => void;
 }
 
+/** @public */
 export function SchemaInferencer({
   open,
   onOpenChange,
   onSchemaInferred,
 }: SchemaInferencerProps) {
+  const t = useTranslation();
   const [jsonInput, setJsonInput] = useState("");
   const [error, setError] = useState<string | null>(null);
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
@@ -61,7 +65,7 @@ export function SchemaInferencer({
       onOpenChange(false);
     } catch (error) {
       console.error("Invalid JSON input:", error);
-      setError("Invalid JSON format. Please check your input.");
+      setError(t.inferrerErrorInvalidJson);
     }
   };
 
@@ -75,10 +79,8 @@ export function SchemaInferencer({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-4xl max-h-[90vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle>Infer JSON Schema</DialogTitle>
-          <DialogDescription>
-            Paste your JSON document below to generate a schema from it.
-          </DialogDescription>
+          <DialogTitle>{t.inferrerTitle}</DialogTitle>
+          <DialogDescription>{t.inferrerDescription}</DialogDescription>
         </DialogHeader>
         <div className="flex-1 min-h-0 py-4 flex flex-col">
           <div className="border rounded-md flex-1 overflow-hidden h-full">
@@ -102,9 +104,9 @@ export function SchemaInferencer({
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={handleClose}>
-            Cancel
+            {t.inferrerCancel}
           </Button>
-          <Button onClick={inferSchemaFromJson}>Generate Schema</Button>
+          <Button onClick={inferSchemaFromJson}>{t.inferrerGenerate}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
