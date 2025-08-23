@@ -32,13 +32,13 @@ import { type JSONSchema, SchemaVisualEditor } from "jsonjoy-builder";
 import { useState } from "react";
 
 export function App() {
-    const [schema, setSchema] = useState<JSONSchema>({});
-	return (
-		<div>
-			<h1>JSONJoy Builder</h1>
-            <SchemaVisualEditor schema={schema} onChange={setSchema}/>
-		</div>
-	);
+  const [schema, setSchema] = useState<JSONSchema>({});
+  return (
+    <div>
+      <h1>JSONJoy Builder</h1>
+      <SchemaVisualEditor schema={schema} onChange={setSchema}/>
+    </div>
+  );
 }
 ```
 
@@ -52,15 +52,12 @@ import { type JSONSchema, SchemaVisualEditor, TranslationContext, de } from "jso
 import { useState } from "react";
 
 export function App() {
-    const [schema, setSchema] = useState<JSONSchema>({});
-	return (
-		<div>
-			<h1>JSONJoy Builder</h1>
-			<TranslationContext value={de}>
-            	<SchemaVisualEditor schema={schema} onChange={setSchema}/>
-			</TranslationContext>
-		</div>
-	);
+  const [schema, setSchema] = useState<JSONSchema>({});
+  return (
+    <TranslationContext value={de}>
+      <SchemaVisualEditor schema={schema} onChange={setSchema}/>
+    </TranslationContext>
+  );
 }
 ```
 
