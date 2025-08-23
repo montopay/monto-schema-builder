@@ -42,6 +42,7 @@
     "dev": "rsbuild dev",
     "preview": "rsbuild preview",
     "build": "rslib build",
+    "build:demo": "rsbuild build",
     "build:dev": "rslib build --mode development",
     "lint": "biome lint .",
     "format": "biome format . --write",
