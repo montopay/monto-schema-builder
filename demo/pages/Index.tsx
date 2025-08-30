@@ -434,6 +434,28 @@ const Index = () => {
                     />
                   </svg>
                 </a>
+                <span className="mx-1">•</span>
+                <a
+                  href="https://www.npmjs.com/package/jsonjoy-builder"
+                  className="font-medium text-primary hover:text-primary/80 transition-colors flex items-center gap-1"
+                  target="_blank"
+                  rel="nofollow noopener noreferrer"
+                >
+                  <span>NPM</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    className="w-3.5 h-3.5 opacity-70"
+                  >
+                    <title>NPM package</title>
+                    <path
+                      fillRule="evenodd"
+                      d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </a>
               </div>
             </div>
           </div>
