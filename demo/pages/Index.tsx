@@ -3,9 +3,12 @@ import {
   CirclePlus,
   Code,
   FileJson,
+  GitBranch,
+  User,
+  Package,
   RefreshCw,
 } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { exampleSchema } from "../../demo/utils/schemaExample.ts";
 import JsonSchemaEditor from "../../src/components/SchemaEditor/JsonSchemaEditor.tsx";
 import { JsonValidator } from "../../src/components/features/JsonValidator.tsx";
@@ -393,69 +396,40 @@ const Index = () => {
             <div className="mt-16 py-4 border-t border-border/30 backdrop-blur-xs">
               <div className="flex items-center justify-center gap-2 text-sm">
                 <span className="text-muted-foreground">Built by</span>
-                <a
-                  href="https://ophir.dev"
-                  className="font-medium text-primary hover:text-primary/80 transition-colors flex items-center gap-1"
-                >
-                  <span>@ophir.dev</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    className="w-3.5 h-3.5 opacity-70"
-                  >
-                    <title>External link</title>
-                    <path
-                      fillRule="evenodd"
-                      d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </a>
-                <span className="mx-1">•</span>
-                <a
-                  href="https://github.com/lovasoa/jsonjoy-builder"
-                  className="font-medium text-primary hover:text-primary/80 transition-colors flex items-center gap-1"
-                  target="_blank"
-                  rel="nofollow noopener noreferrer"
-                >
-                  <span>GitHub</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    className="w-3.5 h-3.5 opacity-70"
-                  >
-                    <title>GitHub repository</title>
-                    <path
-                      fillRule="evenodd"
-                      d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </a>
-                <span className="mx-1">•</span>
-                <a
-                  href="https://www.npmjs.com/package/jsonjoy-builder"
-                  className="font-medium text-primary hover:text-primary/80 transition-colors flex items-center gap-1"
-                  target="_blank"
-                  rel="nofollow noopener noreferrer"
-                >
-                  <span>NPM</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    className="w-3.5 h-3.5 opacity-70"
-                  >
-                    <title>NPM package</title>
-                    <path
-                      fillRule="evenodd"
-                      d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </a>
+                {[
+                  {
+                    href: "https://ophir.dev",
+                    text: "@ophir.dev",
+                    icon: User,
+                  },
+                  {
+                    href: "https://github.com/lovasoa/jsonjoy-builder",
+                    text: "GitHub",
+                    icon: GitBranch,
+                    target: "_blank",
+                    rel: "nofollow noopener noreferrer",
+                  },
+                  {
+                    href: "https://www.npmjs.com/package/jsonjoy-builder",
+                    text: "NPM",
+                    icon: Package,
+                    target: "_blank",
+                    rel: "nofollow noopener noreferrer",
+                  },
+                ].map((link, index, array) => (
+                  <React.Fragment key={link.href}>
+                    <a
+                      href={link.href}
+                      className="font-medium text-primary hover:text-primary/80 transition-colors flex items-center gap-1"
+                      {...(link.target && { target: link.target })}
+                      {...(link.rel && { rel: link.rel })}
+                    >
+                      <link.icon size={14} className="opacity-70" />
+                      <span>{link.text}</span>
+                    </a>
+                    {index < array.length - 1 && <span className="mx-1">•</span>}
+                  </React.Fragment>
+                ))}
               </div>
             </div>
           </div>
