@@ -42,6 +42,40 @@ export function App() {
 }
 ```
 
+### Styling
+
+To style the component, add custom CSS. For basic styling, there are some CSS custom properties ("variables)
+you can set:
+
+```css
+.jsonjoy {
+  --jsonjoy-background: #f8fafc;
+  --jsonjoy-foreground: #020817;
+  --jsonjoy-card: #fff;
+  --jsonjoy-card-foreground: #020817;
+  --jsonjoy-popover: #fff;
+  --jsonjoy-popover-foreground: #020817;
+  --jsonjoy-primary: #0080ff;
+  --jsonjoy-primary-foreground: #f8fafc;
+  --jsonjoy-secondary: #f1f5f9;
+  --jsonjoy-secondary-foreground: #0f172a;
+  --jsonjoy-muted: #f1f5f9;
+  --jsonjoy-muted-foreground: #64748b;
+  --jsonjoy-accent: #f1f5f9;
+  --jsonjoy-accent-foreground: #0f172a;
+  --jsonjoy-destructive: #ef4444;
+  --jsonjoy-destructive-foreground: #f8fafc;
+  --jsonjoy-border: #e2e8f0;
+  --jsonjoy-input: #e2e8f0;
+  --jsonjoy-ring: #020817;
+  --jsonjoy-radius: .8rem;
+  --jsonjoy-font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+.jsonjoy.dark {
+  /** same, but for dark mode */
+}
+```
+
 ### Localization
 
 By default, the editor uses English. To localize, you need to set a language via the `TranslationContext`:
@@ -72,6 +106,8 @@ const es: Translation = {
 };
 ```
 
+See also the [English localizations file](https://github.com/lovasoa/jsonjoy-builder/blob/main/src/i18n/locales/en.ts) for the default localizations.
+
 ### Development
 
 ```bash
@@ -86,11 +122,11 @@ Start the development server:
 npm run dev
 ```
 
-The application will be available at http://localhost:5173
+The demo application will be available at http://localhost:5173
 
 ### Building for Production
 
-Build the application for production:
+Build this library for production:
 
 ```bash
 npm run build
@@ -112,7 +148,7 @@ The built files will be available in the `dist` directory.
 
 #### Schema Inference
 
-The application can automatically generate JSON Schema definitions from existing JSON data. This feature uses a recursion-based inference system to detect:
+The `SchemaInferencer` component can automatically generate JSON Schema definitions from existing JSON data. This feature uses a recursion-based inference system to detect:
 
 - Object structures and properties
 - Array types and their item schemas

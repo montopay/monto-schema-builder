@@ -77,7 +77,7 @@ export function SchemaInferencer({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-4xl max-h-[90vh] flex flex-col">
+      <DialogContent className="sm:max-w-4xl max-h-[90vh] flex flex-col jsonjoy">
         <DialogHeader>
           <DialogTitle>{t.inferrerTitle}</DialogTitle>
           <DialogDescription>{t.inferrerDescription}</DialogDescription>
@@ -103,10 +103,10 @@ export function SchemaInferencer({
           {error && <p className="text-sm text-destructive mt-2">{error}</p>}
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={handleClose}>
+          <Button type="button" variant="outline" onClick={handleClose}>
             {t.inferrerCancel}
           </Button>
-          <Button onClick={inferSchemaFromJson}>{t.inferrerGenerate}</Button>
+          <Button type="button" onClick={inferSchemaFromJson}>{t.inferrerGenerate}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
